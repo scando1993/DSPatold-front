@@ -30,6 +30,12 @@ const routes = [
       {
         path: "/app/campaigns",
         component: () => import("./views/app/campaigns"), //campaigns
+        children: [
+          {
+            path: "",
+            component: () => import("./views/app/campaigns/campaign.refactor")
+          },
+        ]
       },
       {
         path: "/app/users",
@@ -103,6 +109,7 @@ const routes = [
       },
     ]
   },
+
   // sessions
   {
     path: "/app/sessions",
@@ -122,11 +129,6 @@ const routes = [
         component: () => import("./views/app/sessions/forgot")
       }
     ]
-  },
-
-  {
-    path: "/vertical-sidebar",
-    component: () => import("./containers/layouts/verticalSidebar")
   },
   {
     path: "*",

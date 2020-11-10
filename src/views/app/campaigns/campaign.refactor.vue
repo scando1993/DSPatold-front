@@ -41,11 +41,51 @@
 							></b-form-select>
 						</b-form-group>
 
-						<b-form-group id="input-group-4">
-							<b-form-checkbox-group v-model="form.checked" id="checkboxes-4">
-								<b-form-checkbox value="me">Check me out</b-form-checkbox>
-								<b-form-checkbox value="that">Check that out</b-form-checkbox>
-							</b-form-checkbox-group>
+						<b-form-group id="input-group-4" label="Landing Page:" label-for="input-3">
+							<b-form-select
+									id="input-4"
+									v-model="form.url"
+									required
+									placeholder="http://192.168.1.1"
+							></b-form-select>
+						</b-form-group>
+
+						<b-form-group id="input-group-5" label="Landing Page:" label-for="input-3">
+							<b-form-input
+									id="input-5"
+									v-model="form.launchDate"
+									required
+									placeholder="http://192.168.1.1"
+							></b-form-input>
+							<b-form-input
+									id="input-6"
+									v-model="form.sendEmails"
+									required
+									placeholder="http://192.168.1.1"
+							></b-form-input>
+						</b-form-group>
+
+						<b-form-group id="input-group-6" label="Landing Page:" label-for="input-3">
+							<b-form-select
+									id="input-4"
+									v-model="form.sendingProfiles"
+									required
+									placeholder="http://192.168.1.1"
+							></b-form-select>
+							<b-button
+
+							>
+								Send Test Email
+							</b-button>
+						</b-form-group>
+
+						<b-form-group id="input-group-7" label="Groups:" label-for="input-3">
+							<b-form-select
+									id="input-7"
+									v-model="form.groups"
+									required
+									placeholder="Select Group"
+							></b-form-select>
 						</b-form-group>
 					</b-form>
 				</b-container>
@@ -70,6 +110,7 @@
 </template>
 
 <script>
+import breadcumb from "@/components/breadcumb";
 export default {
 	metaInfo: {
 		title: "Campaigns"

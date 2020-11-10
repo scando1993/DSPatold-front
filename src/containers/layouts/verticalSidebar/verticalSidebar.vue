@@ -31,10 +31,10 @@
 					<!-- <p class="main-menu-title text-muted ml-3 font-weight-700 text-13 mt-4 mb-2">Apps</p> -->
 					<li class="Ul_li--hover">
 						<div>
-							<a class="has-arrow " href="#" :class="{ active: selectedParentMenu === 'calendar' }">
+							<a class="has-arrow " href="#" :class="{ active: selectedParentMenu === 'dashboard' }">
 								<router-link tag="div" to="/">
-									<!--										<i class="i-Bar-Chart text-20 mr-2 "/>-->
-									<img src="@/assets/images/svg/home.svg" class="text-20 mr-2 icon-sidebar"/>
+									<i class="i-Bar-Chart text-20 mr-2 "/>
+<!--									<img src="@/assets/images/svg/home.svg" class="text-20 mr-2 icon-sidebar"/>-->
 									<span class="text-15" :class="{ 'vertical-item-name': getVerticalCompact.isItemName }">Dashboard</span>
 								</router-link>
 							</a>
@@ -44,10 +44,10 @@
 					<!-- TaskGrid Menu -->
 					<li class="Ul_li--hover">
 						<div>
-							<a class="has-arrow" href="#" :class="{ active: selectedParentMenu === 'taskGrid' }">
-								<router-link tag="div" to="/app/taskGrid">
-									<!--										<i class="i-Tablet-Secure text-20 mr-2"/>-->
-									<img src="@/assets/images/svg/clientes.svg" class="text-20 mr-2 icon-sidebar"/>
+							<a class="has-arrow" href="#" :class="{ active: selectedParentMenu === 'campaigns' }">
+								<router-link tag="div" to="/app/campaigns">
+									<i class="i-Tablet-Secure text-20 mr-2"/>
+<!--									<img src="@/assets/images/svg/clientes.svg" class="text-20 mr-2 icon-sidebar"/>-->
 									<span class="text-15" :class="{ 'vertical-item-name': getVerticalCompact.isItemName }">Campaigns</span>
 								</router-link>
 							</a>
@@ -57,10 +57,10 @@
 					<!-- Users & Groups menu  -->
 					<li class="Ul_li--hover">
 						<div>
-							<a tag="a" class="has-arrow " href="#" :class="{ active: selectedParentMenu === 'reports' }">
+							<a tag="a" class="has-arrow " href="#" :class="{ active: selectedParentMenu === 'users' }">
 								<router-link tag="div" to="/app/reports">
-									<!--										<i class="i-Statistic text-20 mr-2"/>-->
-									<img src="@/assets/images/svg/reportes.svg" class="text-20 mr-2 icon-sidebar"/>
+									<i class="i-Statistic text-20 mr-2"/>
+<!--									<img src="@/assets/images/svg/reportes.svg" class="text-20 mr-2 icon-sidebar"/>-->
 									<span class="text-15" :class="{ 'vertical-item-name': getVerticalCompact.isItemName }">Users & Groups</span>
 								</router-link>
 							</a>
@@ -70,10 +70,10 @@
 					<!-- Email Templates menu  -->
 					<li class="Ul_li--hover mb-2">
 						<div>
-							<a class="has-arrow " href="#" :class="{ active: selectedParentMenu === 'alerts' }">
+							<a class="has-arrow " href="#" :class="{ active: selectedParentMenu === 'templates' }">
 								<router-link tag="div" to="#">
-									<!--									<i class="i-Bell text-20 mr-2"></i>-->
-									<img src="@/assets/images/svg/notificaciones.svg" class="text-20 mr-2 icon-sidebar"/>
+									<i class="i-Bell text-20 mr-2"></i>
+<!--									<img src="@/assets/images/svg/notificaciones.svg" class="text-20 mr-2 icon-sidebar"/>-->
 									<span class="text-15" :class="{ 'vertical-item-name': getVerticalCompact.isItemName }">Email Templates</span>
 								</router-link>
 							</a>
@@ -84,8 +84,8 @@
 					<!-- Landing Page menu> -->
 					<li class="Ul_li--hover">
 						<div>
-							<a class="has-arrow " href="/app/monitor" :class="{ active: selectedParentMenu === 'monitor' }">
-								<router-link tag="div" to="/app/monitor">
+							<a class="has-arrow " href="/app/landing" :class="{ active: selectedParentMenu === 'landing' }">
+								<router-link tag="div" to="/app/landing">
 									<i class="i-Monitor-Analytics icons-text mr-2"/>
 									<span class="text-15" :class="{ 'vertical-item-name': getVerticalCompact.isItemName }">Landing Pages</span>
 								</router-link>
@@ -96,9 +96,9 @@
 					<!-- Sending Profiles menu-->
 					<li class="Ul_li--hover">
 						<div>
-							<a class="has-arrow " href="#" :class="{ active: selectedParentMenu === 'profile' }">
-								<router-link tag="div" to="/app/settings">
-									<img src="@/assets/images/svg/settings.svg" class="text-20 mr-2 icon-sidebar"/>
+							<a class="has-arrow " href="#" :class="{ active: selectedParentMenu === 'profiles' }">
+								<router-link tag="div" to="/app/profiles">
+<!--									<img src="@/assets/images/svg/settings.svg" class="text-20 mr-2 icon-sidebar"/>-->
 									<span class="text-15" :class="{ 'vertical-item-name': getVerticalCompact.isItemName }">Sending Profiles</span>
 								</router-link>
 
@@ -109,9 +109,9 @@
 					<!-- Account Settings menu-->
 					<li class="Ul_li--hover">
 						<div>
-							<a class="has-arrow " href="#" :class="{ active: selectedParentMenu === 'profile' }">
+							<a class="has-arrow " href="#" :class="{ active: selectedParentMenu === 'settings' }">
 								<router-link tag="div" to="/app/settings">
-									<img src="@/assets/images/svg/settings.svg" class="text-20 mr-2 icon-sidebar"/>
+<!--									<img src="@/assets/images/svg/settings.svg" class="text-20 mr-2 icon-sidebar"/>-->
 									<span class="text-15" :class="{ 'vertical-item-name': getVerticalCompact.isItemName }">Account Settings</span>
 								</router-link>
 
@@ -122,9 +122,9 @@
 					<!-- User Management menu-->
 					<li class="Ul_li--hover">
 						<div>
-							<a class="has-arrow " href="#" :class="{ active: selectedParentMenu === 'profile' }">
-								<router-link tag="div" to="/app/settings">
-									<img src="@/assets/images/svg/settings.svg" class="text-20 mr-2 icon-sidebar"/>
+							<a class="has-arrow " href="#" :class="{ active: selectedParentMenu === 'user_management' }">
+								<router-link tag="div" to="/app/user_management">
+<!--									<img src="@/assets/images/svg/settings.svg" class="text-20 mr-2 icon-sidebar"/>-->
 									<span class="text-15" :class="{ 'vertical-item-name': getVerticalCompact.isItemName }">User Management</span>
 								</router-link>
 
@@ -135,9 +135,9 @@
 					<!-- Webhooks menu-->
 					<li class="Ul_li--hover">
 						<div>
-							<a class="has-arrow " href="#" :class="{ active: selectedParentMenu === 'profile' }">
-								<router-link tag="div" to="/app/settings">
-									<img src="@/assets/images/svg/settings.svg" class="text-20 mr-2 icon-sidebar"/>
+							<a class="has-arrow " href="#" :class="{ active: selectedParentMenu === 'webhooks' }">
+								<router-link tag="div" to="/app/webhooks">
+<!--									<img src="@/assets/images/svg/settings.svg" class="text-20 mr-2 icon-sidebar"/>-->
 									<span class="text-15" :class="{ 'vertical-item-name': getVerticalCompact.isItemName }">Webhooks</span>
 								</router-link>
 
