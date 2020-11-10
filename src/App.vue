@@ -1,18 +1,41 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+	<div>
+		<router-view></router-view>
+<!--		<customizer></customizer>-->
+	</div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import { mapGetters } from "vuex";
 
 export default {
   name: 'App',
-  components: {
-    HelloWorld
-  }
+	data() {
+		return {};
+	},
+	computed: {
+		...mapGetters(["getThemeMode"]),
+		themeName() {
+			return this.getThemeMode.dark ? "dark-theme" : " ";
+		},
+		rtl() {
+			return this.getThemeMode.rtl ? "rtl" : " ";
+		}
+	},
+	metaInfo() {
+		return {
+			// if no subcomponents specify a metaInfo.title, this title will be used
+			title: "DSPat",
+			// all titles will be injected into this template
+			titleTemplate: "%s | DSPat - Admin Dashboard Template",
+			bodyAttrs: {
+				class: [this.themeName, "text-left"]
+			},
+			htmlAttrs: {
+				dir: this.rtl
+			}
+		};
+	}
 }
 </script>
 
