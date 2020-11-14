@@ -144,7 +144,8 @@
 							</b-col>
 							<b-col cols="3" >
 								<b-button size="sm" type="secundary" v-b-modal:campaign-2 class="input-group-btn">
-									<i class="i-Envelope"></i> Send Test Email
+									<i class="i-Envelope" v-if="!sending"></i> Send Test Email
+									<i class="spinner-icon" v-else></i>Sending...
 								</b-button>
 							</b-col>
 						</b-row>
@@ -227,6 +228,7 @@ export default {
 	data() {
 		return {
 			show: false,
+			sending: false,
 			columns: [
 				{
 					label: "Title",
@@ -299,7 +301,7 @@ export default {
 				allowOutsideClick: false,
 				showLoaderOnConfirm: true,
 				preConfirm: function () {
-					return new Promise(function (resolve, reject) {
+					return new Promise(function (resolve) {
 						let groups = _this.form.groups;
 
 						// Validate our fields
@@ -338,7 +340,7 @@ export default {
 						//         })
 					})
 				}
-			})
+				})
 				.then(function (result) {
 					if (result.value) {
 						_this.$swal.fire(
@@ -389,20 +391,47 @@ export default {
 					name: this.form.sendingProfiles
 				}
 			}
-			btnHtml = $("#sendTestModalSubmit").html()
-			$("#sendTestModalSubmit").html('<i class="fa fa-spinner fa-spin"></i> Sending')
+			this.sending = true;
+
+			this.send_test_email()
+				.then(() => {
+					this.$bvToast.toast('Email Sent!',{
+						title: `Variant`,
+						toaster: '',
+						solid: true
+					});
+					this.sending = false;
+				})
+				.catch(( err ) => {
+					this.$bvToast.toast(err, {
+						title: '',
+						toaster: '',
+						solid: true
+					});
+					this.sending = true;
+					throw new Error(err);
+				})
 			// Send the test email
-			api.send_test_email(test_email_request)
-				.success(function (data) {
-					$("#sendTestEmailModal\\.flashes").empty().append("<div style=\"text-align:center\" class=\"alert alert-success\">\
-            <i class=\"fa fa-check-circle\"></i> Email Sent!</div>")
-					$("#sendTestModalSubmit").html(btnHtml)
-				})
-				.error(function (data) {
-					$("#sendTestEmailModal\\.flashes").empty().append("<div style=\"text-align:center\" class=\"alert alert-danger\">\
-            <i class=\"fa fa-exclamation-circle\"></i> " + data.responseJSON.message + "</div>")
-					$("#sendTestModalSubmit").html(btnHtml)
-				})
+			// api.send_test_email(test_email_request)
+			// 	.success(function (data) {
+			// 		$("#sendTestEmailModal\\.flashes").empty().append("<div style=\"text-align:center\" class=\"alert alert-success\">\
+      //       <i class=\"fa fa-check-circle\"></i> Email Sent!</div>")
+			// 		$("#sendTestModalSubmit").html(btnHtml)
+			// 	})
+			// 	.error(function (data) {
+			// 		$("#sendTestEmailModal\\.flashes").empty().append("<div style=\"text-align:center\" class=\"alert alert-danger\">\
+      //       <i class=\"fa fa-exclamation-circle\"></i> " + data.responseJSON.message + "</div>")
+			// 		$("#sendTestModalSubmit").html(btnHtml)
+			// 	})
+		},
+		send_test_email(){
+			return new Promise((resolve, reject) => {
+				if (Math.random() < 0.6){
+					resolve();
+				}else{
+					reject();
+				}
+			});
 		}
 	}
 }
