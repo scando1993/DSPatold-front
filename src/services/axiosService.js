@@ -24,7 +24,7 @@ securedAxiosInstance.interceptors.request.use((_config) => {
 	if (method !== "OPTIONS" && method !== "GET") {
 		_config.headers = {
 			..._config.headers,
-			"X-CSRF-TOKEN": localStorage.getItem('X-CSRF-TOKEN'),
+			"Authorization": localStorage.getItem('Authorization'),
 		};
 	}
 	return _config;
@@ -38,17 +38,17 @@ securedAxiosInstance.interceptors.response.use(null, (error) => {
 	) {
 		// If 401 by expired access cookie, we do a refresh request
 		return plainAxiosInstance
-			.post("/refresh", {}, {headers: {"X-CSRF-TOKEN": localStorage.csrf}})
+			.post("/refresh", {}, {headers: {"Authorization": localStorage.csrf}})
 			.then((response) => {
-				localStorage.setItem('X-CSRF-TOKEN', response.data.csrf)
+				localStorage.setItem('Authorization', response.data.csrf)
 				localStorage.setItem('signedIn', true);
 				// After another successfull refresh - repeat original request
 				let retryConfig = error.response.config;
-				retryConfig.headers["X-CSRF-TOKEN"] = localStorage.csrf;
+				retryConfig.headers["Authorization"] = localStorage.csrf;
 				return plainAxiosInstance.request(retryConfig);
 			})
 			.catch((error) => {
-				localStorage.removeItem('X-CSRF-TOKEN')
+				localStorage.removeItem('Authorization')
 				localStorage.removeItem('signedIn')
 				// redirect to signin if refresh fails
 				window.location.replace("/login");

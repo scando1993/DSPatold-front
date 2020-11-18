@@ -58,7 +58,7 @@
 					<li class="Ul_li--hover">
 						<div>
 							<a tag="a" class="has-arrow " href="#" :class="{ active: selectedParentMenu === 'users' }">
-								<router-link tag="div" to="/app/reports">
+								<router-link tag="div" to="/app/users">
 									<i class="i-Statistic text-20 mr-2"/>
 <!--									<img src="@/assets/images/svg/reportes.svg" class="text-20 mr-2 icon-sidebar"/>-->
 									<span class="text-15" :class="{ 'vertical-item-name': getVerticalCompact.isItemName }">Users & Groups</span>

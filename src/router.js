@@ -42,8 +42,8 @@ const routes = [
         component: () => import("./views/app/users"), //users
         children: [
           {
-            path: "dashboard.v1",
-            component: () => import("./views/app/dashboards/dashboard.v1")
+            path: "",
+            component: () => import("./views/app/users/users_groups.refactor")
           },
         ]
       },

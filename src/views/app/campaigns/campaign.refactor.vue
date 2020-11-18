@@ -73,7 +73,7 @@
 								id="input-2"
 								v-model="form.emailTemplate"
 								:options="emails"
-								class="style-chooser"
+								class="style-chooser-1"
 								placeholder="Select a Template"
 						/>
 					</b-form-group>
@@ -144,8 +144,8 @@
 							</b-col>
 							<b-col cols="3" >
 								<b-button size="sm" type="secundary" v-b-modal:campaign-2 class="input-group-btn">
-									<i class="i-Envelope" v-if="!sending"></i> Send Test Email
-									<i class="spinner-icon" v-else></i>Sending...
+									<i class="i-Envelope" v-if="!sending">Send Test Email</i>
+									<i class="spinner-icon" v-else>Sending...</i>
 								</b-button>
 							</b-col>
 						</b-row>
@@ -397,15 +397,15 @@ export default {
 				.then(() => {
 					this.$bvToast.toast('Email Sent!',{
 						title: `Variant`,
-						toaster: '',
+						toaster: 'test',
 						solid: true
 					});
 					this.sending = false;
 				})
 				.catch(( err ) => {
-					this.$bvToast.toast(err, {
-						title: '',
-						toaster: '',
+					this.$bvToast.toast('err', {
+						title: 'test',
+						toaster: 'test',
 						solid: true
 					});
 					this.sending = true;
