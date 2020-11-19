@@ -71,7 +71,7 @@
 					<li class="Ul_li--hover mb-2">
 						<div>
 							<a class="has-arrow " href="#" :class="{ active: selectedParentMenu === 'templates' }">
-								<router-link tag="div" to="#">
+								<router-link tag="div" to="/app/templates">
 									<i class="i-Bell text-20 mr-2"></i>
 <!--									<img src="@/assets/images/svg/notificaciones.svg" class="text-20 mr-2 icon-sidebar"/>-->
 									<span class="text-15" :class="{ 'vertical-item-name': getVerticalCompact.isItemName }">Email Templates</span>

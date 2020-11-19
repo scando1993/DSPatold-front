@@ -41,20 +41,20 @@ const routes = [
         path: "/app/users",
         component: () => import("./views/app/users"), //users
         children: [
-          {
-            path: "",
-            component: () => import("./views/app/users/users_groups.refactor")
-          },
+            //  path: "",
+            //component: () => import("./views/app/users/users_groups.refactor")
+         
         ]
       },
       {
         path: "/app/templates",
+        name: "templates",
         component: () => import("./views/app/templates"), //templates
         children: [
-          {
-            path: "dashboard.v1",
-            component: () => import("./views/app/dashboards/dashboard.v1")
-          },
+          //{
+           // path: "dashboard.v1",
+          //  component: () => import("./views/app/dashboards/dashboard.v1")
+        //  },
         ]
       },
       {
