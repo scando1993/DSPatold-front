@@ -24,6 +24,7 @@
 							<b-form-input
 								id="input-1"
 								required
+								v-model="modalForm.f_name"
 								placeholder="Template name"
 							></b-form-input>
 						</b-form-group>
@@ -37,6 +38,7 @@
 							<b-form-input
 								id="input-2"
 								required
+								v-model="modalForm.f_email_subjet"
 								placeholder="Email Subject"
 							></b-form-input>
 						</b-form-group>
@@ -47,7 +49,7 @@
 									<div>
 										<b-form-textarea	
 										id="textarea"
-										
+										v-model="modalForm.f_textArea1"
 										placeholder="Enter something..."
 										rows="8"
 										
@@ -71,91 +73,74 @@
 						<div>
 							<b-form-checkbox
 								id="checkbox-1"
-								v-model="status"
+								v-model="modalForm.status1"
 								name="checkbox-1"
 								value="accepted"
 								unchecked-value="not_accepted"
 								>
 								Add Tracking Image
 							</b-form-checkbox>
-							 <div>State: <strong>{{ status }}</strong></div>
+							
 						</div>
+
 
 						<div>
-							<b-button class="btn btn-file btn-danger  mt-3">Add files
-								<input id="attachmentUpload" type="file" onchange="attach(this.files)" multiple="">
-							</b-button>
-					
+							<b-form-file v-model="file" class="mt-3" browse-text="'Add File'" plain @input="addItemTable(file)" ></b-form-file>
 						</div>
 
-						<div id="attachmentsTable_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
-							
-							<div class="row">
-							
-								<div class="col-sm-6">
-									<div class="dataTables_length" id="attachmentsTable_length">
+						
+						<div class="row">
+						
+							<div class="col-sm-6">
+								<div class="dataTables_length" id="attachmentsTable_length">
 
-										<label>Show 
-											<select name="attachmentsTable_length" aria-controls="attachmentsTable" class="form-control input-sm">
-												<option value="10">10</option>
-												<option value="25">25</option>
-												<option value="50">50</option>
-												<option value="100">100</option>
-											</select> entries
-										</label>
-									</div>
-								</div>
-
-								<div class="col-sm-6">
-									<div id="attachmentsTable_filter" class="dataTables_filter">
-										<label>Search:
-											<input type="search" class="form-control input-sm" placeholder="" aria-controls="attachmentsTable">
-										</label>
-									</div>
+									<label>Show 
+										<b-form-select v-model="perPage" :options="options"></b-form-select>
+										 entries
+									</label>
 								</div>
 							</div>
 
-							<div class="row">
-								<div class="col-sm-12">
-									<table id="attachmentsTable" class="table no-footer dataTable" role="grid" aria-describedby="attachmentsTable_info" style="width: 0px;">
-										<thead>
-											<tr role="row">
-												<th class="col-md-1 no-sort sorting_disabled" rowspan="1" colspan="1" aria-label="" style="width: 0px;"></th>
-												<th class="col-md-10 sorting_asc" tabindex="0" aria-controls="attachmentsTable" rowspan="1" colspan="1" aria-label="Name: activate to sort column descending" style="width: 0px;" aria-sort="ascending">Name</th>
-												<th class="col-md-1 no-sort sorting_disabled" rowspan="1" colspan="1" aria-label="" style="width: 0px;"></th>
-												<th class="datatable_hidden no-sort sorting_disabled" rowspan="1" colspan="1" aria-label="Content" style="width: 0px;">Content</th>
-												<th class="datatable_hidden no-sort sorting_disabled" rowspan="1" colspan="1" aria-label="Type" style="width: 0px;">Type</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr class="odd">
-												<td valign="top" colspan="3" class="dataTables_empty">No data available in table</td>
-											</tr>
-										</tbody>
-									</table>
+							<div class="col-sm-6">
+								<div id="attachmentsTable_filter" class="dataTables_filter">
+									<label>Search:
+										<input type="search" class="form-control input-sm" placeholder="" aria-controls="table">
+									</label>
 								</div>
 							</div>
-
-
-							<div class="row">
-								<div class="col-sm-5">
-									<div class="dataTables_info" id="attachmentsTable_info" role="status" aria-live="polite">Showing 0 to 0 of 0 entries</div>
-								</div>
-								<div class="col-sm-7">
-									<div class="dataTables_paginate paging_simple_numbers" id="attachmentsTable_paginate">
-										<ul class="pagination">
-											<li class="paginate_button previous disabled" id="attachmentsTable_previous">
-												<a href="#" aria-controls="attachmentsTable" data-dt-idx="0" tabindex="0">Previous</a>
-											</li>
-											<li class="paginate_button next disabled" id="attachmentsTable_next">
-												<a href="#" aria-controls="attachmentsTable" data-dt-idx="1" tabindex="0">Next</a>
-											</li>
-										</ul>
-									</div>
-								</div>
-							</div>
-
 						</div>
+
+						<div class="row">
+							<div class="col-sm-12">
+								<div>
+									<b-table small :fields="fields" :items="modalForm.items" 
+									responsive="sm" 
+									id="table1"  
+									sticky-header="true"
+									:current-page="currentPage"
+									:per-page="perPage">
+										<template #cell()="data">
+											<i>{{ data.value }}</i>
+										</template>
+									</b-table>
+								</div>
+							</div>
+						</div>
+
+
+						<div class="row">
+							<b-pagination
+								v-model="currentPage"
+								:total-rows="modalForm.items.length"
+								:per-page="perPage"
+								prev-text="Prev"
+								next-text="Next"
+								aria-controls="table1"
+								
+							></b-pagination>
+						</div>
+
+						
 
 						<div class="modal-footer">
 							<b-button size="sm" variant="danger" @click="cancel()">
@@ -182,7 +167,7 @@
 						<div>
 							<b-form-checkbox 
 								id="checkbox-2"
-								v-model="status"
+								v-model="modalForm.status2"
 								name="checkbox-2"
 								value="accepted"
 								unchecked-value="not_accepted"
@@ -207,14 +192,41 @@
 import moment from 'moment';
 
 export default {
-	metaInfo: {
-		title: "Templates"
-	},
 	name: "template",
 	data() {
 		return {
-			status:'accepted',
+			
+			file: null,
+			fields: ['name',
+			'type',
+			],
+			perPage: 5,
+			currentPage: 1,
+			selected: null,
+			options: [5, 10, 20, 50],
+
+			modalForm:{
+				f_name:'',
+				f_email_subjet:'',
+				f_textArea1:'',
+				status:'accepted',
+				status2:'accepted',
+				items:[]
+				
+
+
+			}
+			
+			
 		}
+	},
+	methods:{
+		addItemTable(file){
+			this.modalForm.items.push({name: file.name, type: file.type});
+			console.log(this.modalForm)
+			
+			
+        }
 	}
 }
 </script>
