@@ -6,7 +6,7 @@
 
 		<div id="flashes" class="row"></div>
 		<div class="row">
-			<b-button variant="primary" @click="$bvModal.show('modalTemplate-1')"
+			<b-button variant="primary" @click="$bvModal.show('modalTemplate_1')"
 			>+ New Template</b-button
 			>
 		</div>
@@ -17,13 +17,14 @@
 		</div>
 						--modal--	
 		<div>
-			<b-modal id="modalTemplate-1" hide-footer title="New Template">
+			<b-modal id="modalTemplate_1" hide-footer title="New Template">
 				<b-container fluid>
-					<b-form id="form-1" >
-						<b-form-group id="input-group-1" label="Name:" label-for="input-1">
+					<form id="form-1" ref="form" >
+						<b-form-group id="input-group-1" label="Name:" label-for="input-1" :state="nameState" invalid-feedback="Name is required">
 							<b-form-input
 								id="input-1"
 								required
+								:state="nameState"
 								v-model="modalForm.f_name"
 								placeholder="Template name"
 							></b-form-input>
@@ -33,42 +34,47 @@
 							<button class="btn btn-danger mt-3" @click="$bvModal.show('importEmailModal')">Import Email</button>
 						</div>
 
-						<b-form-group id="input-group-2" label="Subject:" label-for="input-1">
+						<b-form-group id="input-group-2" label="Subject:" label-for="textarea" :state="textArea1State" invalid-feedback="Need to specify at least plaintext or HTML content">
 
 							<b-form-input
 								id="input-2"
-								required
 								v-model="modalForm.f_email_subjet"
 								placeholder="Email Subject"
 							></b-form-input>
-						</b-form-group>
+						
 
-						<div>
-							<b-tabs content-class="mt-3">
-								<b-tab title="Text" active>
-									<div>
-										<b-form-textarea	
-										id="textarea"
-										v-model="modalForm.f_textArea1"
-										placeholder="Enter something..."
-										rows="8"
+							<div>
+								<b-tabs content-class="mt-3">
+									<b-tab title="Text" active >
+										<div>
+											<b-form-textarea	
+											id="textarea"
+											required
+											:state="textArea1State"
+											v-model="modalForm.f_textArea1"
+											placeholder="Enter something..."
+											rows="8"
+											
+											></b-form-textarea>
+										</div>
 										
-										></b-form-textarea>
-									</div>
+									</b-tab>
+									<b-tab title="HTML">
+										<div>
+											<quill-editor
+												ref="myQuillEditor"
+												v-model="modalForm.f_contentEditor"
+												:options="editorOption"
+												@blur="onEditorBlur($event)"
+												@focus="onEditorFocus($event)"
+												@ready="onEditorReady($event)"
+											/>
+										</div>
+									</b-tab>
 									
-								</b-tab>
-								<b-tab title="HTML">
-									<div>
-										<b-form-textarea	
-										id="html_editor"
-										rows="8"
-										
-										></b-form-textarea>
-									</div>
-								</b-tab>
-								
-							</b-tabs>
-						</div>
+								</b-tabs>
+							</div>
+						</b-form-group>
 
 						<div>
 							<b-form-checkbox
@@ -143,13 +149,11 @@
 						
 
 						<div class="modal-footer">
-							<b-button size="sm" variant="danger" @click="cancel()">
-							Cancel
-							</b-button>
+							<button type="button" data-dismiss="modal" class="btn btn-default" @click="closeModal('modalTemplate_1')">Cancel</button>
 
-							<button type="button" class="btn btn-primary" id="modalSubmit">Save Template</button>
+							<button type="button" class="btn btn-primary" id="modalSubmitt" @click.stop.prevent="handleSubmit('modalTemplate_1')" >Save Template</button>
 						</div>
-					</b-form>
+					</form>
 				</b-container>
 			</b-modal>
 
@@ -162,7 +166,7 @@
 						<div class="row" id="modal.flashes"></div>
 						<label class="control-label" for="email">Email Content:</label>
 						<div class="form-group">
-							<textarea rows="10" id="email_content" class="gophish-editor form-control" placeholder="Raw Email Source"></textarea>
+							<textarea rows="10" id="email_content" v-model="txtA2" class="form-control" placeholder="Raw Email Source"></textarea>
 						</div>
 						<div>
 							<b-form-checkbox 
@@ -178,21 +182,52 @@
 						
 					</div>
 					<div class="modal-footer">
-						<button type="button" data-dismiss="modal" class="btn btn-default">Cancel</button>
-						<button type="button" class="btn btn-primary" id="modalSubmit" onclick="importEmail()">Import</button>
+						<button type="button" data-dismiss="modal" class="btn btn-default" @click="closeModal('importEmailModal')">Cancel</button>
+						<button type="button" class="btn btn-primary" id="modalSubmit" @click="importEmail('importEmailModal')">Import</button>
 					</div>
 				
 				</b-container>
 			</b-modal>
+
+			//modal2
+
+
 		</div>
+
+
+		<div>
+			<b-table small :fields="fieldsp" :items="modalForm.itemsp" 
+			responsive="sm" 
+			id="tablep"  
+			sticky-header="true"
+			:current-page="currentPagep"
+			:per-page="perPagep">
+				<template #cell()="data">
+					<i>{{ data.value }}</i>
+				</template>
+			</b-table>
+		</div>
+
+
 	</div>
 </template>
 
 <script>
-import moment from 'moment';
+
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+
+import { quillEditor } from 'vue-quill-editor'
+import Quill from 'quill'
+
+
 
 export default {
 	name: "template",
+	components: {
+    quillEditor
+  	},
 	data() {
 		return {
 			
@@ -200,16 +235,30 @@ export default {
 			fields: ['name',
 			'type',
 			],
+			txtA2:'',
 			perPage: 5,
 			currentPage: 1,
 			selected: null,
 			options: [5, 10, 20, 50],
+			itemsp:[],
+			perPagep: 5,
+			currentPagep: 1,
+			fields: 
+			[
+			'name',
+			'modified_day',
+			],
+			nameState: null,
+			textArea1State:null,
+
 
 			modalForm:{
 				f_name:'',
 				f_email_subjet:'',
 				f_textArea1:'',
-				status:'accepted',
+				f_textArea2:'',
+				f_contentEditor:'',
+				status1:'accepted',
 				status2:'accepted',
 				items:[]
 				
@@ -224,9 +273,63 @@ export default {
 		addItemTable(file){
 			this.modalForm.items.push({name: file.name, type: file.type});
 			console.log(this.modalForm)
+		},
+		importEmail(id){
+			this.modalForm.f_textArea2=this.txtA2;
+			closeModal(id);
 			
+		},
+		closeModal(id){
+			this.$bvModal.hide(id)
+		},
+		acep(id){
+			this.closeModal(id);	
+		},
+		checkFormValidity() {
 			
-        }
+			const valid = this.$refs.form.checkValidity()
+			
+			this.nameState = this.modalForm.f_name!==''
+			this.textArea1State = this.modalForm.f_textArea1 !==''
+			
+			return valid && this.textArea1State
+		},
+
+		handleSubmit(id) {
+			
+			// Exit when the form isn't valid
+			if (!this.checkFormValidity()) {
+			return
+			}
+			else{
+				this.acep(id);
+			}
+			
+		},
+		
+		
+		
+		onEditorBlur(quill) {
+        	console.log('editor blur!', quill)
+		},
+		onEditorFocus(quill) {
+			console.log('editor focus!', quill)
+		},
+		onEditorReady(quill) {
+			console.log('editor ready!', quill)
+		},
+		onEditorChange({ quill, html, text }) {
+			console.log('editor change!', quill, html, text)
+			this.content = html
+		}
+	},
+	computed: {
+		editor() {
+			return this.$refs.myQuillEditor.quill
+		}
+	},
+	mounted() {
+		console.log('this is current quill instance object', this.editor)
 	}
 }
 </script>
