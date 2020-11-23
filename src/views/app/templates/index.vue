@@ -3,6 +3,7 @@
 		<div class="row">
 			<h1 class="page-header">Email Templates</h1>
 		</div>
+		
 
 		<div id="flashes" class="row"></div>
 		<div class="row">
@@ -15,7 +16,7 @@
 		<div id="emptyMessage" class="row" style="display: none">
 			<div class="alert alert-info">No templates yet. Let's create one!</div>
 		</div>
-						--modal--	
+							
 		<div>
 			<b-modal id="modalTemplate_1" hide-footer title="New Template">
 				<b-container fluid>
@@ -157,54 +158,63 @@
 				</b-container>
 			</b-modal>
 
-	//modal template-1 
+	      
 
 
 			<b-modal id="importEmailModal" hide-footer title="Import Email">
 				<b-container fluid>
-					<div class="modal-body">
-						<div class="row" id="modal.flashes"></div>
-						<label class="control-label" for="email">Email Content:</label>
-						<div class="form-group">
-							<textarea rows="10" id="email_content" v-model="txtA2" class="form-control" placeholder="Raw Email Source"></textarea>
-						</div>
-						<div>
-							<b-form-checkbox 
-								id="checkbox-2"
-								v-model="modalForm.status2"
-								name="checkbox-2"
-								value="accepted"
-								unchecked-value="not_accepted"
-								>
-								Change Links to Point to Landing Page
-							</b-form-checkbox>
-						</div>
-						
-					</div>
-					<div class="modal-footer">
-						<button type="button" data-dismiss="modal" class="btn btn-default" @click="closeModal('importEmailModal')">Cancel</button>
-						<button type="button" class="btn btn-primary" id="modalSubmit" @click="importEmail('importEmailModal')">Import</button>
-					</div>
+					<form id="form-2" ref="form2" >
+						<b-form-group id="input-group-2" label="Email Content:" label-for="email_content" :state="textArea2State" invalid-feedback="Email Content is required">
+							<div>
+								<textarea rows="10" id="email_content" required
+									:state="textArea2State" v-model="txtA2" class="form-control" placeholder="Raw Email Source"></textarea>
+							</div>
+							<div>
+								<b-form-checkbox 
+									id="checkbox-2"
+									v-model="modalForm.status2"
+									name="checkbox-2"
+									value="accepted"
+									unchecked-value="not_accepted"
+									>
+									Change Links to Point to Landing Page
+								</b-form-checkbox>
+							</div>
+								
+							
+							<div class="modal-footer">
+								<button type="button" data-dismiss="modal" class="btn btn-default" @click="closeModal('importEmailModal')">Cancel</button>
+								<button type="button" class="btn btn-primary" id="modalSubmit" @click.stop.prevent="handleSubmit2('importEmailModal')">Import</button>
+							</div>
+						</b-form-group>
+					</form>
 				
 				</b-container>
 			</b-modal>
 
-			//modal2
+		
 
 
 		</div>
 
 
 		<div>
-			<b-table small :fields="fieldsp" :items="modalForm.itemsp" 
+			<b-table small :fields="fieldsp" :items="dataTemplate" 
 			responsive="sm" 
 			id="tablep"  
 			sticky-header="true"
 			:current-page="currentPagep"
 			:per-page="perPagep">
-				<template #cell()="data">
-					<i>{{ data.value }}</i>
+				<template #cell(nameage)="data">
+					{{ data.dataTemplate.name }} 
 				</template>
+				<template #cell(imputDate)="data">
+					{{ data.dataTemplate.modified_day }} 
+				</template>
+
+				
+
+				
 			</b-table>
 		</div>
 
@@ -220,6 +230,7 @@ import 'quill/dist/quill.bubble.css'
 
 import { quillEditor } from 'vue-quill-editor'
 import Quill from 'quill'
+import moment from 'moment'
 
 
 
@@ -230,6 +241,10 @@ export default {
   	},
 	data() {
 		return {
+			content: '',
+        	editorOption: {
+          // Some Quill options...
+        	},
 			
 			file: null,
 			fields: ['name',
@@ -243,13 +258,16 @@ export default {
 			itemsp:[],
 			perPagep: 5,
 			currentPagep: 1,
-			fields: 
+			fieldsp: 
 			[
 			'name',
 			'modified_day',
 			],
 			nameState: null,
 			textArea1State:null,
+			textArea2State:null,
+			dataTemplate:[],
+			
 
 
 			modalForm:{
@@ -260,7 +278,10 @@ export default {
 				f_contentEditor:'',
 				status1:'accepted',
 				status2:'accepted',
-				items:[]
+				items:[],
+				now: moment((new Date()).toISOString()).format('YYYY-MM-DD')
+			
+				
 				
 
 
@@ -276,13 +297,29 @@ export default {
 		},
 		importEmail(id){
 			this.modalForm.f_textArea2=this.txtA2;
-			closeModal(id);
+			this.closeModal(id);
 			
 		},
 		closeModal(id){
 			this.$bvModal.hide(id)
 		},
 		acep(id){
+
+			this.dataTemplate.push({
+				name: this.modalForm.f_name,
+				modified_day: this.modalForm.now,
+				f_email_subjet:this.modalForm.f_email_subjet,
+				f_textArea1:this.modalForm.f_textArea1,
+				f_textArea2:this.modalForm.f_textArea2,
+				f_contentEditor:this.modalForm.f_contentEditor,
+				status1:this.modalForm.status1,
+				status2:this.modalForm.status2,
+				items:this.modalForm.items
+			});
+			
+			
+			console.log(this.dataTemplate);
+			console.log(this.modalForm);
 			this.closeModal(id);	
 		},
 		checkFormValidity() {
@@ -293,6 +330,15 @@ export default {
 			this.textArea1State = this.modalForm.f_textArea1 !==''
 			
 			return valid && this.textArea1State
+		},
+		checkFormValidity2() {
+			
+			const valid = this.$refs.form2.checkValidity()
+			
+			
+			this.textArea2State = valid
+			
+			return valid
 		},
 
 		handleSubmit(id) {
@@ -306,15 +352,22 @@ export default {
 			}
 			
 		},
-		
-		
-		
-		onEditorBlur(quill) {
-        	console.log('editor blur!', quill)
+
+		handleSubmit2(id) {
+			
+			// Exit when the form isn't valid
+			if (!this.checkFormValidity2()) {
+			return
+			}
+			else{
+				this.importEmail(id);
+			}
+			
 		},
-		onEditorFocus(quill) {
-			console.log('editor focus!', quill)
-		},
+		
+		
+		
+		
 		onEditorReady(quill) {
 			console.log('editor ready!', quill)
 		},
