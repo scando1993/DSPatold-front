@@ -8,7 +8,7 @@
 
 		<div id="flashes" class="row"></div>
 		<div class="row">
-			<b-button variant="primary" @click="$bvModal.show('modalTemplate-1')">+ New Profile</b-button>
+			<b-button variant="primary" @click="$bvModal.show('modalprofile_1')">+ New Profile</b-button>
 			
 		</div>
 		&nbsp;
@@ -19,6 +19,289 @@
 			</div>
 		</div>
 
+		<div>
+			<b-modal id="modalprofile_1" hide-footer title="New Sending Profile">
+				<b-container fluid>
+					<form id="form-1" ref="form" >
+						<b-form-group id="input-group-1" label="Name:" label-for="input-1" :state="nameState" invalid-feedback="Name is required">
+							<b-form-input
+								id="input-1"
+								required
+								:state="nameState"
+								v-model="modalForm.f_name"
+								placeholder="Profile name"
+							></b-form-input>
+						</b-form-group>
+
+						<b-form-group id="input-group-2" label="Interface Type:" :state="interfaceState">
+							<b-form-input
+								id="input-2"
+								
+								:state="interfaceState"
+								v-model="modalForm.f_interface"
+								
+							>SMTP</b-form-input>
+						</b-form-group>
+						
+						<b-form-group id="input-group-3" label="From:" label-for="input-3" :state="fromState" invalid-feedback="Name is required">
+							<b-form-input
+								id="input-3"
+								required
+								:state="fromState"
+								v-model="modalForm.f_from"
+								placeholder="First Last <test@example.com>"
+							></b-form-input>
+						</b-form-group>
+
+						<b-form-group id="input-group-4" label="From:" label-for="input-4" :state="hostState" invalid-feedback="Name is required">
+							<b-form-input
+								id="input-4"
+								required
+								:state="hostState"
+								v-model="modalForm.f_host"
+								placeholder="smtp.example.com:25"
+							></b-form-input>
+						</b-form-group>
+
+						<b-form-group id="input-group-5" label="Username:" label-for="input-5" :state="userNameState" invalid-feedback="Name is required">
+							<b-form-input
+								id="input-5"
+								required
+								:state="userNameState"
+								v-model="modalForm.f_userName"
+								placeholder="Username"
+							></b-form-input>
+						</b-form-group>
+
+
+						<b-form-group id="input-group-6" label="Password:" label-for="input-6" :state="passwordState" invalid-feedback="Name is required">
+							<b-form-input
+								id="input-6"
+								required
+								:state="passwordState"
+								v-model="modalForm.f_password"
+								placeholder="Password"
+							></b-form-input>
+						</b-form-group>
+
+						<div>
+							<b-form-checkbox
+								id="checkbox1"
+								v-model="modalForm.status_checkbox1"
+								name="checkbox1"
+								value="accepted"
+								unchecked-value="not_accepted"
+								>
+								Ignore Certificate Errors 
+							</b-form-checkbox>
+						</div>
+
+						<b-container class="bv-example-row" >
+  							
+								
+							<b-form-group id="input-group-6" :state="customHeaderState" invalid-feedback="Name is required">
+								<fieldset>
+									<b-row>
+										<b-col>
+											<b-form-input
+												id="input-6a"
+												required
+												:state="customHeaderState"
+												v-model="modalForm.f_customHeader"
+												placeholder="X-Custom-Header"
+											></b-form-input>
+										</b-col>
+
+										<b-col>
+											<b-form-input
+												id="input-6b"
+												required
+												:state="urlGoState"
+												v-model="modalForm.f_urlGo"
+												placeholder="Url}}-gophisp"
+											></b-form-input>
+										</b-col>
+
+
+										<b-col>
+											<b-button variant="danger" @click="$bvModal.show('modalprofile_1')">+ Add Custom Header</b-button>
+		
+										</b-col>
+									</b-row>
+								</fieldset>
+
+							</b-form-group>
+							
+							
+							<div class="row">
+					
+								<div class="col-sm-6">
+									<label>Show<b-form-select v-model="perPage" :options="options"></b-form-select>
+										entries
+									</label>
+								</div>
+
+								<div class="col-sm-6">
+									<label>Search:
+										<input type="search" class="form-control input-sm" placeholder="">
+									</label>
+								</div>
+							</div>
+
+							<div>
+								<b-table small :fields="fields" :items="dataTemplate" 
+								responsive="sm" 
+								id="table"  
+								sticky-header="true"
+								:current-page="currentPage"
+								:per-page="perPage">
+									<template #cell(nameage)="data">
+										{{ data.dataTemplate.name }} 
+									</template>
+									<template #cell(imputDate)="data">
+										{{ data.dataTemplate.modified_day }} 
+									</template>
+
+									
+
+									
+								</b-table>
+							</div>
+
+							<div class="row">
+								<b-pagination
+									v-model="currentPage"
+									:total-rows=50
+									:per-page="perPage"
+									prev-text="Prev"
+									next-text="Next"
+									aria-controls="table"
+									
+								></b-pagination>
+							</div>
+
+
+							<div>
+								<b-button variant="success" @click="$bvModal.show('modalprofile_1')">+ Add Custom Header</b-button>
+
+							</div>
+
+			
+
+							<div class="modal-footer">
+								<button type="button" data-dismiss="modal" class="btn btn-default" @click="closeModal('modalTemplate_1')">Cancel</button>
+
+								<button type="button" class="btn btn-primary" id="modalSubmitt" @click.stop.prevent="handleSubmit('modalTemplate_1')" >Save Template</button>
+							</div>
+													
+												
+
+						</b-container>
+
+						
+					</form>
+				</b-container>
+			</b-modal>
+		</div>
+
 	</div>
 
 </template>
+
+
+
+<script>
+
+
+import moment from 'moment'
+
+
+
+export default {
+	name: "sending",
+	components: {
+  	},
+	data() {
+		return {
+			
+			fields: ['header',
+			'value',
+			],
+			txtA2:'',
+			perPage: 5,
+			currentPage: 1,
+			selected: null,
+			options: [5, 10, 20, 50],
+			nameState: null,
+			userNameState:null,
+			passwordState:null,
+			interfaceState:null,
+			fromState:null,
+			hostState:null,
+			modalForm:{
+				f_name:'',
+				f_userName:'',
+				f_password:'',
+				f_interface:'',
+				f_from:'',
+				f_host:'',
+				status_checkbox1:'accepted',
+				now: moment((new Date()).toISOString()).format('YYYY-MM-DD')
+			
+				
+				
+
+
+			}
+			
+			
+		}
+	},
+	methods:{
+		closeModal(id){
+			this.$bvModal.hide(id)
+		},
+		acep(id){
+
+			this.dataTemplate.push({
+				name: this.modalForm.f_name,
+				modified_day: this.modalForm.now,
+				f_email_subjet:this.modalForm.f_email_subjet,
+				f_textArea1:this.modalForm.f_textArea1,
+				f_textArea2:this.modalForm.f_textArea2,
+				f_contentEditor:this.modalForm.f_contentEditor,
+				status1:this.modalForm.status1,
+				status2:this.modalForm.status2,
+				items:this.modalForm.items
+			});
+			
+			
+			console.log(this.dataTemplate);
+			console.log(this.modalForm);
+			this.closeModal(id);	
+		},
+		checkFormValidity() {
+			
+			const valid = this.$refs.form.checkValidity()
+			
+			this.nameState = this.modalForm.f_name!==''
+			this.textArea1State = this.modalForm.f_textArea1 !==''
+			
+			return valid && this.textArea1State
+		},
+		
+		handleSubmit(id) {
+			
+			// Exit when the form isn't valid
+			if (!this.checkFormValidity()) {
+			return
+			}
+			else{
+				this.acep(id);
+			}
+			
+		},
+
+			}
+}
+</script>
