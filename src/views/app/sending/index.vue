@@ -189,9 +189,9 @@
 			
 
 							<div class="modal-footer">
-								<button type="button" data-dismiss="modal" class="btn btn-default" @click="closeModal('modalTemplate_1')">Cancel</button>
+								<button type="button" data-dismiss="modal" class="btn btn-default" @click="closeModal('modalprofile_1')">Cancel</button>
 
-								<button type="button" class="btn btn-primary" id="modalSubmitt" @click.stop.prevent="handleSubmit('modalTemplate_1')" >Save Template</button>
+								<button type="button" class="btn btn-primary" id="modalSubmitt" @click.stop.prevent="handleSubmit('modalprofile_1')" >Save Profile</button>
 							</div>
 													
 												
@@ -273,6 +273,29 @@
 			</b-modal>
 		</div>
 
+		<div>
+			<b-table small :fields="fieldsp" :items="dataProfile" 
+			responsive="sm" 
+			id="tablep"  
+			sticky-header="true"
+			:current-page="currentPagep"
+			:per-page="perPagep">
+				<template #cell(nameage)="data">
+					{{ data.dataProfile.name }} 
+				</template>
+				<template #cell(imputInterface)="data">
+					{{ data.dataProfile.interface }} 
+				</template>
+				<template #cell(imputDate)="data">
+					{{ data.dataProfile.modified_day }} 
+				</template>
+
+				
+
+				
+			</b-table>
+		</div>
+
 	</div>
 
 </template>
@@ -296,9 +319,15 @@ export default {
 			fields: ['header',
 			'value',
 			],
+			fieldsp: ['name',
+			'interface',
+			'modified_day'
+			],
 			txtA2:'',
 			perPage: 5,
 			currentPage: 1,
+			perPagep: 5,
+			currentPagep: 1,
 			selected: null,
 			options: [5, 10, 20, 50],
 			nameState: null,
@@ -309,7 +338,7 @@ export default {
 			hostState:null,
 			customHeaderState:null,
 			urlGoState:null,
-			dataTemplate:[],
+			dataProfile:[],
 			testFirstNameState:null,
 			testLastNameState:null,
 			testPositionState:null,
@@ -348,21 +377,28 @@ export default {
 		},
 		acep(id){
 
-			this.dataTemplate.push({
-				name: this.modalForm.f_name,
-				modified_day: this.modalForm.now,
-				f_email_subjet:this.modalForm.f_email_subjet,
-				f_textArea1:this.modalForm.f_textArea1,
-				f_textArea2:this.modalForm.f_textArea2,
-				f_contentEditor:this.modalForm.f_contentEditor,
-				status1:this.modalForm.status1,
-				status2:this.modalForm.status2,
-				items:this.modalForm.items
+			this.dataProfile.push({
+				name:this.modalForm.f_name,
+				userName:this.modalForm.f_userName,
+				password:this.modalForm.f_password,
+				interface:this.modalForm.f_interface,
+				from:this.modalForm.f_from,
+				host:this.modalForm.f_host,
+				items:this.modalForm.f_items,
+				urlGo:this.modalForm.f_urlGo,
+				customHeader:this.modalForm.f_customHeader,
+				status_checkbox1:this.modalForm.status_checkbox1,
+				testPosition:this.modalForm.f_testPosition,
+				testFirstName:this.modalForm.f_testFirstName,
+				testEmail:this.modalForm.f_testEmail,
+				testLastName:this.modalForm.f_testLastName,
+				modified_day:this.modalForm.now
+				
+				
 			});
 			
 			
-			console.log(this.dataTemplate);
-			console.log(this.modalForm);
+			console.log(this.dataProfile);
 			this.closeModal(id);	
 		},
 		checkFormValidity() {
@@ -370,9 +406,14 @@ export default {
 			const valid = this.$refs.form.checkValidity()
 			
 			this.nameState = this.modalForm.f_name!==''
-			this.textArea1State = this.modalForm.f_textArea1 !==''
+			this.userNameState= this.modalForm.f_userName!==''
+			this.passwordState= this.modalForm.f_password!==''
+			this.interfaceState= this.modalForm.f_interface!==''
+			this.fromState= this.modalForm.f_from!==''
+			this.hostState= this.modalForm.f_host!==''
 			
-			return valid && this.textArea1State
+			
+			return valid 
 		},
 		checkFormValidity2() {
 			

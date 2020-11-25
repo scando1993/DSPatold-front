@@ -71,10 +71,10 @@ const routes = [
         path: "/app/sending",
         component: () => import("./views/app/sending"), //sending
         children: [
-          {
-            path: "dashboard.v1",
-            component: () => import("./views/app/dashboards/dashboard.v1")
-          },
+         // {
+          //  path: "dashboard.v1",
+         //   component: () => import("./views/app/dashboards/dashboard.v1")
+         // },
         ]
       },
       {
