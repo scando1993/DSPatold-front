@@ -36,11 +36,11 @@
 						<b-form-group id="input-group-2" label="Interface Type:" :state="interfaceState">
 							<b-form-input
 								id="input-2"
-								
+								:readonly="true"
 								:state="interfaceState"
 								v-model="modalForm.f_interface"
 								
-							>SMTP</b-form-input>
+							></b-form-input>
 						</b-form-group>
 						
 						<b-form-group id="input-group-3" label="From:" label-for="input-3" :state="fromState" invalid-feedback="Name is required">
@@ -98,39 +98,42 @@
 
 						<b-container class="bv-example-row" >
   							
-								
-							<b-form-group id="input-group-6" :state="customHeaderState" invalid-feedback="Name is required">
-								<fieldset>
-									<b-row>
-										<b-col>
+							<form ref="additem">
+								<b-row>
+									<b-col>
+										<b-form-group id="input-group-7a"  label-for="input-7a" :state="customHeaderState" invalid-feedback="Name is reaaaaaquired">
 											<b-form-input
-												id="input-6a"
+												id="input-7a"
 												required
 												:state="customHeaderState"
 												v-model="modalForm.f_customHeader"
 												placeholder="X-Custom-Header"
 											></b-form-input>
-										</b-col>
+										</b-form-group>
+									</b-col>
 
-										<b-col>
+									<b-col>
+										<b-form-group id="input-group-7b" label-for="input-7b" :state="urlGoState" invalid-feedback="Name is rebbbbbquired">
 											<b-form-input
-												id="input-6b"
+												id="input-7b"
 												required
 												:state="urlGoState"
 												v-model="modalForm.f_urlGo"
 												placeholder="Url}}-gophisp"
 											></b-form-input>
-										</b-col>
+										</b-form-group>
+									</b-col>
 
 
-										<b-col>
-											<b-button variant="danger" @click="$bvModal.show('modalprofile_1')">+ Add Custom Header</b-button>
-		
-										</b-col>
-									</b-row>
-								</fieldset>
+									<b-col>
+										<b-button variant="danger" @click.stop.prevent="handleSubmit2">+ Add Custom Header</b-button>
+	
+									</b-col>
+								</b-row>
+									
 
-							</b-form-group>
+								
+							</form>
 							
 							
 							<div class="row">
@@ -149,17 +152,14 @@
 							</div>
 
 							<div>
-								<b-table small :fields="fields" :items="dataTemplate" 
+								<b-table small :fields="fields" :items="this.modalForm.f_items" 
 								responsive="sm" 
 								id="table"  
 								sticky-header="true"
 								:current-page="currentPage"
 								:per-page="perPage">
-									<template #cell(nameage)="data">
-										{{ data.dataTemplate.name }} 
-									</template>
-									<template #cell(imputDate)="data">
-										{{ data.dataTemplate.modified_day }} 
+									<template #cell()="data">
+										<i>{{ data.value }}</i>
 									</template>
 
 									
@@ -171,7 +171,7 @@
 							<div class="row">
 								<b-pagination
 									v-model="currentPage"
-									:total-rows=50
+									:total-rows="modalForm.f_items.length"
 									:per-page="perPage"
 									prev-text="Prev"
 									next-text="Next"
@@ -182,7 +182,7 @@
 
 
 							<div>
-								<b-button variant="success" @click="$bvModal.show('modalprofile_1')">+ Add Custom Header</b-button>
+								<b-button variant="success" @click="$bvModal.show('modalprofile_2')">Send Test Email </b-button>
 
 							</div>
 
@@ -200,6 +200,75 @@
 
 						
 					</form>
+				</b-container>
+			</b-modal>
+		</div>
+
+		<div>
+			<b-modal id="modalprofile_2" hide-footer title="New Sending Profile">
+				<b-container fluid>
+					<form id="form_3" ref="sendTestEmail">
+						<b-row>
+							<b-col>
+								<b-form-group id="input-group-8"  label-for="input-8" :state="testFirstNameState" invalid-feedback="Name is reaaaaaquired">
+									<b-form-input
+										id="input-8"
+										required
+										:state="testFirstNameState"
+										v-model="modalForm.f_testFirstName"
+										placeholder="Fisrt Name"
+									></b-form-input>
+								</b-form-group>
+							</b-col>
+
+							<b-col>
+								<b-form-group id="input-group-9" label-for="input-9" :state="testLastNameState" invalid-feedback="Name is rebbbbbquired">
+									<b-form-input
+										id="input-9"
+										required
+										:state="testLastNameState"
+										v-model="modalForm.f_testLastName"
+										placeholder="Last Name"
+									></b-form-input>
+								</b-form-group>
+							</b-col>
+
+
+							<b-col>
+								<b-form-group id="input-group-10" label-for="input-10" :state="testEmailState" invalid-feedback="Name is rebbbbbquired">
+									<b-form-input
+										id="input-10"
+										required
+										:state="testEmailState"
+										v-model="modalForm.f_testEmail"
+										placeholder="Email"
+									></b-form-input>
+								</b-form-group>
+							</b-col>
+
+							<b-col>
+								<b-form-group id="input-group-11" label-for="input-11" :state="testPositionState" invalid-feedback="Name is rebbbbbquired">
+									<b-form-input
+										id="input-11"
+										required
+										:state="testPositionState"
+										v-model="modalForm.f_testPosition"
+										placeholder="Position"
+									></b-form-input>
+								</b-form-group>
+							</b-col>
+						</b-row>
+
+						<div class="modal-footer">
+								<button type="button" data-dismiss="modal" class="btn btn-default" @click="closeModal('modalTemplate_1')">Cancel</button>
+
+								<button type="button" class="btn btn-primary" id="modalSubmitt" @click.stop.prevent="handleSubmit3('modalprofile_2')" >Save</button>
+						</div>
+							
+
+								
+					</form>
+
 				</b-container>
 			</b-modal>
 		</div>
@@ -238,15 +307,31 @@ export default {
 			interfaceState:null,
 			fromState:null,
 			hostState:null,
+			customHeaderState:null,
+			urlGoState:null,
+			dataTemplate:[],
+			testFirstNameState:null,
+			testLastNameState:null,
+			testPositionState:null,
+			testEmailState:null,
 			modalForm:{
 				f_name:'',
 				f_userName:'',
 				f_password:'',
-				f_interface:'',
+				f_interface:'SMTP',
 				f_from:'',
 				f_host:'',
+				f_items:[],
+				f_urlGo:'',
+				f_customHeader:'',
 				status_checkbox1:'accepted',
-				now: moment((new Date()).toISOString()).format('YYYY-MM-DD')
+				now: moment((new Date()).toISOString()).format('YYYY-MM-DD'),
+				f_testPosition:'',
+				f_testFirstName:'',
+				f_testEmail:'',
+				f_testLastName:''
+				
+
 			
 				
 				
@@ -289,6 +374,30 @@ export default {
 			
 			return valid && this.textArea1State
 		},
+		checkFormValidity2() {
+			
+			const valid = this.$refs.additem.checkValidity()
+			
+			this.customHeaderState = this.modalForm.f_customHeader !==''
+			this.urlGoState = this.modalForm.f_urlGo !==''
+			
+			
+			
+			return valid 
+		},
+
+		checkFormValidity3() {
+			
+			const valid = this.$refs.sendTestEmail.checkValidity()
+
+			this.testFirstNameState = this.modalForm.f_testFirstName !==''
+			this.testLastNameState = this.modalForm.f_testLastName !==''
+			this.testPositionState = this.modalForm.f_testPosition !==''
+			this.testEmailState = this.modalForm.f_testEmail !==''
+			
+			
+			return valid 
+		},
 		
 		handleSubmit(id) {
 			
@@ -301,6 +410,46 @@ export default {
 			}
 			
 		},
+
+		handleSubmit2() {
+			
+			// Exit when the form isn't valid
+			if (!this.checkFormValidity2()) {
+				
+			return
+			}
+			else{
+				
+				this.btn_addHeader();
+			}
+			
+		},
+
+		handleSubmit3(id) {
+			
+			// Exit when the form isn't valid
+			if (!this.checkFormValidity3()) {
+				
+			return
+			}
+			else{
+				
+				this.btn_sendEmail();
+				this.closeModal(id)
+			}
+			
+		},
+		btn_addHeader(){
+			this.modalForm.f_items.push({header:this.modalForm.f_customHeader , value: this.modalForm.f_urlGo});
+			
+		},
+
+		btn_sendEmail(){
+
+			console.log("envia email de prueba")
+
+
+		}
 
 			}
 }
