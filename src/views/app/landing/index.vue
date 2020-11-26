@@ -17,6 +17,47 @@
 			<div class="alert alert-info">No templates yet. Let's create one!</div>
 		</div>
 
+		<div class="row">
+						
+			<div class="col-sm-6">
+				<div class="dataTables_length" >
+
+					<label>Show 
+						<b-form-select v-model="perPage" :options="options"></b-form-select>
+							entries
+					</label>
+				</div>
+			</div>
+
+			<div class="col-sm-6">
+				<div id="attachmentsTable_filter" class="dataTables_filter">
+					<label>Search:
+						<input type="search" class="form-control input-sm" placeholder="" aria-controls="table">
+					</label>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-sm-12">
+				<div>
+					<b-table :fields="fields" :items="dataTemplate" 
+					responsive="sm" 
+					id="table"  
+					sticky-header="true"
+					:current-page="currentPage"
+					:per-page="perPage">
+						<template #cell(nameage)="data">
+							{{ data.dataTemplate.name }} 
+						</template>
+						<template #cell(imputDate)="data">
+							{{ data.dataTemplate.modified_day }} 
+						</template>
+					</b-table>
+				</div>
+			</div>
+		</div>
+
 		<div>
 			<b-modal id="modalLanding_1" hide-footer title="New Landing Page">
 				<b-container fluid>
@@ -130,6 +171,13 @@ export default {
 			urlState:null,
 			dataTemplate:[],
 			url:'',
+			fields: ['name',
+			'modified_day',
+			],
+			perPage: 5,
+			currentPage: 1,
+			selected: null,
+			options: [5, 10, 20, 50],
 			
 
 
