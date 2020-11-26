@@ -41,10 +41,10 @@ const routes = [
         path: "/app/users",
         component: () => import("./views/app/users"), //users
         children: [
-          {
-            path: "",
-            component: () => import("./views/app/users/users_groups.refactor")
-          },
+          //{
+          //  path: "",
+          //  component: () => import("./views/app/users/users_groups.refactor")
+         // },
         ]
       },
       {
