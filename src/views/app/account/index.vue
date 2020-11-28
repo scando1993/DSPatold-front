@@ -141,7 +141,19 @@
 
 
 				</b-tab>
-				<b-tab title="UI Settings"><p>I'm the second tab</p></b-tab>
+				<b-tab title="UI Settings">
+					<b-form-checkbox 
+						id="checkbox-5"
+						v-model="status5"
+						name="checkbox-5"
+						value="accepted"
+						unchecked-value="not_accepted"
+						>Show campaign results map
+						
+					</b-form-checkbox>
+
+
+				</b-tab>
 				<b-tab title="Reporting Settings"><p>I'm a disabled tab!</p></b-tab>
 			</b-tabs>
 		</div>
