@@ -96,8 +96,8 @@
 					<!-- Sending Profiles menu-->
 					<li class="Ul_li--hover">
 						<div>
-							<a class="has-arrow " href="#" :class="{ active: selectedParentMenu === 'profiles' }">
-								<router-link tag="div" to="/app/profiles">
+							<a class="has-arrow " href="#" :class="{ active: selectedParentMenu === 'sending' }">
+								<router-link tag="div" to="/app/sending">
 <!--									<img src="@/assets/images/svg/settings.svg" class="text-20 mr-2 icon-sidebar"/>-->
 									<span class="text-15" :class="{ 'vertical-item-name': getVerticalCompact.isItemName }">Sending Profiles</span>
 								</router-link>
