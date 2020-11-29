@@ -109,8 +109,8 @@
 					<!-- Account Settings menu-->
 					<li class="Ul_li--hover">
 						<div>
-							<a class="has-arrow " href="#" :class="{ active: selectedParentMenu === 'settings' }">
-								<router-link tag="div" to="/app/settings">
+							<a class="has-arrow " href="#" :class="{ active: selectedParentMenu === 'account' }">
+								<router-link tag="div" to="/app/account">
 <!--									<img src="@/assets/images/svg/settings.svg" class="text-20 mr-2 icon-sidebar"/>-->
 									<span class="text-15" :class="{ 'vertical-item-name': getVerticalCompact.isItemName }">Account Settings</span>
 								</router-link>
