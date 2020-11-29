@@ -22,6 +22,13 @@ import VueGoodTablePlugin from "vue-good-table";
 import Meta from "vue-meta";
 import FlagIcon from "vue-flag-icon";
 
+import Breadcumb from "@/components/breadcumb";
+
+import vSelect from 'vue-select'
+import 'vue-select/src/scss/vue-select.scss';
+
+import VueSweetalert2 from "vue-sweetalert2";
+
 import "@/assets/styles/sass/themes/lite-blue.scss";
 
 Vue.config.productionTip = false
@@ -32,7 +39,10 @@ Vue.config.productionTip = false
 // })
 
 Vue.use(BootstrapVue);
+Vue.use(VueSweetalert2);
 
+Vue.component('breadcumb', Breadcumb);
+Vue.component('v-select', vSelect);
 Vue.component(
     "vertical-sidebar",
     // The `import` function returns a Promise.
