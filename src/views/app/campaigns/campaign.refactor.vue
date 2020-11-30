@@ -4,52 +4,78 @@
 		<breadcumb :page="'Campaigns'" :folder="''"/>
 		<b-button variant="primary" v-b-modal:campaign-1>New Campaign</b-button>
 		<div class="my-4"></div>
-		<b-container fluid>
-			<b-row>
-				<b-col sm="12">
-					<b-card>
-						<b-tabs>
-							<b-tab title="Active Campaigns" active>
-								<div>
-									<b-alert variant="success" :show="isEmpty(activeCampaigns)">
-										No campaigns created yet. Let's create one!
-									</b-alert>
-								</div>
-								<vue-good-table
-										v-if="!isEmpty(activeCampaigns)"
-										:rows="activeCampaigns"
-										:columns="columns"
-										:search-options="{
-											enabled: true,
-											placeholder: ''
+
+		<b-row>
+			<b-col sm="12">
+				<b-card>
+					<b-tabs>
+						<b-tab title="Active Campaigns" active>
+							<div>
+								<b-alert variant="success" :show="isEmpty(activeCampaigns)">
+									No campaigns created yet. Let's create one!
+								</b-alert>
+							</div>
+							<vue-good-table
+									v-if="!isEmpty(activeCampaigns)"
+									:columns="columns2"
+									:rows="activeCampaigns"
+									:search-options="{
+											enabled: true
 										}"
-								>
-									<template slot="table-column" slot-scope="props">
-										<span v-if="props.column.label !== 'Button'">
-											test-{{ props.column.label }}
+									styleClass="tableOne vgt-table"
+							>
+								<template slot="table-row" slot-scope="props">
+										<span v-if="props.column.field == 'action'">
+										<b-dropdown
+												id="dropdown-left"
+												variant="link"
+												text="Left align"
+												toggle-class="text-decoration-none"
+												size="md"
+												dropleft
+												no-caret
+										>
+                  <template v-slot:button-content class="_r_btn border-0">
+                    <span class="_dot _r_block-dot bg-dark"></span>
+                    <span class="_dot _r_block-dot bg-dark"></span>
+                    <span class="_dot _r_block-dot bg-dark"></span>
+                  </template>
+
+						<b-dropdown-item  class="dropdown-item" @click="duplicateCampaign(props.row)">
+                      <i class="nav-icon i-File-Copy text-info font-weight-bold mr-2"></i>Duplicate
+						</b-dropdown-item>
+											<b-dropdown-item  class="dropdown-item" @click="editCampaign(props.row)">
+						  <i class="nav-icon i-Pen-2 text-success font-weight-bold mr-2"></i>Edit
+					  </b-dropdown-item>
+						<b-dropdown-item>
+                    <a class="dropdown-item" @click="deleteCampaign(props.row)">
+                      <i class="nav-icon i-Close-Window text-danger font-weight-bold mr-2"></i>Delete
+					</a>
+                  </b-dropdown-item>
+                </b-dropdown>
 										</span>
-										<span v-else></span>
-									</template>
-									<template slot="table-row" slot-scope="props">
-						        <span v-if="props.column.field === 'button'">
-						          <a href="">
-						            <i class="i-Eraser-2 text-25 text-success mr-2"></i>
-						            {{ props.row.button }}</a
-						          >
-						          <a href="">
-						            <i class="i-Close-Window text-25 text-danger"></i>
-						            {{ props.row.button }}</a
-						          >
-						        </span>
-									</template>
-								</vue-good-table>
-							</b-tab>
-							<b-tab title="Archived Campaigns"></b-tab>
-						</b-tabs>
-					</b-card>
-				</b-col>
-			</b-row>
-		</b-container>
+									<span v-if="props.column.field == 'status'">
+										<span class="badge badge-pill badge-outline-primary p-2 ">{{props.row.status}}</span>
+									</span>
+
+									<span v-else>
+										  {{props.formattedRow[props.column.field]}}
+										</span>
+								</template>
+							</vue-good-table>
+						</b-tab>
+						<b-tab title="Archived Campaigns">
+							<div>
+								<b-alert variant="success" :show="true">
+									No campaigns archived yet
+								</b-alert>
+							</div>
+						</b-tab>
+					</b-tabs>
+				</b-card>
+			</b-col>
+		</b-row>
+
 		<!--Modal create / show-->
 		<b-modal id="campaign-1" title="New Campaign" size="lg" v-model="show">
 			<b-container fluid>
@@ -218,241 +244,453 @@
 </template>
 
 <script>
-import moment from 'moment';
+	import moment from 'moment';
 
-export default {
-	metaInfo: {
-		title: "Campaigns"
-	},
-	name: "campaign",
-	data() {
-		return {
-			show: false,
-			sending: false,
-			columns: [
-				{
-					label: "Title",
-					field: "span",
-					html: true
+	export default {
+		metaInfo: {
+			title: "Campaigns"
+		},
+		name: "campaign",
+		data() {
+			return {
+				show: false,
+				sending: false,
+				columns2: [
+					{
+						label: "Name",
+						field: "name",
+						thClass: "text-left",
+						tdClass: "text-left"
+					},
+					{
+						label: "Groups",
+						field: "groups",
+						thClass: "text-left",
+						tdClass: "text-left"
+					},
+					{
+						label: "Tests",
+						field: "tests",
+						thClass: "text-left",
+						tdClass: "text-left"
+					},
+					{
+						label: "Phish-prone %",
+						field: "phishProne",
+						thClass: "text-left",
+						tdClass: "text-left",
+						type: "percentage"
+					},
+					{
+						label: "Last test",
+						field: "lastTest",
+						type: "date",
+						thClass: "text-left",
+						tdClass: "text-left",
+						dateInputFormat: "yyyy-mm-dd",
+						dateOutputFormat: "MMM Do yy"
+					},
+					{
+						label: "Status",
+						field: "status",
+						thClass: "text-left",
+						tdClass: "text-left"
+					},
+					{
+						label: "",
+						field: "action",
+						thClass: "text-left",
+						tdClass: "text-left"
+					}
+				],
+				columns: [
+					{
+						label: "Order Id",
+						field: "id",
+						thClass: "text-left pl-3",
+						tdClass: "text-left pl-3"
+					},
+					{
+						label: "Buyer Name",
+						field: "name",
+						thClass: "text-left",
+						tdClass: "text-left"
+					},
+					{
+						label: "Product",
+						field: "img",
+						html: true,
+						thClass: "text-left",
+						tdClass: "text-left"
+					},
+					{
+						label: "Status",
+						field: "span",
+						html: true,
+						thClass: "text-left",
+						tdClass: "text-left"
+					},
+
+					{
+						label: "Shipping Cost",
+						field: "score",
+
+						// html:true,
+						type: "percentage",
+						thClass: "text-left",
+						tdClass: "text-left"
+					},
+					{
+						label: "Date",
+						field: "createdAt",
+						type: "date",
+						dateInputFormat: "yyyy-mm-dd",
+						dateOutputFormat: "mmm Do yy",
+						thClass: "text-left",
+						tdClass: "text-left"
+					},
+					{
+						label: "Action",
+						field: "action",
+						html: true,
+						thClass: "text-left",
+						tdClass: "text-left"
+					}
+				],
+				rows: [
+					{
+						id: 1,
+						name: "John",
+						img:
+								'<img src="' +
+								require("@/assets/images/products/iphone-1.jpg") +
+								'" class="rounded-circle avatar-sm" alt=""> <img src="' +
+								require("@/assets/images/products/iphone-2.jpg") +
+								'" class="rounded-circle avatar-sm" alt="">',
+						span:
+								'<span class="badge badge-pill badge-outline-primary p-2 ">Delivered</span>',
+						createdAt: "2019-10-31 ",
+						score: 0.03343,
+						action:
+								'<button class=" btn btn-outline-primary text-black btn-rounded">View</button>'
+					},
+					{
+						id: 2,
+						name: "Jane",
+						img:
+								'<img src="' +
+								require("@/assets/images/products/headphone-1.jpg") +
+								'" class="rounded-circle avatar-sm" alt=""> <img src="' +
+								require("@/assets/images/products/headphone-2.jpg") +
+								'" class="rounded-circle avatar-sm" alt="">',
+						span:
+								'<span class="badge badge-pill badge-outline-danger p-2">Shipped</span>',
+						createdAt: "2011-10-31",
+						score: 0.03343,
+						action:
+								'<button class=" btn btn-outline-primary text-black btn-rounded">View</button>'
+					},
+					{
+						id: 3,
+						name: "Susan",
+						img:
+								'<img src="' +
+								require("@/assets/images/products/headphone-3.jpg") +
+								'" class="rounded-circle avatar-sm" alt=""> <img src="' +
+								require("@/assets/images/products/headphone-4.jpg") +
+								'" class="rounded-circle avatar-sm" alt="">',
+						span:
+								'<span class="badge badge-pill badge-outline-success p-2 ">Delivered</span>',
+						createdAt: "2011-10-30",
+						score: 0.03343,
+						action:
+								'<button class=" btn btn-outline-primary text-black btn-rounded">View</button>'
+					},
+					{
+						id: 4,
+						name: "Chris",
+						img:
+								'<img src="' +
+								require("@/assets/images/products/speaker-1.jpg") +
+								'" class="rounded-circle avatar-sm" alt=""> <img src="' +
+								require("@/assets/images/products/speaker-2.jpg") +
+								'" class="rounded-circle avatar-sm" alt="">',
+						span:
+								'<span class="badge badge-pill badge-outline-primary p-2">Pending</span>',
+						createdAt: "2011-10-11",
+						score: 0.03343,
+						action:
+								'<button class=" btn btn-outline-primary text-black btn-rounded">View</button>'
+					},
+					{
+						id: 5,
+						name: "Dan",
+						img:
+								'<img src="' +
+								require("@/assets/images/products/watch-1.jpg") +
+								'" class="rounded-circle avatar-sm" alt=""> <img src="' +
+								require("@/assets/images/products/watch-2.jpg") +
+								'" class="rounded-circle avatar-sm" alt="">',
+						span:
+								'<span class="badge badge-pill badge-outline-info p-2">Processing</span>',
+						createdAt: "2011-10-21",
+						score: 0.03343,
+						action:
+								'<button class=" btn btn-outline-primary text-black btn-rounded">View</button>'
+					},
+					{
+						id: 6,
+						name: "John",
+						img:
+								'<img src="' +
+								require("@/assets/images/products/speaker-1.jpg") +
+								'" class="rounded-circle avatar-sm" alt=""> <img src="' +
+								require("@/assets/images/products/speaker-2.jpg") +
+								'" class="rounded-circle avatar-sm" alt="">',
+						span:
+								'<span class="badge badge-pill badge-outline-success p-2 ">Delivered</span>',
+						createdAt: "2011-10-31",
+						score: 0.03343,
+						action:
+								'<button class=" btn btn-outline-primary text-black btn-rounded">View</button>'
+					},
+					{
+						id: 7,
+						name: "John",
+						img:
+								'<img src="' +
+								require("@/assets/images/products/headphone-3.jpg") +
+								'" class="rounded-circle avatar-sm" alt=""> <img src="' +
+								require("@/assets/images/products/headphone-4.jpg") +
+								'" class="rounded-circle avatar-sm" alt="">',
+						span:
+								'<span class="badge badge-pill badge-outline-info p-2 ">Pending</span>',
+						createdAt: "2019-10-31 ",
+						score: 0.03343,
+						action:
+								'<button class=" btn btn-outline-primary text-black btn-rounded">View</button>'
+					},
+					{
+						id: 8,
+						name: "Jane",
+						img:
+								'<img src="' +
+								require("@/assets/images/products/iphone-1.jpg") +
+								'" class="rounded-circle avatar-sm" alt=""> <img src="' +
+								require("@/assets/images/products/iphone-1.jpg") +
+								'" class="rounded-circle avatar-sm" alt="">',
+						span:
+								'<span class="badge badge-pill badge-outline-danger p-2">Shipped</span>',
+						createdAt: "2011-10-31",
+						score: 0.03343,
+						action:
+								'<button class=" btn btn-outline-primary text-black btn-rounded">View</button>'
+					}
+				],
+				form: {
+					emailTemplate: null,
+					name: '',
+					landingPage: null,
+					url: '',
+					launchDate: '',
+					sendEmails: '',
+					sendingProfiles: null,
+					groups: [],
 				},
-				{
-					label: "Created Date",
-					field: "createdAt",
-					type: "date",
-					dateInputFormat: "yyyy-mm-dd",
-					dateOutputFormat: "MMM Do yy"
-				},
-				{
-					label: "Status",
-					field: "score",
-					type: "percentage"
-				},
-				{
-					label: "Button",
-					field: "button",
-					html: true,
-					tdClass: "text-right",
-					thClass: "text-right"
-				}
-			],
-			form: {
-				emailTemplate: null,
-				name: '',
-				landingPage: null,
-				url: '',
-				launchDate: '',
-				sendEmails: '',
-				sendingProfiles: null,
-				groups: [],
-			},
-			testForm: {
-				first_name: '',
+				testForm: {
+					first_name: '',
 					last_name: '',
 					email: '',
 					position: ''
-			},
-			activeCampaigns: [],
-			emails: ['Example 2', 'Example 3'],
-			landings: ['Landing 1', 'Landing 2'],
-			profiles: ['sending 1', "sending 2", "sending 3"],
-			groups: ['group 1', 'group 2', "group 3"]
-		}
-	},
-	methods: {
-		onSubmit(evt) {
-			console.log(JSON.stringify(this.form))
-			evt.preventDefault()
-			alert(JSON.stringify(this.form))
-			// Trick to reset/clear native browser form validation state
-			this.show = false
-			this.$nextTick(() => {
+				},
+				activeCampaigns: [
+					{
+						name: "Baseline Test",
+						groups: 'All users',
+						tests: 1,
+						phishProne: 0.50,
+						lastTest: "2020-11-30",
+						status: 'Open',
+						action: '',
+					}
+				],
+			}
+		},
+		methods: {
+			onSubmit(evt) {
+				console.log(JSON.stringify(this.form))
+				evt.preventDefault()
+				alert(JSON.stringify(this.form))
+				// Trick to reset/clear native browser form validation state
 				this.show = false
-			});
-			let _this = this;
-			this.$swal.fire({
-				title: "Are you sure?",
-				text: "This will schedule the campaign to be launched.",
-				type: "question",
-				animation: false,
-				showCancelButton: true,
-				confirmButtonText: "Launch",
-				confirmButtonColor: "#428bca",
-				reverseButtons: true,
-				allowOutsideClick: false,
-				showLoaderOnConfirm: true,
-				preConfirm: function () {
-					return new Promise(function (resolve) {
-						let groups = _this.form.groups;
+				this.$nextTick(() => {
+					this.show = false
+				});
+				let _this = this;
+				this.$swal.fire({
+					title: "Are you sure?",
+					text: "This will schedule the campaign to be launched.",
+					type: "question",
+					animation: false,
+					showCancelButton: true,
+					confirmButtonText: "Launch",
+					confirmButtonColor: "#428bca",
+					reverseButtons: true,
+					allowOutsideClick: false,
+					showLoaderOnConfirm: true,
+					preConfirm: function () {
+						return new Promise(function (resolve) {
+							let groups = _this.form.groups;
 
-						// Validate our fields
-						let send_by_date = _this.form.sendEmails;
-						if (send_by_date !== "") {
-							send_by_date = moment(send_by_date, "MMMM Do YYYY, h:mm a").utc().format()
-						}
-						let campaign = {
-							name: _this.form.name,
-							template: {
-								name: _this.form.emailTemplate
-							},
-							url: _this.form.url,
-							page: {
-								name: _this.form.landingPage
-							},
-							smtp: {
-								name: _this.form.sendingProfiles
-							},
-							launch_date: moment(_this.form.launchDate, "MMMM Do YYYY, h:mm a").utc().format(),
-							send_by_date: send_by_date || null,
-							groups: groups,
-						}
-						_this.activeCampaigns.push(campaign);
-						resolve()
-						// Submit the campaign
-						//     api.campaigns.post(campaign)
-						//         .success(function (data) {
-						//             resolve()
-						//             campaign = data
-						//         })
-						//         .error(function (data) {
-						//             $("#modal\\.flashes").empty().append("<div style=\"text-align:center\" class=\"alert alert-danger\">\
-						// <i class=\"fa fa-exclamation-circle\"></i> " + data.responseJSON.message + "</div>")
-						//             Swal.close()
-						//         })
-					})
-				}
+							// Validate our fields
+							let send_by_date = _this.form.sendEmails;
+							if (send_by_date !== "") {
+								send_by_date = moment(send_by_date, "MMMM Do YYYY, h:mm a").utc().format()
+							}
+							let campaign = {
+								name: _this.form.name,
+								template: {
+									name: _this.form.emailTemplate
+								},
+								url: _this.form.url,
+								page: {
+									name: _this.form.landingPage
+								},
+								smtp: {
+									name: _this.form.sendingProfiles
+								},
+								launch_date: moment(_this.form.launchDate, "MMMM Do YYYY, h:mm a").utc().format(),
+								send_by_date: send_by_date || null,
+								groups: groups,
+							}
+							_this.activeCampaigns.push(campaign);
+							resolve()
+							// Submit the campaign
+							//     api.campaigns.post(campaign)
+							//         .success(function (data) {
+							//             resolve()
+							//             campaign = data
+							//         })
+							//         .error(function (data) {
+							//             $("#modal\\.flashes").empty().append("<div style=\"text-align:center\" class=\"alert alert-danger\">\
+							// <i class=\"fa fa-exclamation-circle\"></i> " + data.responseJSON.message + "</div>")
+							//             Swal.close()
+							//         })
+						})
+					}
 				})
-				.then(function (result) {
-					if (result.value) {
-						_this.$swal.fire(
-							'Campaign Scheduled!',
-							'This campaign has been scheduled for launch!',
-							'success');
+						.then(function (result) {
+							if (result.value) {
+								_this.$swal.fire(
+										'Campaign Scheduled!',
+										'This campaign has been scheduled for launch!',
+										'success');
+							}
+						});
+
+			},
+			onReset(evt) {
+				evt.preventDefault()
+				// Reset our form values
+				this.form = {
+					emailTemplate: null,
+					name: '',
+					landingPage: null,
+					url: '',
+					launchDate: '',
+					sendEmails: '',
+					sendingProfiles: null,
+					groups: [],
+				}
+				// Trick to reset/clear native browser form validation state
+				this.show = false
+				this.$nextTick(() => {
+					this.show = false
+				})
+			},
+			isEmpty(arr) {
+				console.log(!Array.isArray(arr) || !arr.length);
+				return !Array.isArray(arr) || !arr.length;
+			},
+			sendTestEmail() {
+				const test_email_request = {
+					template: {
+						name: this.form.emailTemplate
+					},
+					first_name: this.testForm.first_name,
+					last_name: this.testForm.last_name,
+					email: this.testForm.email,
+					position: this.testForm.position,
+					url: this.form.url,
+					page: {
+						name: this.form.landingPage
+					},
+					smtp: {
+						name: this.form.sendingProfiles
+					}
+				}
+				this.sending = true;
+
+				this.send_test_email()
+						.then(() => {
+							this.$bvToast.toast('Email Sent!',{
+								title: `Variant`,
+								toaster: 'test',
+								solid: true
+							});
+							this.sending = false;
+						})
+						.catch(( err ) => {
+							this.$bvToast.toast('err', {
+								title: 'test',
+								toaster: 'test',
+								solid: true
+							});
+							this.sending = true;
+							throw new Error(err);
+						})
+				// Send the test email
+				// api.send_test_email(test_email_request)
+				// 	.success(function (data) {
+				// 		$("#sendTestEmailModal\\.flashes").empty().append("<div style=\"text-align:center\" class=\"alert alert-success\">\
+				//       <i class=\"fa fa-check-circle\"></i> Email Sent!</div>")
+				// 		$("#sendTestModalSubmit").html(btnHtml)
+				// 	})
+				// 	.error(function (data) {
+				// 		$("#sendTestEmailModal\\.flashes").empty().append("<div style=\"text-align:center\" class=\"alert alert-danger\">\
+				//       <i class=\"fa fa-exclamation-circle\"></i> " + data.responseJSON.message + "</div>")
+				// 		$("#sendTestModalSubmit").html(btnHtml)
+				// 	})
+			},
+			send_test_email(){
+				return new Promise((resolve, reject) => {
+					if (Math.random() < 0.6){
+						resolve();
+					}else{
+						reject();
 					}
 				});
-
-		},
-		onReset(evt) {
-			evt.preventDefault()
-			// Reset our form values
-			this.form = {
-				emailTemplate: null,
-				name: '',
-				landingPage: null,
-				url: '',
-				launchDate: '',
-				sendEmails: '',
-				sendingProfiles: null,
-				groups: [],
 			}
-			// Trick to reset/clear native browser form validation state
-			this.show = false
-			this.$nextTick(() => {
-				this.show = false
-			})
-		},
-		isEmpty(arr) {
-			console.log(!Array.isArray(arr) || !arr.length);
-			return !Array.isArray(arr) || !arr.length;
-		},
-		sendTestEmail() {
-			const test_email_request = {
-				template: {
-					name: this.form.emailTemplate
-				},
-				first_name: this.testForm.first_name,
-				last_name: this.testForm.last_name,
-				email: this.testForm.email,
-				position: this.testForm.position,
-				url: this.form.url,
-				page: {
-					name: this.form.landingPage
-				},
-				smtp: {
-					name: this.form.sendingProfiles
-				}
-			}
-			this.sending = true;
-
-			this.send_test_email()
-				.then(() => {
-					this.$bvToast.toast('Email Sent!',{
-						title: `Variant`,
-						toaster: 'test',
-						solid: true
-					});
-					this.sending = false;
-				})
-				.catch(( err ) => {
-					this.$bvToast.toast('err', {
-						title: 'test',
-						toaster: 'test',
-						solid: true
-					});
-					this.sending = true;
-					throw new Error(err);
-				})
-			// Send the test email
-			// api.send_test_email(test_email_request)
-			// 	.success(function (data) {
-			// 		$("#sendTestEmailModal\\.flashes").empty().append("<div style=\"text-align:center\" class=\"alert alert-success\">\
-      //       <i class=\"fa fa-check-circle\"></i> Email Sent!</div>")
-			// 		$("#sendTestModalSubmit").html(btnHtml)
-			// 	})
-			// 	.error(function (data) {
-			// 		$("#sendTestEmailModal\\.flashes").empty().append("<div style=\"text-align:center\" class=\"alert alert-danger\">\
-      //       <i class=\"fa fa-exclamation-circle\"></i> " + data.responseJSON.message + "</div>")
-			// 		$("#sendTestModalSubmit").html(btnHtml)
-			// 	})
-		},
-		send_test_email(){
-			return new Promise((resolve, reject) => {
-				if (Math.random() < 0.6){
-					resolve();
-				}else{
-					reject();
-				}
-			});
 		}
 	}
-}
 </script>
 
 <style>
-.input-group-btn {
-	line-height: 20px !important;
-		padding: 0.20rem 0.5em;
-		width: 100%;
-}
-.style-chooser .vs__search::placeholder {
-	background: #dfe5fb;
-	border: none;
-	color: #394066;
-	text-transform: lowercase;
-	font-variant: small-caps;
-}
+	/*.input-group-btn {
+        line-height: 20px !important;
+            padding: 0.20rem 0.5em;
+            width: 100%;
+    }*/
+	/*.style-chooser .vs__search::placeholder {
+        background: #dfe5fb;
+        border: none;
+        color: #394066;
+        text-transform: lowercase;
+        font-variant: small-caps;
+    }
 
-.style-chooser .vs__clear,
-.style-chooser .vs__open-indicator {
-	fill: #394066;
-}
+    .style-chooser .vs__clear,
+    .style-chooser .vs__open-indicator {
+        fill: #394066;
+    }*/
 </style>
