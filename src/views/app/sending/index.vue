@@ -9,10 +9,10 @@
 		<div id="flashes" class="row"></div>
 		<div class="row">
 			<b-button variant="primary" @click="$bvModal.show('modalprofile_1')">+ New Profile</b-button>
-			
+
 		</div>
 		&nbsp;
-		
+
 		<div id="emptyMessage" class="row" >
 			<div class="alert alert-info">
 				No profiles yet. Let's create one!
@@ -20,7 +20,7 @@
 		</div>
 
 		<div>
-			<b-modal id="modalprofile_1" hide-footer title="New Sending Profile">
+			<b-modal id="modalprofile_1" hide-footer title="New Sending Profile" size="lg">
 				<b-container fluid>
 					<form id="form-1" ref="form" >
 						<b-form-group id="input-group-1" label="Name:" label-for="input-1" :state="nameState" invalid-feedback="Name is required">
@@ -39,10 +39,10 @@
 								:readonly="true"
 								:state="interfaceState"
 								v-model="modalForm.f_interface"
-								
+
 							></b-form-input>
 						</b-form-group>
-						
+
 						<b-form-group id="input-group-3" label="From:" label-for="input-3" :state="fromState" invalid-feedback="Name is required">
 							<b-form-input
 								id="input-3"
@@ -92,12 +92,12 @@
 								value="accepted"
 								unchecked-value="not_accepted"
 								>
-								Ignore Certificate Errors 
+								Ignore Certificate Errors
 							</b-form-checkbox>
 						</div>
 
 						<b-container class="bv-example-row" >
-  							
+
 							<form ref="additem">
 								<b-row>
 									<b-col>
@@ -127,17 +127,17 @@
 
 									<b-col>
 										<b-button variant="danger" @click.stop.prevent="handleSubmit2">+ Add Custom Header</b-button>
-	
+
 									</b-col>
 								</b-row>
-									
 
-								
+
+
 							</form>
-							
-							
+
+
 							<div class="row">
-					
+
 								<div class="col-sm-6">
 									<label>Show<b-form-select v-model="perPage" :options="options"></b-form-select>
 										entries
@@ -152,9 +152,9 @@
 							</div>
 
 							<div>
-								<b-table small :fields="fields" :items="this.modalForm.f_items" 
-								responsive="sm" 
-								id="table"  
+								<b-table small :fields="fields" :items="this.modalForm.f_items"
+								responsive="sm"
+								id="table"
 								sticky-header="true"
 								:current-page="currentPage"
 								:per-page="perPage">
@@ -162,9 +162,9 @@
 										<i>{{ data.value }}</i>
 									</template>
 
-									
 
-									
+
+
 								</b-table>
 							</div>
 
@@ -176,7 +176,7 @@
 									prev-text="Prev"
 									next-text="Next"
 									aria-controls="table"
-									
+
 								></b-pagination>
 							</div>
 
@@ -186,19 +186,19 @@
 
 							</div>
 
-			
+
 
 							<div class="modal-footer">
 								<button type="button" data-dismiss="modal" class="btn btn-default" @click="closeModal('modalprofile_1')">Cancel</button>
 
 								<button type="button" class="btn btn-primary" id="modalSubmitt" @click.stop.prevent="handleSubmit('modalprofile_1')" >Save Profile</button>
 							</div>
-													
-												
+
+
 
 						</b-container>
 
-						
+
 					</form>
 				</b-container>
 			</b-modal>
@@ -264,9 +264,9 @@
 
 								<button type="button" class="btn btn-primary" id="modalSubmitt" @click.stop.prevent="handleSubmit3('modalprofile_2')" >Save</button>
 						</div>
-							
 
-								
+
+
 					</form>
 
 				</b-container>
@@ -274,25 +274,25 @@
 		</div>
 
 		<div>
-			<b-table small :fields="fieldsp" :items="dataProfile" 
-			responsive="sm" 
-			id="tablep"  
+			<b-table small :fields="fieldsp" :items="dataProfile"
+			responsive="sm"
+			id="tablep"
 			sticky-header="true"
 			:current-page="currentPagep"
 			:per-page="perPagep">
 				<template #cell(nameage)="data">
-					{{ data.dataProfile.name }} 
+					{{ data.dataProfile.name }}
 				</template>
 				<template #cell(imputInterface)="data">
-					{{ data.dataProfile.interface }} 
+					{{ data.dataProfile.interface }}
 				</template>
 				<template #cell(imputDate)="data">
-					{{ data.dataProfile.modified_day }} 
+					{{ data.dataProfile.modified_day }}
 				</template>
 
-				
 
-				
+
+
 			</b-table>
 		</div>
 
@@ -315,7 +315,7 @@ export default {
   	},
 	data() {
 		return {
-			
+
 			fields: ['header',
 			'value',
 			],
@@ -359,16 +359,16 @@ export default {
 				f_testFirstName:'',
 				f_testEmail:'',
 				f_testLastName:''
-				
 
-			
-				
-				
+
+
+
+
 
 
 			}
-			
-			
+
+
 		}
 	},
 	methods:{
@@ -393,55 +393,55 @@ export default {
 				testEmail:this.modalForm.f_testEmail,
 				testLastName:this.modalForm.f_testLastName,
 				modified_day:this.modalForm.now
-				
-				
+
+
 			});
-			
-			
+
+
 			console.log(this.dataProfile);
-			this.closeModal(id);	
+			this.closeModal(id);
 		},
 		checkFormValidity() {
-			
+
 			const valid = this.$refs.form.checkValidity()
-			
+
 			this.nameState = this.modalForm.f_name!==''
 			this.userNameState= this.modalForm.f_userName!==''
 			this.passwordState= this.modalForm.f_password!==''
 			this.interfaceState= this.modalForm.f_interface!==''
 			this.fromState= this.modalForm.f_from!==''
 			this.hostState= this.modalForm.f_host!==''
-			
-			
-			return valid 
+
+
+			return valid
 		},
 		checkFormValidity2() {
-			
+
 			const valid = this.$refs.additem.checkValidity()
-			
+
 			this.customHeaderState = this.modalForm.f_customHeader !==''
 			this.urlGoState = this.modalForm.f_urlGo !==''
-			
-			
-			
-			return valid 
+
+
+
+			return valid
 		},
 
 		checkFormValidity3() {
-			
+
 			const valid = this.$refs.sendTestEmail.checkValidity()
 
 			this.testFirstNameState = this.modalForm.f_testFirstName !==''
 			this.testLastNameState = this.modalForm.f_testLastName !==''
 			this.testPositionState = this.modalForm.f_testPosition !==''
 			this.testEmailState = this.modalForm.f_testEmail !==''
-			
-			
-			return valid 
+
+
+			return valid
 		},
-		
+
 		handleSubmit(id) {
-			
+
 			// Exit when the form isn't valid
 			if (!this.checkFormValidity()) {
 			return
@@ -449,40 +449,40 @@ export default {
 			else{
 				this.acep(id);
 			}
-			
+
 		},
 
 		handleSubmit2() {
-			
+
 			// Exit when the form isn't valid
 			if (!this.checkFormValidity2()) {
-				
+
 			return
 			}
 			else{
-				
+
 				this.btn_addHeader();
 			}
-			
+
 		},
 
 		handleSubmit3(id) {
-			
+
 			// Exit when the form isn't valid
 			if (!this.checkFormValidity3()) {
-				
+
 			return
 			}
 			else{
-				
+
 				this.btn_sendEmail();
 				this.closeModal(id)
 			}
-			
+
 		},
 		btn_addHeader(){
 			this.modalForm.f_items.push({header:this.modalForm.f_customHeader , value: this.modalForm.f_urlGo});
-			
+
 		},
 
 		btn_sendEmail(){

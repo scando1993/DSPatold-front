@@ -6,7 +6,7 @@
 
 
 		<div id="flashes" class="row"></div>-->
-		<breadcumb :page="'Landing Pages'"/>
+		<breadcumb :page="'Landing Pages'" :folder="''"/>
 		<!--<div class="row">
 			<b-button variant="primary" @click="$bvModal.show('modalLanding_1')"
 			>+ New Page</b-button
@@ -139,11 +139,11 @@
 		</div>-->
 
 		<div class="row">
-						
+
 			<div class="col-sm-6">
 				<div class="dataTables_length" >
 
-					<label>Show 
+					<label>Show
 						<b-form-select v-model="perPage" :options="options"></b-form-select>
 							entries
 					</label>
@@ -162,17 +162,17 @@
 		<div class="row">
 			<div class="col-sm-12">
 				<div>
-					<b-table :fields="fields" :items="dataTemplate" 
-					responsive="sm" 
-					id="table"  
+					<b-table :fields="fields" :items="dataTemplate"
+					responsive="sm"
+					id="table"
 					sticky-header="true"
 					:current-page="currentPage"
 					:per-page="perPage">
 						<template #cell(nameage)="data">
-							{{ data.dataTemplate.name }} 
+							{{ data.dataTemplate.name }}
 						</template>
 						<template #cell(imputDate)="data">
-							{{ data.dataTemplate.modified_day }} 
+							{{ data.dataTemplate.modified_day }}
 						</template>
 					</b-table>
 				</div>
@@ -209,18 +209,18 @@
 						/>
 
 						<div>
-							<b-form-checkbox 
+							<b-form-checkbox
 								id="checkbox-2"
 								v-model="modalForm.status1"
 								name="checkbox-2"
 								value="accepted"
 								unchecked-value="not_accepted"
 								>
-								Capture Submitted Data 
+								Capture Submitted Data
 							</b-form-checkbox>
 						</div>
-								
-						
+
+
 						<div class="modal-footer">
 							<button type="button" data-dismiss="modal" class="btn btn-default" @click="closeModal('modalLanding_1')">Cancel</button>
 							<button type="button" class="btn btn-primary" id="modalSubmit" @click.stop.prevent="handleSubmit('modalLanding_1')">Import</button>
@@ -228,7 +228,7 @@
 
 
 
-				
+
 					</form>
 				</b-container>
 			</b-modal>
@@ -260,9 +260,9 @@
 
 	</div>
 
-	
 
-	
+
+
 </template>
 
 <script>
@@ -304,7 +304,7 @@ export default {
 				status1:'accepted',
 				f_url:'',
 				now: moment((new Date()).toISOString()).format('YYYY-MM-DD')
-			
+
 			},
 			columns: [
 				{
@@ -330,7 +330,7 @@ export default {
 		}
 	},
 	methods:{
-		
+
 		closeModal(id){
 			this.$bvModal.hide(id)
 		},
@@ -338,7 +338,7 @@ export default {
 			this.content=this.url;
 			this.closeModal(id);
 
-			
+
 		},
 		acep(id){
 
@@ -347,35 +347,35 @@ export default {
 				modified_day: this.modalForm.now,
 				content:this.content,
 				status1:this.modalForm.status1,
-				
+
 			});
-			
-			
+
+
 			console.log(this.dataTemplate);
 			console.log(this.modalForm);
-			this.closeModal(id);	
+			this.closeModal(id);
 		},
 		checkFormValidity() {
-			
+
 			const valid = this.$refs.form.checkValidity()
-			
+
 			this.nameState = valid
-			
-			
-			return valid 
+
+
+			return valid
 		},
 		checkFormValidity2() {
-			
+
 			const valid = this.$refs.form2.checkValidity()
-			
-			
+
+
 			this.urlStat = valid
-			
+
 			return valid
 		},
 
 		handleSubmit(id) {
-			
+
 			// Exit when the form isn't valid
 			if (!this.checkFormValidity()) {
 			return
@@ -383,11 +383,11 @@ export default {
 			else{
 				this.acep(id);
 			}
-			
+
 		},
 
 		handleSubmit2(id) {
-			
+
 			// Exit when the form isn't valid
 			if (!this.checkFormValidity2()) {
 			return
@@ -395,12 +395,12 @@ export default {
 			else{
 				this.importSite(id);
 			}
-			
+
 		},
-		
-		
-		
-		
+
+
+
+
 		onEditorReady(quill) {
 			console.log('editor ready!', quill)
 		},

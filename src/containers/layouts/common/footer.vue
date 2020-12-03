@@ -5,39 +5,27 @@
     <div class="app-footer">
       <div class="row">
         <div class="col-md-9">
-          <p><strong>Gull - Vuejs Admin Dashboard Template</strong></p>
-          <p>
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Libero
-            quis beatae officia saepe perferendis voluptatum minima eveniet
-            voluptates dolorum, temporibus nisi maxime nesciunt totam
-            repudiandae commodi sequi dolor quibusdam sunt.
-          </p>
+          <p><strong>DPSat - Admin Dashboard Template</strong></p>
         </div>
       </div>
       <div
         class="footer-bottom border-top pt-3 d-flex flex-column flex-sm-row align-items-center"
       >
         <div class="d-flex align-items-center">
-          <img class="logo" src="@/assets/images/logo.png" alt="" />
+          <img class="logo" src="@/assets/images/cropped-data-logo-pag.png" width="470" alt="" />
           <div>
             <div>
-              <p class="m-0">&copy; 2019 UI-Lib</p>
+              <p class="m-0">&copy; 2020 Data Protect</p>
               <p class="m-0">All rights reserved</p>
             </div>
           </div>
           <span class="flex-grow-1"></span>
-          <a
-            class="btn btn-primary text-white btn-rounded"
-            href="https://themeforest.net/item/gull-vuejs-admin-dashboard-template/24497287?ref=ui-lib"
-            target="_blank"
-            >Buy Gull Vue</a
-          >
         </div>
       </div>
       <!-- fotter end -->
     </div>
   </div>
-</template> 
+</template>
 <script>
 export default {
   data() {
@@ -49,4 +37,7 @@ export default {
 
 
 <style lang="scss" scoped>
-</style> 
+.app-footer .logo{
+	width: 10rem;
+}
+</style>

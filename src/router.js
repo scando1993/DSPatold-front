@@ -32,15 +32,27 @@ const routes = [
         component: () => import("./views/app/campaigns"), //campaigns
         children: [
           {
-            path: "",
-            component: () => import("./views/app/campaigns/campaign.refactor")
+            path: "new",
+            component: () => import("./views/app/campaigns/campaign.new")
           },
+          {
+            path: "show",
+            component: () => import('./views/app/campaigns/campaign.show')
+          },
+          {
+            path: '',
+            component: () => import('./views/app/campaigns/campaign.refactor')
+          }
         ]
       },
       {
         path: "/app/users",
         component: () => import("./views/app/users"), //users
         children: [
+          {
+            path: '',
+            component: () => import('./views/app/users/users.dashboard')
+          }
         ]
       },
       {
