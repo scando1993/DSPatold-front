@@ -13,7 +13,7 @@
 				<b-card>
 					<b-container fluid>
 						<b-form id="form-1" @submit="onSubmit" @reset="onReset">
-							<b-form-group id="input-group-1" label="Name:" label-for="input-1">
+							<b-form-group id="input-group-1" label="Campaign Name:" label-for="input-1">
 								<b-form-input
 										id="input-1"
 										v-model="form.name"
@@ -22,18 +22,37 @@
 								></b-form-input>
 							</b-form-group>
 
+							<b-form-group id="input-select-group" label="Groups:">
+								<div class="btn-group" role="group" aria-label="Basic example">
+									<b-button variant="primary ripple m-1" v-on:click="sendToAllUsers">All users</b-button>
+									<b-button variant="secondary ripple m-1" v-on:click="sendToAllGroups = false">Specific Groups</b-button>
+								</div>
+							</b-form-group>
+
+							<span v-if="!sendToAllGroups">
+								<b-form-group id="input-group-8" label-for="input-8">
+									<v-select
+											id="input-8"
+											v-model="form.groups"
+											required
+											multiple
+											placeholder="Select Groups"
+											:options="groups"
+									></v-select>
+								</b-form-group>
+							</span>
+
 							<b-form-group
-									id="input-group-2"
-									label="Email address:"
+									id="input-group-emailTemplate"
+									label="Email Template:"
 									label-for="input-2"
-									description="We'll never share your email with anyone else."
 							>
 								<v-select
-										id="input-2"
+										id="input-emailTemplate"
 										v-model="form.emailTemplate"
-										:options="emails"
+										:options="emailTemplate"
 										class="style-chooser-1"
-										placeholder="Select a Template"
+										placeholder="Select email template"
 								/>
 							</b-form-group>
 
@@ -58,40 +77,40 @@
 							<b-form-group>
 
 							</b-form-group>
+
 							<b-form-row>
-								<b-col>
+								<b-col cols="6">
 									<b-form-group id="input-group-5" label="Launch Date" label-for="input-5">
+
 										<b-form-datepicker
 												id="input-5"
 												v-model="form.launchDate"
 												required
-												today-button
-												reset-button
-												close-button
 												locale="es"
-												size="sm"
 										></b-form-datepicker>
+
+										<b-form-timepicker v-model="form.launchDateHours"></b-form-timepicker>
+
 									</b-form-group>
+
+
 								</b-col>
-								<b-col>
+								<b-col cols="6">
 									<b-form-group id="input-group-6" label="Send Emails by (Optional)" label-for="input-6">
 										<b-form-datepicker
 												id="input-6"
 												v-model="form.sendEmails"
 												required
-												today-button
-												reset-button
-												close-button
 												locale="es"
-												size="sm"
 										></b-form-datepicker>
+										<b-form-timepicker v-model="form.sendEmailsHours"></b-form-timepicker>
 									</b-form-group>
 								</b-col>
 							</b-form-row>
 
 
 							<b-form-group id="input-group-7" label="Sending Profile:" label-for="input-7">
-								<b-row no-gutters align-h="center">
+								<b-row>
 									<b-col cols="9">
 										<v-select
 												id="input-7"
@@ -111,17 +130,6 @@
 							</b-form-group>
 
 
-							<b-form-group id="input-group-8" label="Groups:" label-for="input-8">
-								<v-select
-										id="input-8"
-										v-model="form.groups"
-										required
-										:multiple=true
-										placeholder="Select Groups"
-										:options="groups"
-								></v-select>
-							</b-form-group>
-
 						</b-form>
 					</b-container>
 				</b-card>
@@ -129,9 +137,46 @@
 		</b-row>
 		<b-modal id="campaign-2" title="Send Test Email" size="lg">
 			<b-form>
-				<b-form-group id="input-group-11" label="Send Test Email to:" label-for="input-11">
-					<b-container fluid>
-						<b-row cols="4">
+				<b-container fluid>
+						<b-row>
+							<b-col>
+								<b-row>
+									<b-col>
+									<b-form-group id="input-test-email-name" label="First Name:" label-for="input-test-email-name">
+										<b-form-input
+												id="input-test-email-name"
+												v-model="testForm.first_name"
+												required
+										></b-form-input>
+									</b-form-group>
+										<b-form-group id="input-test-email-lastname" label="Last Name:" label-for="input-test-email-lastname">
+											<b-form-input
+													id="input-test-email-lastname"
+													v-model="testForm.last_name"
+													required
+											></b-form-input>
+										</b-form-group>
+									</b-col>
+									<b-col>
+										<b-form-group id="input-test-email-position" label="Position:" label-for="input-test-email-position">
+											<b-form-input
+													id="input-test-email-position"
+													v-model="testForm.position"
+													required
+											></b-form-input>
+										</b-form-group>
+										<b-form-group id="input-test-email-email" label="Email:" label-for="input-test-email-email">
+											<b-form-input
+													id="input-test-email-email"
+													v-model="testForm.email"
+													required
+											></b-form-input>
+										</b-form-group>
+									</b-col>
+								</b-row>
+							</b-col>
+						</b-row>
+						<!--<b-row cols="4">
 							<b-col>
 								<b-form-input
 										id="input-11"
@@ -164,9 +209,8 @@
 										placeholder="Email"
 								></b-form-input>
 							</b-col>
-						</b-row>
+						</b-row>-->
 					</b-container>
-				</b-form-group>
 			</b-form>
 		</b-modal>
 	</div>
@@ -185,9 +229,11 @@ export default {
 				landingPage: null,
 				url: '',
 				launchDate: '',
+				launchDateHours: '',
 				sendEmails: '',
+				sendEmailsHours: '',
 				sendingProfiles: null,
-				groups: [],
+				groups: []
 			},
 			testForm: {
 				first_name: '',
@@ -195,9 +241,18 @@ export default {
 				email: '',
 				position: ''
 			},
+			groups: ['Prueba', 'Mi nuevo grupo', 'Demo Facebook'],
+			emailTemplate: ['Template facebook', 'Mi template Prueba'],
+			ladings: ['Intermatico'],
+			sendToAllGroups: true,
+			profiles: ['Facebook Profile']
 		}
 	},
 	methods: {
+		sendToAllUsers() {
+			this.form.groups = [];
+			this.sendToAllGroups = true;
+		},
 		onSubmit(evt) {
 			console.log(JSON.stringify(this.form))
 			evt.preventDefault()

@@ -57,6 +57,11 @@
 									<span v-if="props.column.field === 'status'">
 										<span class="badge badge-pill badge-outline-primary p-2 ">{{ props.row.status }}</span>
 									</span>
+									<span v-if="props.column.field === 'name'">
+										<!--<router-link to="show/'{props.row.name}'" >{{ props.row.name }}
+										</router-link>-->
+										<router-link :to="{ name: 'campaignShow', params: { id: 123 }}">User</router-link>
+									</span>
 									<span v-else>{{ props.formattedRow[props.column.field] }}</span>
 								</template>
 							</vue-good-table>
@@ -119,9 +124,6 @@
 						></b-form-input>
 					</b-form-group>
 
-					<b-form-group>
-
-					</b-form-group>
 					<b-form-row>
 						<b-col>
 							<b-form-group id="input-group-5" label="Launch Date" label-for="input-5">
@@ -298,60 +300,6 @@ export default {
 					field: "action",
 					thClass: "text-right",
 					tdClass: "text-right"
-				}
-			],
-			columns: [
-				{
-					label: "Order Id",
-					field: "id",
-					thClass: "text-left pl-3",
-					tdClass: "text-left pl-3"
-				},
-				{
-					label: "Buyer Name",
-					field: "name",
-					thClass: "text-left",
-					tdClass: "text-left"
-				},
-				{
-					label: "Product",
-					field: "img",
-					html: true,
-					thClass: "text-left",
-					tdClass: "text-left"
-				},
-				{
-					label: "Status",
-					field: "span",
-					html: true,
-					thClass: "text-left",
-					tdClass: "text-left"
-				},
-
-				{
-					label: "Shipping Cost",
-					field: "score",
-
-					// html:true,
-					type: "percentage",
-					thClass: "text-left",
-					tdClass: "text-left"
-				},
-				{
-					label: "Date",
-					field: "createdAt",
-					type: "date",
-					dateInputFormat: "yyyy-mm-dd",
-					dateOutputFormat: "mmm Do yy",
-					thClass: "text-left",
-					tdClass: "text-left"
-				},
-				{
-					label: "Action",
-					field: "action",
-					html: true,
-					thClass: "text-left",
-					tdClass: "text-left"
 				}
 			],
 			rows: [

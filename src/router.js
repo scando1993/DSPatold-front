@@ -36,7 +36,8 @@ const routes = [
             component: () => import("./views/app/campaigns/campaign.new")
           },
           {
-            path: "show",
+            path: "show/:id",
+            name: "campaignShow",
             component: () => import('./views/app/campaigns/campaign.show')
           },
           {
