@@ -29,8 +29,11 @@
 
 					>Add Task</b-button>-->
 
-						<b-button variant="primary mb-30" @click="$bvModal.show('modalTemplate_1')">+ New Template</b-button>
-
+						<!--<b-button variant="primary mb-30" @click="$bvModal.show('modalTemplate_1')">+ New Template</b-button>
+-->
+					<!--<b-button variant="primary mt-3" @click="$router.push('templates/new')">New Template</b-button>
+-->
+					<b-button variant="primary" @click="$router.push('templates/new')">New Template</b-button>
 					<b-list-group>
 						<b-list-group-item class="border-0" href="#">
 							<a href>
@@ -156,8 +159,8 @@
 							></b-form-input>
 						</b-form-group>
 
-						<div>              
-							<button class="btn btn-danger mt-3" @click="$bvModal.show('importEmailModal')">Import Email</button>
+						<div class="mb-2">
+							<button class="btn btn-danger" @click="$bvModal.show('importEmailModal')">Import Email</button>
 						</div>
 
 						<b-form-group id="input-group-2" label="Subject:" label-for="textarea" :state="textArea1State" invalid-feedback="Need to specify at least plaintext or HTML content">
@@ -169,8 +172,8 @@
 							></b-form-input>
 						
 
-							<div>
-								<b-tabs content-class="mt-3">
+							<div class="mt-3">
+								<b-tabs>
 									<b-tab title="Text" active >
 										<div>
 											<b-form-textarea	
@@ -186,8 +189,9 @@
 										
 									</b-tab>
 									<b-tab title="HTML">
-										<div>
+										<div class="example">
 											<quill-editor
+													class="editor"
 												ref="myQuillEditor"
 												v-model="modalForm.f_contentEditor"
 												:options="editorOption"
@@ -346,14 +350,34 @@ import moment from 'moment'
 export default {
 	name: "template",
 	components: {
-    quillEditor
+    	quillEditor
   	},
 	data() {
 		return {
 			content: '',
-        	editorOption: {
-          // Some Quill options...
-        	},
+			editorOption: {
+				modules: {
+					toolbar: [
+						['bold', 'italic', 'underline', 'strike'],
+						['blockquote', 'code-block'],
+						[{ 'header': 1 }, { 'header': 2 }],
+						[{ 'list': 'ordered' }, { 'list': 'bullet' }],
+						[{ 'script': 'sub' }, { 'script': 'super' }],
+						[{ 'indent': '-1' }, { 'indent': '+1' }],
+						[{ 'direction': 'rtl' }],
+						[{ 'size': ['small', false, 'large', 'huge'] }],
+						[{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+						[{ 'font': [] }],
+						[{ 'color': [] }, { 'background': [] }],
+						[{ 'align': [] }],
+						['clean'],
+						['link', 'image', 'video']
+					],
+					syntax: {
+						highlight: text => hljs.highlightAuto(text).value
+					}
+				}
+			},
 			isBadge: true,
 			isOpenMobileMenu: false,
 			file: null,
@@ -505,3 +529,10 @@ export default {
 	}
 }
 </script>
+
+<style>
+.editor {
+	height: 20rem;
+	overflow: hidden;
+}
+</style>

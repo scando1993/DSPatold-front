@@ -30,6 +30,7 @@ import 'vue-select/src/scss/vue-select.scss';
 import VueSweetalert2 from "vue-sweetalert2";
 
 import "@/assets/styles/sass/themes/lite-blue.scss";
+import VueApexCharts from 'vue-apexcharts'
 
 Vue.config.productionTip = false
 
@@ -40,6 +41,10 @@ Vue.config.productionTip = false
 
 Vue.use(BootstrapVue);
 Vue.use(VueSweetalert2);
+
+Vue.use(VueApexCharts)
+
+Vue.component('apexchart', VueApexCharts)
 
 Vue.component('breadcumb', Breadcumb);
 Vue.component('v-select', vSelect);

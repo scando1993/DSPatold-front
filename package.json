@@ -22,6 +22,7 @@
     "rxjs": "^6.6.3",
     "vee-validate": "^3.4.0",
     "vue": "^2.6.11",
+    "vue-apexcharts": "^1.6.0",
     "vue-axios": "^3.0.1",
     "vue-flag-icon": "^1.0.6",
     "vue-form-wizard": "^0.8.4",

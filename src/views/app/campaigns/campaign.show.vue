@@ -10,75 +10,93 @@
                     <b-tabs>
                         <b-tab title="Overview" active>
                             <div class="row">
-                                <b-col cols="8"></b-col>
+                                <b-col cols="8">
+
+                                    <b-card title="Campaign Timeline" class=" mb-30">
+                                      <div id="basicArea-chart" style="min-height: 365px">
+                                            <apexchart
+                                                    type="line"
+                                                    height="350"
+                                                    :options="basicLineChart.chartOptions"
+                                                    :series="basicLineChart.series"
+                                            />
+                                            </div>
+                                    </b-card>
+                                    <b-card title="Failures by Day" class=" mb-30">
+                                       <div>
+                                            <apexchart width="500"
+                                                       type="bar" :options="options" :series="series"></apexchart>
+                                        </div>
+
+                                    </b-card>
+
+                                </b-col>
                                 <b-col lg="4" md="6" class=" mb-30">
-                                    <b-card title="Travel Different Countries">
-                                        <div class="ul-widget-app__poll-list mb-4">
-                                            <h3 class="heading mr-2">
-                                                Status
-                                            </h3>
-                                            <div class="d-flex">
-                                                <span class="text-muted text-12">Status</span>
-                                                <span class="t-font-boldest ml-auto">
-                                75%
-                                <i class="i-Turn-Up-2 text-14 text-success font-weight-700"></i>
-                            </span>
-                                            </div>
-                                            <b-progress height="5px" :value="75"></b-progress>
+                                    <b-card title="Campaign Status" class="mb-30">
+                                    <div class="ul-widget-app__browser-list">
+                                        <div class="ul-widget-app__browser-list-1 mb-30">
+                                            <i class="i-Email  text-18 text-danger font-weight-600 mr-3"></i>
+                                            <span class="text-15">Email sent</span>
+                                            <b-badge pill variant="success p-1 m-1">3</b-badge>
                                         </div>
-                                        <div class="ul-widget-app__poll-list mb-4">
-                                            <h3 class="heading mr-2">
-                                                4589
-                                            </h3>
-                                            <div class="d-flex">
-                                                <span class="text-muted text-12">From U.S.A</span>
-                                                <span class="t-font-boldest ml-auto">
-                                33%
-                                <i class="i-Turn-Down-2 text-14 text-danger font-weight-700"></i>
-                            </span>
-                                            </div>
-                                            <b-progress height="5px" variant="success" :value="33"></b-progress>
+
+                                        <div class="ul-widget-app__browser-list-1 mb-30">
+                                            <i class="i-Cloud-Email  text-18 text-warning font-weight-600 mr-3"></i>
+                                            <span class="text-15">Email Opened</span>
+                                            <b-badge pill variant="danger p-1 m-1">1</b-badge>
                                         </div>
-                                        <div class="ul-widget-app__poll-list mb-4">
-                                            <h3 class="heading mr-2">
-                                                7589
-                                            </h3>
-                                            <div class="d-flex">
-                                                <span class="text-muted text-12">From Canada</span>
-                                                <span class="t-font-boldest ml-auto">
-                                49%
-                                <i class="i-Turn-Down-2 text-14 text-danger font-weight-700"></i>
-                            </span>
-                                            </div>
-                                            <b-progress height="5px" variant="dark" :value="49"></b-progress>
+
+
+                                        <div class="ul-widget-app__browser-list-1 mb-30">
+                                            <i class="i-Cursor-Click-2  text-18 text-info font-weight-600 mr-3"></i>
+                                            <span class="text-15">Clicked Link</span>
+                                            <b-badge pill variant="primary p-1 m-1">1</b-badge>
                                         </div>
-                                        <div class="ul-widget-app__poll-list mb-4">
-                                            <h3 class="heading mr-2">
-                                                3589
-                                            </h3>
-                                            <div class="d-flex">
-                                                <span class="text-muted text-12">From France</span>
-                                                <span class="t-font-boldest ml-auto">
-                                13%
-                                <i class="i-Turn-Down-2 text-14 text-danger font-weight-700"></i>
-                            </span>
-                                            </div>
-                                            <b-progress height="5px" variant="danger" :value="13"></b-progress>
+
+                                        <div class="ul-widget-app__browser-list-1 mb-30">
+                                            <i class="i-Data-Cloud  text-18 text-danger font-weight-600 mr-3"></i>
+                                            <span class="text-15">Submitted Data</span>
+                                            <b-badge pill variant="dark p-1 m-1">1</b-badge>
                                         </div>
-                                        <div class="ul-widget-app__poll-list mb-4">
-                                            <h3 class="heading mr-2">
-                                                3589
-                                            </h3>
-                                            <div class="d-flex">
-                                                <span class="text-muted text-12">From japan</span>
-                                                <span class="t-font-boldest ml-auto">
-                                25%
-                                <i class="i-Turn-Down-2 text-14 text-danger font-weight-700"></i>
-                            </span>
+
+
+                                        <div class="ul-widget-app__browser-list-1 mb-30">
+                                            <i class="i-Voicemail  text-18 text-success mr-3"></i>
+                                            <span class="text-15">Email Reported</span>
+
+                                            <b-badge pill variant="danger p-1 m-1">0</b-badge>
+                                        </div>
+                                    </div>
+                                </b-card>
+
+
+
+                                    <b-card title="Phishing Email" class="">
+                                        <div class="ul-widget-app__browser-list">
+                                            <div class="ul-widget-app__browser-list-1 mb-30">
+                                                <span class="text-15">From</span>
+                                                <span class="text-15 p-1 m-1">scando@fiec.espol.edu.ec</span>
                                             </div>
-                                            <b-progress height="5px" variant="warning" :value="25"></b-progress>
+
+                                            <div class="ul-widget-app__browser-list-1 mb-30">
+                                                <span class="text-15">To</span>
+                                                <span class="text-15 p-1 m-1">4 recipients</span>
+                                            </div>
+
+
+                                            <div class="ul-widget-app__browser-list-1 mb-30">
+                                                <span class="text-15">Reply To</span>
+                                                <span class="text-15 p-1 m-1">scando@fiec.espol.edu.ec</span>
+                                            </div>
+
+                                            <div class="ul-widget-app__browser-list-1 mb-30">
+                                                <span class="text-15">Subject</span>
+                                                <span class="text-15 p-1 m-1">Cambio de password</span>
+                                            </div>
                                         </div>
                                     </b-card>
+
+
                                 </b-col>
                             </div>
 
@@ -111,16 +129,16 @@
 											</template>
 
 											<b-dropdown-item class="dropdown-item" @click="duplicateCampaign(props.row)">
-												<i class="nav-icon i-File-Copy text-info font-weight-bold mr-2"></i>Duplicate
+												<i class="nav-icon i-File-Copy text-info font-weight-bold mr-2"></i>Details
 											</b-dropdown-item>
-											<b-dropdown-item class="dropdown-item" @click="editCampaign(props.row)">
+											<!--<b-dropdown-item class="dropdown-item" @click="editCampaign(props.row)">
 												<i class="nav-icon i-Pen-2 text-success font-weight-bold mr-2"></i>Edit
 											</b-dropdown-item>
 											<b-dropdown-item>
 												<a class="dropdown-item" @click="deleteCampaign(props.row)">
 													<i class="nav-icon i-Close-Window text-danger font-weight-bold mr-2"></i>Delete
 												</a>
-											</b-dropdown-item>
+											</b-dropdown-item>-->
 										</b-dropdown>
 									</span>
                                         <span v-if="props.column.field === 'status'">
@@ -139,7 +157,6 @@
 </template>
 
 <script>
-
 export default {
     metaInfo: {
         title: "Campaigns"
@@ -147,8 +164,101 @@ export default {
     name: "campaign-show",
     data() {
         return {
-            rows: [],
-            columsn: []
+            columns: [
+                {
+                    label: "First Name",
+                    field: "name",
+                    thClass: "text-left",
+                    tdClass: "text-left"
+                },
+                {
+                    label: "Last Name",
+                    field: "lastName",
+                    thClass: "text-left",
+                    tdClass: "text-left"
+                },
+                {
+                    label: "Email",
+                    field: "email",
+                    thClass: "text-left",
+                    tdClass: "text-left"
+                },
+                {
+                    label: "Position",
+                    field: "position",
+                    thClass: "text-left",
+                    tdClass: "text-left",
+                    type: "percentage"
+                },
+                {
+                    label: "Status",
+                    field: "status",
+                    thClass: "text-left",
+                    tdClass: "text-left"
+                },
+                {
+                    label: "",
+                    field: "action",
+                    thClass: "text-right",
+                    tdClass: "text-right"
+                }
+            ],
+            rows: [
+                {
+                    name: "Kevin",
+                    lastName: 'Cando',
+                    email: 'scando@fiec.espol.edu.ec',
+                    position: 'Developer',
+                    status: 'Email sent',
+                    action: '',
+                }
+            ],
+            options: {
+                chart: {
+                    id: 'vuechart-example'
+                },
+                xaxis: {
+                    categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998]
+                }
+            },
+            series: [{
+                name: 'series-1',
+                data: [30, 40, 45, 50, 49, 60, 70, 91]
+            }],
+            basicLineChart : {
+
+                series: [{
+                    name: "Desktops",
+                    data: [10, 41, 35, 51, 49, 62, 69, 91, 148]
+                }],
+                chartOptions: {
+                    chart: {
+                        height: 350,
+                        zoom: {
+                            enabled: false
+                        }
+                    },
+                    dataLabels: {
+                        enabled: false
+                    },
+                    stroke: {
+                        curve: 'straight'
+                    },
+                    title: {
+                        text: 'Product Trends by Month',
+                        align: 'left'
+                    },
+                    grid: {
+                        row: {
+                            colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+                            opacity: 0.5
+                        },
+                    },
+                    xaxis: {
+                        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
+                    }
+                }
+            }
         }
     }
 }
