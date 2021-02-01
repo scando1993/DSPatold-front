@@ -9,6 +9,8 @@ import invoice from "./modules/invoice";
 import cart from "./modules/cart";
 import verticalSidebar from "./modules/verticalSidebar";
 import scrumboard from "./modules/scrumboard";
+import Quill from 'quill'
+
 
 
 // Load Vuex

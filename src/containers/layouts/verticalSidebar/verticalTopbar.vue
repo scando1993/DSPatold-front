@@ -12,12 +12,14 @@
 				<i
 						class="i-Add-UserStar mr-3 text-20 cursor-pointer"
 						v-b-tooltip.hover
+						v-b-modal:users-new
 						title="User"
 				></i>
 				<i
-						class="i-Speach-Bubble-3 mr-3 text-20 cursor-pointer"
+						class="i-Find-User mr-3 text-20 cursor-pointer"
 						v-b-tooltip.hover
-						title="Chat"
+						title="Users and Groups"
+						@click="$router.push('users/')"
 				></i>
 				<i
 						class="i-Email mr-3 text-20 cursor-pointer"
@@ -196,21 +198,49 @@
 							<div class="dropdown-header">
 								<i class="i-Lock-User mr-1"></i> Timothy Carlson
 							</div>
-							<a class="dropdown-item">Account settings</a>
-							<a class="dropdown-item">Billing history</a>
+							<a class="dropdown-item">
+								<router-link tag="div" to="/app/user_management">
+									<span class="text-15">User Management</span>
+								</router-link>
+							</a>
+							<a class="dropdown-item">
+								<router-link tag="div" to="/app/account">
+									<span class="text-15">Account Settings</span>
+								</router-link>
+							</a>
+							<a class="dropdown-item">
+								<router-link tag="div" to="/app/webhooks">
+									<span class="text-15">Webhooks</span>
+								</router-link>
+							</a>
 							<a class="dropdown-item" href="#" @click.prevent="logoutUser">Sign out</a>
 						</div>
 					</b-dropdown>
 				</div>
 			</div>
 		</header>
+		<users-new />
+<!--		<b-modal id="groups-new" title="New Groups">-->
+<!--			<b-container fluid>-->
+<!--				<b-form id="groups-new-form" @submit="" @reset="">-->
+
+<!--				</b-form>-->
+<!--			</b-container>-->
+<!--			<div slot="modal-footer" class="ml-auto">-->
+<!--				<b-button form="form-1" type="reset" variant="danger">Reset</b-button>-->
+<!--				<span class="mx-2"></span>-->
+<!--				<b-button form="form-1" type="submit" variant="primary">Submit</b-button>-->
+<!--			</div>-->
+<!--		</b-modal>-->
 	</div>
 </template>
 <script>
 import {mapGetters, mapActions} from "vuex";
 import Util from "@/utils";
+import UsersNew from "@/views/app/users/users.new";
 
 export default {
+	components: { UsersNew },
 	computed: {
 		...mapGetters(["getVerticalCompact", "getVerticalSidebar", "getSideBarToggleProperties"])
 	},

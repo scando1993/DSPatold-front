@@ -32,9 +32,18 @@ const routes = [
         component: () => import("./views/app/campaigns"), //campaigns
         children: [
           {
-            path: "",
-            component: () => import("./views/app/campaigns/campaign.refactor")
+            path: "new",
+            component: () => import("./views/app/campaigns/campaign.new")
           },
+          {
+            path: "show/:id",
+            name: "campaignShow",
+            component: () => import('./views/app/campaigns/campaign.show')
+          },
+          {
+            path: '',
+            component: () => import('./views/app/campaigns/campaign.refactor')
+          }
         ]
       },
       {
@@ -42,19 +51,25 @@ const routes = [
         component: () => import("./views/app/users"), //users
         children: [
           {
-            path: "",
-            component: () => import("./views/app/users/users_groups.refactor")
-          },
+            path: '',
+            component: () => import('./views/app/users/users.dashboard')
+          }
         ]
       },
       {
         path: "/app/templates",
+        name: "templates",
         component: () => import("./views/app/templates"), //templates
         children: [
           {
-            path: "dashboard.v1",
-            component: () => import("./views/app/dashboards/dashboard.v1")
+            path: "new",
+            name: "templateNew",
+            component: () => import("./views/app/templates/template.new")
           },
+          {
+            path: '',
+            component: () => import('./views/app/templates/index')
+          }
         ]
       },
       {
@@ -71,10 +86,10 @@ const routes = [
         path: "/app/sending",
         component: () => import("./views/app/sending"), //sending
         children: [
-          {
-            path: "dashboard.v1",
-            component: () => import("./views/app/dashboards/dashboard.v1")
-          },
+         // {
+          //  path: "dashboard.v1",
+         //   component: () => import("./views/app/dashboards/dashboard.v1")
+         // },
         ]
       },
       {
