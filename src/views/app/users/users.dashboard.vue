@@ -2,7 +2,7 @@
 	<!--	Body start content-->
 	<div class="main-content">
 		<breadcumb :page="'Users & Groups'" :folder="''"/>
-		<b-button variant="primary" v-b-modal:groups-new>New Group</b-button>
+		<b-button variant="primary" v-b-modal:users-new>New Group</b-button>
 		<div class="my-4"></div>
 
 		<b-row>
@@ -23,38 +23,38 @@
 							styleClass="tableOne vgt-table"
 					>
 						<template slot="table-row" slot-scope="props">
-									<span v-if="props.column.field === 'action'">
-										<b-dropdown
-												id="dropdown-left"
-												variant="link"
-												text="Left align"
-												toggle-class="text-decoration-none"
-												size="md"
-												dropleft
-												no-caret
-										>
-											<template v-slot:button-content class="_r_btn border-0">
-												<span class="_dot _r_block-dot bg-dark"></span>
-												<span class="_dot _r_block-dot bg-dark"></span>
-												<span class="_dot _r_block-dot bg-dark"></span>
-											</template>
+							<span v-if="props.column.field === 'action'">
+								<b-dropdown
+										id="dropdown-left"
+										variant="link"
+										text="Left align"
+										toggle-class="text-decoration-none"
+										size="md"
+										dropleft
+										no-caret
+								>
+									<template v-slot:button-content class="_r_btn border-0">
+										<span class="_dot _r_block-dot bg-dark"></span>
+										<span class="_dot _r_block-dot bg-dark"></span>
+										<span class="_dot _r_block-dot bg-dark"></span>
+									</template>
 
-											<b-dropdown-item class="dropdown-item" @click="duplicateCampaign(props.row)">
-												<i class="nav-icon i-File-Copy text-info font-weight-bold mr-2"></i>Duplicate
-											</b-dropdown-item>
-											<b-dropdown-item class="dropdown-item" @click="editCampaign(props.row)">
-												<i class="nav-icon i-Pen-2 text-success font-weight-bold mr-2"></i>Edit
-											</b-dropdown-item>
-											<b-dropdown-item>
-												<a class="dropdown-item" @click="deleteCampaign(props.row)">
-													<i class="nav-icon i-Close-Window text-danger font-weight-bold mr-2"></i>Delete
-												</a>
-											</b-dropdown-item>
-										</b-dropdown>
-									</span>
+									<b-dropdown-item class="dropdown-item" @click="duplicateCampaign(props.row)">
+										<i class="nav-icon i-File-Copy text-info font-weight-bold mr-2"></i>Duplicate
+									</b-dropdown-item>
+									<b-dropdown-item class="dropdown-item" @click="editCampaign(props.row)">
+										<i class="nav-icon i-Pen-2 text-success font-weight-bold mr-2"></i>Edit
+									</b-dropdown-item>
+									<b-dropdown-item>
+										<a class="dropdown-item" @click="deleteCampaign(props.row)">
+											<i class="nav-icon i-Close-Window text-danger font-weight-bold mr-2"></i>Delete
+										</a>
+									</b-dropdown-item>
+								</b-dropdown>
+							</span>
 							<span v-if="props.column.field === 'status'">
-										<span class="badge badge-pill badge-outline-primary p-2 ">{{ props.row.status }}</span>
-									</span>
+								<span class="badge badge-pill badge-outline-primary p-2 ">{{ props.row.status }}</span>
+							</span>
 							<span v-else>{{ props.formattedRow[props.column.field] }}</span>
 						</template>
 					</vue-good-table>
@@ -65,6 +65,8 @@
 </template>
 
 <script>
+import { isEmpty as _isEmpty} from '@/helpers'
+import UsersNew from "@/views/app/users/users.new";
 export default {
 	name: "users.dashboard",
 	data() {
@@ -74,7 +76,9 @@ export default {
 		}
 	},
 	methods: {
-		isEmpty(){}
+		isEmpty(arr){
+			return _isEmpty(arr);
+		}
 	}
 }
 </script>

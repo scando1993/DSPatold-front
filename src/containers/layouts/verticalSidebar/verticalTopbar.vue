@@ -12,7 +12,7 @@
 				<i
 						class="i-Add-UserStar mr-3 text-20 cursor-pointer"
 						v-b-tooltip.hover
-						v-b-modal:groups-new
+						v-b-modal:users-new
 						title="User"
 				></i>
 				<i
@@ -219,25 +219,28 @@
 				</div>
 			</div>
 		</header>
-		<b-modal id="groups-new" title="New Groups">
-			<b-container fluid>
-				<b-form id="groups-new-form" @submit="" @reset="">
+		<users-new />
+<!--		<b-modal id="groups-new" title="New Groups">-->
+<!--			<b-container fluid>-->
+<!--				<b-form id="groups-new-form" @submit="" @reset="">-->
 
-				</b-form>
-			</b-container>
-			<div slot="modal-footer" class="ml-auto">
-				<b-button form="form-1" type="reset" variant="danger">Reset</b-button>
-				<span class="mx-2"></span>
-				<b-button form="form-1" type="submit" variant="primary">Submit</b-button>
-			</div>
-		</b-modal>
+<!--				</b-form>-->
+<!--			</b-container>-->
+<!--			<div slot="modal-footer" class="ml-auto">-->
+<!--				<b-button form="form-1" type="reset" variant="danger">Reset</b-button>-->
+<!--				<span class="mx-2"></span>-->
+<!--				<b-button form="form-1" type="submit" variant="primary">Submit</b-button>-->
+<!--			</div>-->
+<!--		</b-modal>-->
 	</div>
 </template>
 <script>
 import {mapGetters, mapActions} from "vuex";
 import Util from "@/utils";
+import UsersNew from "@/views/app/users/users.new";
 
 export default {
+	components: { UsersNew },
 	computed: {
 		...mapGetters(["getVerticalCompact", "getVerticalSidebar", "getSideBarToggleProperties"])
 	},
@@ -250,8 +253,6 @@ export default {
 		handleFullScreen() {
 			Util.toggleFullScreen();
 		},
-			onSubmit(evt){},
-			onReset(evt){}
 	}
 };
 </script>>

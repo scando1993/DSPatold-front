@@ -1,3 +1,3 @@
-export function isEmpty(){
-
+export function isEmpty(arr){
+	return !Array.isArray(arr) || !arr.length;
 }
