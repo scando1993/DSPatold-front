@@ -1,5 +1,18 @@
-function query(){
+import axios from "axios";
 
+function query(endpoint, method, data, async) {
+	return axios({
+		baseURL: 'http://192.168.100.4:3333/api' + endpoint,
+		method: method,
+		data: data,
+		transformRequest: [(data, headers) => {
+			return data;
+		}],
+		headers: {
+			'Authorization': 'Bearer 52b6d8bd1150ab990c2e7ce4d5a568fff6da58a0202745a079a00c9401e999eb',
+			'Content-Type': "application/json"
+		}
+	})
 }
 /*
 Define our API Endpoints
@@ -9,6 +22,7 @@ let api = {
 	campaigns: {
 		// get() - Queries the API for GET /campaigns
 		get: function () {
+			console.log("GET CAMPAIGNS");
 			return query("/campaigns/", "GET", {}, false)
 		},
 		// post() - Posts a campaign to POST /campaigns

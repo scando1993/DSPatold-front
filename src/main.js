@@ -30,7 +30,8 @@ import 'vue-select/src/scss/vue-select.scss';
 import VueSweetalert2 from "vue-sweetalert2";
 
 import "@/assets/styles/sass/themes/lite-blue.scss";
-import VueApexCharts from 'vue-apexcharts'
+import VueApexCharts from 'vue-apexcharts';
+import moment from 'moment';
 
 Vue.config.productionTip = false
 
@@ -93,6 +94,12 @@ Vue.use(VueLazyload, {
 });
 
 firebase.initializeApp(firebaseSettings);
+
+Vue.filter('formatDate', function(value) {
+  if (value) {
+    return moment(String(value)).format('MM/DD/YYYY hh:mm')
+  }
+});
 
 new Vue({
   securedAxiosInstance,

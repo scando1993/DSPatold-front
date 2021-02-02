@@ -19,13 +19,21 @@
 									v-if="!isEmpty(activeCampaigns)"
 									:columns="columns2"
 									:rows="activeCampaigns"
-									:search-options="{
-											enabled: true
-										}"
+									:search-options="{ enabled: true }"
 									styleClass="tableOne vgt-table"
 							>
 								<template slot="table-row" slot-scope="props">
-									<span v-if="props.column.field === 'action'">
+									<span v-if="props.column.field === 'name'">
+										<router-link :to="{ name: 'campaignShow', params: { id: props.row.id }}">{{ props.row.name }}</router-link>
+									</span>
+									<span v-if="props.column.field === 'created_date'">
+										{{ props.row.created_date | formatDate }}
+										<!-- <span class="badge badge-pill badge-outline-primary p-2 ">{{ props.row.status }}</span> -->
+									</span>
+									<span v-if="props.column.field === 'status'">
+										<span class="badge badge-pill badge-outline-primary p-2 ">{{ props.row.status }}</span>
+									</span>
+									<span v-if="props.column.field === 'actions'">
 										<b-dropdown
 												id="dropdown-left"
 												variant="link"
@@ -54,15 +62,7 @@
 											</b-dropdown-item>
 										</b-dropdown>
 									</span>
-									<span v-if="props.column.field === 'status'">
-										<span class="badge badge-pill badge-outline-primary p-2 ">{{ props.row.status }}</span>
-									</span>
-									<span v-if="props.column.field === 'name'">
-										<!--<router-link to="show/'{props.row.name}'" >{{ props.row.name }}
-										</router-link>-->
-										<router-link :to="{ name: 'campaignShow', params: { id: 123 }}">User</router-link>
-									</span>
-									<span v-else>{{ props.formattedRow[props.column.field] }}</span>
+									<!-- <span v-else>{{ props.formattedRow[props.column.field] }}</span> -->
 								</template>
 							</vue-good-table>
 						</b-tab>
@@ -79,7 +79,7 @@
 		</b-row>
 
 		<!--Modal create / show-->
-		<b-modal id="campaign-1" title="New Campaign" size="lg" v-model="show">
+		<!-- <b-modal id="campaign-1" title="New Campaign" size="lg" v-model="show">
 			<b-container fluid>
 				<b-form id="form-1" @submit="onSubmit" @reset="onReset">
 					<b-form-group id="input-group-1" label="Name:" label-for="input-1">
@@ -195,8 +195,8 @@
 				<span class="mx-2"></span>
 				<b-button form="form-1" type="submit" variant="primary">Submit</b-button>
 			</div>
-		</b-modal>
-		<b-modal id="campaign-2" title="Send Test Email" size="lg">
+		</b-modal> -->
+		<!-- <b-modal id="campaign-2" title="Send Test Email" size="lg">
 			<b-form>
 				<b-form-group id="input-group-11" label="Send Test Email to:" label-for="input-11">
 					<b-container fluid>
@@ -237,13 +237,14 @@
 					</b-container>
 				</b-form-group>
 			</b-form>
-		</b-modal>
+		</b-modal> -->
 	</div>
 
 </template>
 
 <script>
 import moment from 'moment';
+import api from '../../../api/api';
 
 export default {
 	metaInfo: {
@@ -262,32 +263,13 @@ export default {
 					tdClass: "text-left"
 				},
 				{
-					label: "Groups",
-					field: "groups",
-					thClass: "text-left",
-					tdClass: "text-left"
-				},
-				{
-					label: "Tests",
-					field: "tests",
-					thClass: "text-left",
-					tdClass: "text-left"
-				},
-				{
-					label: "Phish-prone %",
-					field: "phishProne",
-					thClass: "text-left",
-					tdClass: "text-left",
-					type: "percentage"
-				},
-				{
-					label: "Last test",
-					field: "lastTest",
+					label: "Created Date",
+					field: "created_date",
 					type: "date",
 					thClass: "text-left",
 					tdClass: "text-left",
-					dateInputFormat: "yyyy-mm-dd",
-					dateOutputFormat: "MMM Do yy"
+					dateInputFormat: 'yyyy-MM-dd HH:mm:ss',
+    			dateOutputFormat: 'DD-MM-YYYY HH:mm:ss'
 				},
 				{
 					label: "Status",
@@ -296,140 +278,10 @@ export default {
 					tdClass: "text-left"
 				},
 				{
-					label: "",
-					field: "action",
+					label: "Actions",
+					field: "actions",
 					thClass: "text-right",
 					tdClass: "text-right"
-				}
-			],
-			rows: [
-				{
-					id: 1,
-					name: "John",
-					img:
-						'<img src="' +
-						require("@/assets/images/products/iphone-1.jpg") +
-						'" class="rounded-circle avatar-sm" alt=""> <img src="' +
-						require("@/assets/images/products/iphone-2.jpg") +
-						'" class="rounded-circle avatar-sm" alt="">',
-					span:
-						'<span class="badge badge-pill badge-outline-primary p-2 ">Delivered</span>',
-					createdAt: "2019-10-31 ",
-					score: 0.03343,
-					action:
-						'<button class=" btn btn-outline-primary text-black btn-rounded">View</button>'
-				},
-				{
-					id: 2,
-					name: "Jane",
-					img:
-						'<img src="' +
-						require("@/assets/images/products/headphone-1.jpg") +
-						'" class="rounded-circle avatar-sm" alt=""> <img src="' +
-						require("@/assets/images/products/headphone-2.jpg") +
-						'" class="rounded-circle avatar-sm" alt="">',
-					span:
-						'<span class="badge badge-pill badge-outline-danger p-2">Shipped</span>',
-					createdAt: "2011-10-31",
-					score: 0.03343,
-					action:
-						'<button class=" btn btn-outline-primary text-black btn-rounded">View</button>'
-				},
-				{
-					id: 3,
-					name: "Susan",
-					img:
-						'<img src="' +
-						require("@/assets/images/products/headphone-3.jpg") +
-						'" class="rounded-circle avatar-sm" alt=""> <img src="' +
-						require("@/assets/images/products/headphone-4.jpg") +
-						'" class="rounded-circle avatar-sm" alt="">',
-					span:
-						'<span class="badge badge-pill badge-outline-success p-2 ">Delivered</span>',
-					createdAt: "2011-10-30",
-					score: 0.03343,
-					action:
-						'<button class=" btn btn-outline-primary text-black btn-rounded">View</button>'
-				},
-				{
-					id: 4,
-					name: "Chris",
-					img:
-						'<img src="' +
-						require("@/assets/images/products/speaker-1.jpg") +
-						'" class="rounded-circle avatar-sm" alt=""> <img src="' +
-						require("@/assets/images/products/speaker-2.jpg") +
-						'" class="rounded-circle avatar-sm" alt="">',
-					span:
-						'<span class="badge badge-pill badge-outline-primary p-2">Pending</span>',
-					createdAt: "2011-10-11",
-					score: 0.03343,
-					action:
-						'<button class=" btn btn-outline-primary text-black btn-rounded">View</button>'
-				},
-				{
-					id: 5,
-					name: "Dan",
-					img:
-						'<img src="' +
-						require("@/assets/images/products/watch-1.jpg") +
-						'" class="rounded-circle avatar-sm" alt=""> <img src="' +
-						require("@/assets/images/products/watch-2.jpg") +
-						'" class="rounded-circle avatar-sm" alt="">',
-					span:
-						'<span class="badge badge-pill badge-outline-info p-2">Processing</span>',
-					createdAt: "2011-10-21",
-					score: 0.03343,
-					action:
-						'<button class=" btn btn-outline-primary text-black btn-rounded">View</button>'
-				},
-				{
-					id: 6,
-					name: "John",
-					img:
-						'<img src="' +
-						require("@/assets/images/products/speaker-1.jpg") +
-						'" class="rounded-circle avatar-sm" alt=""> <img src="' +
-						require("@/assets/images/products/speaker-2.jpg") +
-						'" class="rounded-circle avatar-sm" alt="">',
-					span:
-						'<span class="badge badge-pill badge-outline-success p-2 ">Delivered</span>',
-					createdAt: "2011-10-31",
-					score: 0.03343,
-					action:
-						'<button class=" btn btn-outline-primary text-black btn-rounded">View</button>'
-				},
-				{
-					id: 7,
-					name: "John",
-					img:
-						'<img src="' +
-						require("@/assets/images/products/headphone-3.jpg") +
-						'" class="rounded-circle avatar-sm" alt=""> <img src="' +
-						require("@/assets/images/products/headphone-4.jpg") +
-						'" class="rounded-circle avatar-sm" alt="">',
-					span:
-						'<span class="badge badge-pill badge-outline-info p-2 ">Pending</span>',
-					createdAt: "2019-10-31 ",
-					score: 0.03343,
-					action:
-						'<button class=" btn btn-outline-primary text-black btn-rounded">View</button>'
-				},
-				{
-					id: 8,
-					name: "Jane",
-					img:
-						'<img src="' +
-						require("@/assets/images/products/iphone-1.jpg") +
-						'" class="rounded-circle avatar-sm" alt=""> <img src="' +
-						require("@/assets/images/products/iphone-1.jpg") +
-						'" class="rounded-circle avatar-sm" alt="">',
-					span:
-						'<span class="badge badge-pill badge-outline-danger p-2">Shipped</span>',
-					createdAt: "2011-10-31",
-					score: 0.03343,
-					action:
-						'<button class=" btn btn-outline-primary text-black btn-rounded">View</button>'
 				}
 			],
 			form: {
@@ -448,22 +300,20 @@ export default {
 				email: '',
 				position: ''
 			},
-			activeCampaigns: [
-				{
-					name: "Baseline Test",
-					groups: 'All users',
-					tests: 1,
-					phishProne: 0.50,
-					lastTest: "2020-11-30",
-					status: 'Open',
-					action: '',
-				}
-			],
+			activeCampaigns: [],
 		}
+	},
+	mounted() {
+		api.campaigns.summary()
+			.then(response => {
+				this.activeCampaigns = response.data.campaigns;
+			}).catch(err => {
+				console.log(err);
+			});
 	},
 	methods: {
 		onSubmit(evt) {
-			console.log(JSON.stringify(this.form))
+			// console.log(JSON.stringify(this.form))
 			evt.preventDefault()
 			alert(JSON.stringify(this.form))
 			// Trick to reset/clear native browser form validation state
@@ -554,7 +404,7 @@ export default {
 			})
 		},
 		isEmpty(arr) {
-			console.log(!Array.isArray(arr) || !arr.length);
+			// console.log(!Array.isArray(arr) || !arr.length);
 			return !Array.isArray(arr) || !arr.length;
 		},
 		sendTestEmail() {
