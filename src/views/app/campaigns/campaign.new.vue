@@ -3,8 +3,8 @@
 		<breadcumb :page="'New Campaign'" :folder="'Campaigns'"/>
 		<div class="d-flex flex-row">
 			<b-button class="mx-3" variant="light" @click="$router.back()">Go back</b-button>
-			<b-button class="mx-3" form="form1" type="reset" variant="danger">Reset</b-button>
-			<b-button class="mx-3" form="form1" type="submit" variant="primary">Submit</b-button>
+			<b-button class="mx-3" form="form-1" type="reset" variant="danger">Reset</b-button>
+			<b-button class="mx-3" form="form-1" type="submit" variant="primary">Submit</b-button>
 		</div>
 		<div class="my-4"></div>
 
@@ -34,10 +34,12 @@
 									<v-select
 											id="input-8"
 											v-model="form.groups"
+											:options="groups"
+											:reduce="group => group.name"
+											label="name"
 											required
 											multiple
 											placeholder="Select Groups"
-											:options="groups"
 									></v-select>
 								</b-form-group>
 							</span>
@@ -49,8 +51,11 @@
 							>
 								<v-select
 										id="input-emailTemplate"
-										v-model="form.emailTemplate"
-										:options="emailTemplate"
+										v-model="form.template.name"
+										:options="templates"
+										:reduce="template => template.name"
+										label="name"
+										required
 										class="style-chooser-1"
 										placeholder="Select email template"
 								/>
@@ -59,8 +64,11 @@
 							<b-form-group id="input-group-3" label="Landing Page:" label-for="input-3">
 								<v-select
 										id="input-3"
-										v-model="form.landingPage"
-										:options="landings"
+										v-model="form.page.name"
+										:options="pages"
+										:reduce="page => page.name"
+										label="name"
+										required
 										placeholder="Select a Landing Page"
 								/>
 							</b-form-group>
@@ -69,7 +77,6 @@
 								<b-form-input
 										id="input-4"
 										v-model="form.url"
-										required
 										placeholder="http://192.168.1.1"
 								></b-form-input>
 							</b-form-group>
@@ -84,12 +91,12 @@
 
 										<b-form-datepicker
 												id="input-5"
-												v-model="form.launchDate"
+												v-model="form.launch_date"
 												required
 												locale="es"
 										></b-form-datepicker>
 
-										<b-form-timepicker v-model="form.launchDateHours"></b-form-timepicker>
+										<b-form-timepicker v-model="launch_hour" required></b-form-timepicker>
 
 									</b-form-group>
 
@@ -99,11 +106,10 @@
 									<b-form-group id="input-group-6" label="Send Emails by (Optional)" label-for="input-6">
 										<b-form-datepicker
 												id="input-6"
-												v-model="form.sendEmails"
-												required
+												v-model="form.send_by_date"
 												locale="es"
 										></b-form-datepicker>
-										<b-form-timepicker v-model="form.sendEmailsHours"></b-form-timepicker>
+										<b-form-timepicker v-model="send_by_hour"></b-form-timepicker>
 									</b-form-group>
 								</b-col>
 							</b-form-row>
@@ -114,10 +120,12 @@
 									<b-col cols="9">
 										<v-select
 												id="input-7"
-												v-model="form.sendingProfiles"
+												v-model="form.smtp.name"
+												:options="sendProfiles"
+												:reduce="profile => profile.name"
+												label="name"
 												required
 												placeholder="Select a Sending Profile"
-												:options="profiles"
 										/>
 									</b-col>
 									<b-col cols="3">
@@ -218,45 +226,80 @@
 
 <script>
 import moment from "moment";
+import api from '../../../api/api';
 
 export default {
 	name: "campaign-new",
 	data() {
 		return {
 			form: {
-				emailTemplate: null,
 				name: '',
-				landingPage: null,
+				template: { name: '' },
 				url: '',
-				launchDate: '',
-				launchDateHours: '',
-				sendEmails: '',
-				sendEmailsHours: '',
-				sendingProfiles: null,
+				page: { name: '' },
+				smtp: { name: '' },
+				launch_date: null,
+				send_by_date: null,
 				groups: []
 			},
+			launch_hour: '00:00:00',
+			send_by_hour: '00:00:00',
 			testForm: {
 				first_name: '',
 				last_name: '',
 				email: '',
 				position: ''
 			},
-			groups: ['Prueba', 'Mi nuevo grupo', 'Demo Facebook'],
-			emailTemplate: ['Template facebook', 'Mi template Prueba'],
-			ladings: ['Intermatico'],
+			groups: [],
+			templates: [],
+			pages: [],
 			sendToAllGroups: true,
-			profiles: ['Facebook Profile']
+			sendProfiles: [],
+			sending: false
 		}
+	},
+	mounted() {
+		api.templates.get()
+			.then(response => {
+				this.templates = response.data;
+			}).catch(err => {
+				console.log(err);
+			});
+		
+		api.pages.get()
+			.then(response => {
+				this.pages = response.data;
+			}).catch(err => {
+				console.log(err);
+			});
+
+		api.groups.summary()
+			.then(response => {
+				this.groups = response.data.groups;
+				this.form.groups = this.groups.map(x => x.name);
+			}).catch(err => {
+				console.log(err);
+			});
+
+		api.SMTP.get()
+			.then(response => {
+				this.sendProfiles = response.data;
+			}).catch(err => {
+				console.log(err);
+			});
 	},
 	methods: {
 		sendToAllUsers() {
-			this.form.groups = [];
+			this.form.groups = this.groups.map(x => x.name);
 			this.sendToAllGroups = true;
 		},
 		onSubmit(evt) {
-			console.log(JSON.stringify(this.form))
+			this.form.launch_date += `T${this.launch_hour}+00:00`;
+			if (this.form.send_by_date) this.form.send_by_date += `T${this.send_by_hour}+00:00`;
+			this.form.groups = this.form.groups.map(x => { return { name: x } });
+			
+			console.log(this.form);
 			evt.preventDefault()
-			alert(JSON.stringify(this.form))
 			// Trick to reset/clear native browser form validation state
 			this.show = false
 			this.$nextTick(() => {
@@ -275,43 +318,43 @@ export default {
 				allowOutsideClick: false,
 				showLoaderOnConfirm: true,
 				preConfirm: function () {
-					return new Promise(function (resolve) {
-						let groups = _this.form.groups;
-
-						// Validate our fields
-						let send_by_date = _this.form.sendEmails;
-						if (send_by_date !== "") {
-							send_by_date = moment(send_by_date, "MMMM Do YYYY, h:mm a").utc().format()
-						}
-						let campaign = {
-							name: _this.form.name,
-							template: {
-								name: _this.form.emailTemplate
-							},
-							url: _this.form.url,
-							page: {
-								name: _this.form.landingPage
-							},
-							smtp: {
-								name: _this.form.sendingProfiles
-							},
-							launch_date: moment(_this.form.launchDate, "MMMM Do YYYY, h:mm a").utc().format(),
-							send_by_date: send_by_date || null,
-							groups: groups,
-						}
-						_this.activeCampaigns.push(campaign);
-						resolve()
+					return new Promise(function (resolve, reject) {
 						// Submit the campaign
-						//     api.campaigns.post(campaign)
-						//         .success(function (data) {
-						//             resolve()
-						//             campaign = data
-						//         })
-						//         .error(function (data) {
-						//             $("#modal\\.flashes").empty().append("<div style=\"text-align:center\" class=\"alert alert-danger\">\
-						// <i class=\"fa fa-exclamation-circle\"></i> " + data.responseJSON.message + "</div>")
-						//             Swal.close()
-						//         })
+						console.log(_this.form);
+						api.campaigns.post(_this.form)
+							.then(response => {
+									resolve()
+									campaign = response
+							})
+							.catch(error => {
+									$("#modal\\.flashes").empty().append("<div style=\"text-align:center\" class=\"alert alert-danger\">\
+			<i class=\"fa fa-exclamation-circle\"></i> " + error.responseJSON.message + "</div>")
+									Swal.close()
+							})
+						// let groups = _this.form.groups;
+
+						// // Validate our fields
+						// let send_by_date = _this.form.sendEmails;
+						// if (send_by_date !== "") {
+						// 	send_by_date = moment(send_by_date, "MMMM Do YYYY, h:mm a").utc().format()
+						// }
+						// let campaign = {
+						// 	name: _this.form.name,
+						// 	template: {
+						// 		name: _this.form.emailTemplate
+						// 	},
+						// 	url: _this.form.url,
+						// 	page: {
+						// 		name: _this.form.landingPage
+						// 	},
+						// 	smtp: {
+						// 		name: _this.form.sendingProfiles
+						// 	},
+						// 	launch_date: moment(_this.form.launchDate, "MMMM Do YYYY, h:mm a").utc().format(),
+						// 	send_by_date: send_by_date || null,
+						// 	groups: groups,
+						// }
+						// _this.activeCampaigns.push(campaign);
 					})
 				}
 			})
@@ -329,15 +372,17 @@ export default {
 			evt.preventDefault()
 			// Reset our form values
 			this.form = {
-				emailTemplate: null,
 				name: '',
-				landingPage: null,
+				template: { name: '' },
 				url: '',
-				launchDate: '',
-				sendEmails: '',
-				sendingProfiles: null,
+				page: { name: '' },
+				smtp: { name: '' },
+				launch_date: null,
+				send_by_date: null,
 				groups: [],
 			}
+			this.launch_hour = '00:00:00';
+			this.send_by_hour = '00:00:00';
 			// Trick to reset/clear native browser form validation state
 			this.show = false
 			this.$nextTick(() => {
