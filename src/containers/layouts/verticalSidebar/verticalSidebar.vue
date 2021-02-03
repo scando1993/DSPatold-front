@@ -220,7 +220,6 @@ export default {
 
 			if (currentParentUrl !== undefined || currentParentUrl !== null) {
 				this.selectedParentMenu = currentParentUrl.toLowerCase();
-				console.log(currentParentUrl)
 			} else {
 				this.selectedParentMenu = "dashboards";
 			}

@@ -5,9 +5,6 @@ function query(endpoint, method, data, async) {
 		baseURL: 'http://192.168.100.4:3333/api' + endpoint,
 		method: method,
 		data: JSON.stringify(data),
-		// transformRequest: [(data, headers) => {
-		// 	return data;
-		// }],
 		headers: {
 			'Authorization': 'Bearer 52b6d8bd1150ab990c2e7ce4d5a568fff6da58a0202745a079a00c9401e999eb',
 			'Content-Type': "application/json"
@@ -22,7 +19,6 @@ let api = {
 	campaigns: {
 		// get() - Queries the API for GET /campaigns
 		get: function () {
-			console.log("GET CAMPAIGNS");
 			return query("/campaigns/", "GET", {}, false)
 		},
 		// post() - Posts a campaign to POST /campaigns

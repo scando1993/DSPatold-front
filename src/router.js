@@ -58,7 +58,6 @@ const routes = [
       },
       {
         path: "/app/templates",
-        name: "templates",
         component: () => import("./views/app/templates"), //templates
         children: [
           {
