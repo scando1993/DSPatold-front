@@ -62,12 +62,16 @@ const routes = [
         children: [
           {
             path: "new",
-            name: "templateNew",
             component: () => import("./views/app/templates/template.new")
           },
           {
+            path: "show/:id",
+            name: "templateShow",
+            component: () => import('./views/app/templates/template.show')
+          },
+          {
             path: '',
-            component: () => import('./views/app/templates/index')
+            component: () => import('./views/app/templates/template.list')
           }
         ]
       },

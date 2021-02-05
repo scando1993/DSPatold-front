@@ -1,8 +1,11 @@
 import axios from "axios";
 
+const API_URL = "https://acbd481a43e1.ngrok.io/api";
+// const API_URL = "http://192.168.100.4:3333/api";
+
 function query(endpoint, method, data, async) {
 	return axios({
-		baseURL: 'http://192.168.100.4:3333/api' + endpoint,
+		baseURL: API_URL + endpoint,
 		method: method,
 		data: JSON.stringify(data),
 		headers: {
