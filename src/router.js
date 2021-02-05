@@ -76,9 +76,22 @@ const routes = [
         ]
       },
       {
-        path: "/app/landing",
-        component: () => import("./views/app/landing"), //landing
+        path: "/app/landing_pages",
+        component: () => import("./views/app/landing_pages"), //landing
         children: [
+          {
+            path: "new",
+            component: () => import("./views/app/landing_pages/landing.new")
+          },
+          {
+            path: "show/:id",
+            name: "landingShow",
+            component: () => import('./views/app/landing_pages/landing.show')
+          },
+          {
+            path: '',
+            component: () => import('./views/app/landing_pages/landing.list')
+          },
           {
             path: "dashboard.v1",
             component: () => import("./views/app/dashboards/dashboard.v1")

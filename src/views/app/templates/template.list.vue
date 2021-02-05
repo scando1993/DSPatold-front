@@ -2,7 +2,7 @@
 	<!--	Body start content-->
 	<div class="main-content">
 		<breadcumb :page="'Email Templates'" :folder="''"/>
-		<b-button variant="primary" @click="$router.push('new')">New Template</b-button>
+		<b-button variant="primary" @click="$router.push('templates/new')">New Template</b-button>
 		<div class="my-4"></div>
 		
 		<b-row>

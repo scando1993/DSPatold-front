@@ -87,8 +87,8 @@
 					<!-- Landing Page menu> -->
 					<li class="Ul_li--hover">
 						<div>
-							<a class="has-arrow " href="/app/landing" :class="{ active: selectedParentMenu === 'landing' }">
-								<router-link tag="div" to="/app/landing">
+							<a class="has-arrow " href="/app/landing_pages" :class="{ active: selectedParentMenu === 'landing' }">
+								<router-link tag="div" to="/app/landing_pages">
 									<i class="i-Monitor-Analytics text-20 mr-2 sidebar-text"/>
 									<span class="text-15 sidebar-text" :class="{ 'vertical-item-name': getVerticalCompact.isItemName }">Landing Pages</span>
 								</router-link>

@@ -1,6 +1,6 @@
 <template>
 	<div class="main-content">
-		<breadcumb :page="'Email Template'" :folder="'Templates'" />
+		<breadcumb :page="'Landing Page'" :folder="''" />
 		<div class="my-4"></div>
 	</div>
 </template>
@@ -8,14 +8,15 @@
 <script>
 export default {
 	metaInfo: {
-		title: "Templates",
+		title: "Landing Pages",
 	},
-	name: "template-show",
+	name: "landing-show",
 	data() {
 		return {};
-	},
-};
+	}
+}
 </script>
 
-<style scoped>
+<style>
+
 </style>

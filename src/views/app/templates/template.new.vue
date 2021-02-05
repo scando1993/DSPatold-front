@@ -1,6 +1,6 @@
 <template>
 	<div class="main-content">
-		<breadcumb :page="'New Template'" :folder="'Templates'"/>
+		<breadcumb :page="'New Email Template'" :folder="''"/>
 		<div class="d-flex flex-row">
 			<b-button class="mx-3" variant="light" @click="$router.back()">Go back</b-button>
 			<b-button class="mx-3" form="form-1" type="reset" variant="danger">Reset</b-button>
@@ -79,9 +79,9 @@
 								</b-form-checkbox>
 							</b-form-group>
 
-							<b-form-group>
+							<!-- <b-form-group>
 								<b-form-file v-model="file" class="mt-3" browse-text="'Add File'" plain @input="addItemTable(file)" ></b-form-file>
-							</b-form-group>
+							</b-form-group> -->
 
 							<!-- <div class="row">
 							
@@ -147,6 +147,7 @@ import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
 import { quillEditor } from 'vue-quill-editor'
+import api from '../../../api/api';
 	
 export default {
 	name: "template-new",
@@ -193,8 +194,6 @@ export default {
 	},
 	methods: {
 		onSubmit(evt) {
-			console.log(this.form);
-			console.log(this.checkFormValidity());
 			evt.preventDefault()
 			// Trick to reset/clear native browser form validation state
 			this.show = false
@@ -204,43 +203,43 @@ export default {
 
 			let _this = this;
 			
-			// this.$swal.fire({
-			// 	title: "Are you sure?",
-			// 	text: "This will schedule the campaign to be launched.",
-			// 	icon: "question",
-			// 	showClass: {
-			// 		popup: '',
-			// 		backdrop: ''
-			// 	},
-			// 	showCancelButton: true,
-			// 	confirmButtonText: "Launch",
-			// 	confirmButtonColor: "#428bca",
-			// 	reverseButtons: true,
-			// 	allowOutsideClick: false,
-			// 	showLoaderOnConfirm: true,
-			// 	preConfirm: function () {
-			// 		return new Promise(function (resolve, reject) {
-			// 			// Submit the campaign
-			// 			api.campaigns.post(_this.form)
-			// 				.then(response => {
-			// 					resolve();
-			// 				})
-			// 				.catch(error => {
-			// 					const errorMsg = error.response.data.message;
-			// 					_this.$swal.close();
-			// 					_this.$swal.fire('Error!', errorMsg, 'error');
-			// 				})
-			// 		});
-			// 	}
-			// })
-			// 	.then(function (result) {
-			// 		if (result.value) {
-			// 			_this.$swal.fire(
-			// 				'Campaign Scheduled!',
-			// 				'This campaign has been scheduled for launch!',
-			// 				'success');
-			// 		}
-			// 	});
+			this.$swal.fire({
+				title: "Are you sure?",
+				text: "This will add a new email template.",
+				icon: "question",
+				showClass: {
+					popup: '',
+					backdrop: ''
+				},
+				showCancelButton: true,
+				confirmButtonText: "Launch",
+				confirmButtonColor: "#428bca",
+				reverseButtons: true,
+				allowOutsideClick: false,
+				showLoaderOnConfirm: true,
+				preConfirm: function () {
+					return new Promise(function (resolve, reject) {
+						// Submit the campaign
+						api.templates.post(_this.form)
+							.then(response => {
+								resolve();
+							})
+							.catch(error => {
+								const errorMsg = error.response.data.message;
+								_this.$swal.close();
+								_this.$swal.fire('Error!', errorMsg, 'error');
+							})
+					});
+				}
+			})
+				.then(function (result) {
+					if (result.value) {
+						_this.$swal.fire(
+							'Template added successfully!',
+							'This template has been added successfully!',
+							'success');
+					}
+				});
 		},
 		onReset(evt) {
 			evt.preventDefault()
