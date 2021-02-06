@@ -15,10 +15,10 @@
 						<b-form id="form-1" @submit="onSubmit" @reset="onReset">
 							<b-form-group id="input-group-1" label="Page Name:" label-for="input-1">
 								<b-form-input
-										id="input-1"
-										v-model="form.name"
-										required
-										placeholder="Page name"
+									id="input-1"
+									v-model="form.name"
+									required
+									placeholder="Page name"
 								></b-form-input>
 							</b-form-group>
 
@@ -63,6 +63,12 @@
 				</b-card>
 			</b-col>
 		</b-row>
+	
+		<div>
+			<b-modal id="modal_import" hide-footer title="New Import" size="lg">
+				<!-- Add modal form -->
+			</b-modal>
+		</div>
 	</div>
 </template>
 

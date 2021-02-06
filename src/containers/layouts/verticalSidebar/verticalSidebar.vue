@@ -87,7 +87,7 @@
 					<!-- Landing Page menu> -->
 					<li class="Ul_li--hover">
 						<div>
-							<a class="has-arrow " href="/app/landing_pages" :class="{ active: selectedParentMenu === 'landing' }">
+							<a class="has-arrow " href="/app/landing_pages" :class="{ active: selectedParentMenu === 'landing_pages' }">
 								<router-link tag="div" to="/app/landing_pages">
 									<i class="i-Monitor-Analytics text-20 mr-2 sidebar-text"/>
 									<span class="text-15 sidebar-text" :class="{ 'vertical-item-name': getVerticalCompact.isItemName }">Landing Pages</span>
@@ -99,8 +99,8 @@
 					<!-- Sending Profiles menu-->
 					<li class="Ul_li--hover">
 						<div>
-							<a class="has-arrow " href="#" :class="{ active: selectedParentMenu === 'sending' }">
-								<router-link tag="div" to="/app/sending">
+							<a class="has-arrow " href="#" :class="{ active: selectedParentMenu === 'sending_profiles' }">
+								<router-link tag="div" to="/app/sending_profiles">
 <!--									<img src="@/assets/images/svg/settings.svg" class="text-20 mr-2 icon-sidebar"/>-->
 									<i class="i-Add-Cart text-20 mr-2 sidebar-text"/>
 									<span class="text-15 sidebar-text" :class="{ 'vertical-item-name': getVerticalCompact.isItemName }">Sending Profiles</span>
@@ -148,19 +148,6 @@
 <!--							</a>-->
 <!--						</div>-->
 <!--					</li>-->
-
-					<!-- Sign-out menu> -->
-					<li class="Ul_li--hover">
-						<div>
-							<a class="has-arrow " href="#" @click.prevent="logoutUser">
-								<i class="i-Power-2 text-20 mr-2 sidebar-text"></i>
-								<span
-										class="text-15 sidebar-text"
-										:class="{ 'vertical-item-name': getVerticalCompact.isItemName }"
-								>Sign Out</span>
-							</a>
-						</div>
-					</li>
 
 					<!-- Sign-out menu> -->
 					<li class="Ul_li--hover">

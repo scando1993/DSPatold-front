@@ -1,28 +1,28 @@
 <template>
 	<!--	Body start content-->
 	<div class="main-content">
-		<breadcumb :page="'Landing Pages'" :folder="''"/>
-		<b-button variant="primary" @click="$router.push('landing_pages/new')">New Landing Page</b-button>
+		<breadcumb :page="'Sending Profiles'" :folder="''"/>
+		<b-button variant="primary" @click="$router.push('sending_profiles/new')">New Sending Profile</b-button>
 		<div class="my-4"></div>
 		
 		<b-row>
 			<b-col sm="12">
 				<b-card>
 					<div>
-						<b-alert variant="success" :show="isEmpty(pages)">
-							No pages created yet. Let's create one!
+						<b-alert variant="success" :show="isEmpty(profiles)">
+							No profiles created yet. Let's create one!
 						</b-alert>
 					</div>
 					<vue-good-table
-							v-if="!isEmpty(pages)"
+							v-if="!isEmpty(profiles)"
 							:columns="columns"
-							:rows="pages"
+							:rows="profiles"
 							:search-options="{ enabled: true }"
 							styleClass="tableOne vgt-table"
 					>
 						<template slot="table-row" slot-scope="props">
 							<span v-if="props.column.field === 'name'">
-								<router-link :to="{ name: 'landingShow', params: { id: props.row.id }}">{{ props.row.name }}</router-link>
+								<router-link :to="{ name: 'sendingProfileShow', params: { id: props.row.id }}">{{ props.row.name }}</router-link>
 							</span>
 							<span v-if="props.column.field === 'modified_date'">
 								{{ props.row.modified_date | formatDate }}
@@ -43,14 +43,14 @@
 										<span class="_dot _r_block-dot bg-dark"></span>
 									</template>
 
-									<b-dropdown-item class="dropdown-item" @click="duplicatePage(props.row)">
+									<b-dropdown-item class="dropdown-item" @click="duplicateProfile(props.row)">
 										<i class="nav-icon i-File-Copy text-info font-weight-bold mr-2"></i>Duplicate
 									</b-dropdown-item>
-									<b-dropdown-item class="dropdown-item" @click="editPage(props.row)">
+									<b-dropdown-item class="dropdown-item" @click="editProfile(props.row)">
 										<i class="nav-icon i-Pen-2 text-success font-weight-bold mr-2"></i>Edit
 									</b-dropdown-item>
 									<b-dropdown-item>
-										<a class="dropdown-item" @click="deletePage(props.row)">
+										<a class="dropdown-item" @click="deleteProfile(props.row)">
 											<i class="nav-icon i-Close-Window text-danger font-weight-bold mr-2"></i>Delete
 										</a>
 									</b-dropdown-item>
@@ -65,45 +65,14 @@
 </template>
 
 <script>
-import 'quill/dist/quill.core.css'
-import 'quill/dist/quill.snow.css'
-import 'quill/dist/quill.bubble.css'
-
-import { quillEditor } from 'vue-quill-editor'
 import api from '../../../api/api';
 
 
 export default {
-	name: "landing-page",
-	components: {
-		quillEditor
-	},
+	name: "sending-profile",
 	data() {
 		return {
-			content: '',
-			editorOption: {
-				// Some Quill options...
-			},
-			nameState: null,
-			urlState:null,
-			dataTemplate:[],
-			url:'',
-			fields: [
-				'name',
-				'modified_day',
-			],
-			perPage: 5,
-			currentPage: 1,
-			selected: null,
 			options: [5, 10, 20, 50],
-			form:{
-				name:'',
-				html:'',
-				capture_credentials: true,
-				capture_passwords: true,
-				redirect_url: '',
-				modified_date: ''
-			},
 			columns: [
 				{
 					label: "Name",
@@ -120,13 +89,13 @@ export default {
 					tdClass: "text-right"
 				}
 			],
-			pages: []
+			profiles: []
 		}
 	},
 	mounted() {
-		api.pages.get()
+		api.SMTP.get()
 			.then(response => {
-				this.pages = response.data;
+				this.profiles = response.data;
 			}).catch(err => {
 				console.log(err);
 			});
