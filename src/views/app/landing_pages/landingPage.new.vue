@@ -65,8 +65,22 @@
 		</b-row>
 	
 		<div>
-			<b-modal id="modal_import" hide-footer title="New Import" size="lg">
-				<!-- Add modal form -->
+			<b-modal id="importSite" hide-footer title="Import Site" size="lg">
+				<b-form id="form-import-site">
+					<b-form-group id="input-group-import-1" label="URL:" label-for="import-input">
+						<b-form-input
+							id="import-input"
+							v-model="import_url"
+							required
+							placeholder="http://google.com"
+						></b-form-input>
+					</b-form-group>
+
+					<div class="d-flex float-right">
+						<b-button class="mx-3" variant="default" @click="closeModal('importSite')">Cancel</b-button>
+						<b-button class="mx-3" variant="success" @click="importSite('importSite')">Import</b-button>
+					</div>
+				</b-form>
 			</b-modal>
 		</div>
 	</div>
@@ -117,7 +131,8 @@ export default {
 				}
 			},
 			capture: true,
-			not_capture: false
+			not_capture: false,
+			import_url: ""
 		};
 	},
 	methods: {
@@ -182,49 +197,16 @@ export default {
 			this.$bvModal.hide(id);
 		},
 		importSite(id) {
-			this.content = this.url;
-			this.closeModal(id);
-		},
-		acep(id) {
-			this.dataTemplate.push({
-				name: this.form.name,
-				modified_date: this.form.now,
-				content:this.content,
-				status1:this.form.status1,
-			});
-
-			this.closeModal(id);
-		},
-		checkFormValidity() {
-			const valid = this.$refs.form.checkValidity()
-
-			this.nameState = valid
-
-			return valid
-		},
-		checkFormValidity2() {
-			const valid = this.$refs.form2.checkValidity()
-
-			this.urlStat = valid
-
-			return valid
-		},
-		handleSubmit(id) {
-			// Exit when the form isn't valid
-			if (!this.checkFormValidity()) return;
-			
-			this.acep(id);
-		},
-		handleSubmit2(id) {
-			// Exit when the form isn't valid
-			if (!this.checkFormValidity2()) return;
-			
-			this.importSite(id);
+			api.clone_site({url: this.import_url, include_resources: false})
+				.then(response => {
+					this.form.html = response.data.html;
+					this.closeModal(id);
+				} );
 		},
 		onEditorReady(quill) {},
 		onEditorFocus() {},
 		onEditorChange({ quill, html, text }) {
-			this.content = html
+			this.form.html = html;
 		},
 		onEditorBlur() {}
 	}
