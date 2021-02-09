@@ -198,7 +198,7 @@ export default {
 					backdrop: ''
 				},
 				showCancelButton: true,
-				confirmButtonText: "Launch",
+				confirmButtonText: "Add profile",
 				confirmButtonColor: "#428bca",
 				reverseButtons: true,
 				allowOutsideClick: false,

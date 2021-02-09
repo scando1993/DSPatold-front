@@ -140,7 +140,7 @@ export default {
 					backdrop: ''
 				},
 				showCancelButton: true,
-				confirmButtonText: "Launch",
+				confirmButtonText: "Add page",
 				confirmButtonColor: "#428bca",
 				reverseButtons: true,
 				allowOutsideClick: false,

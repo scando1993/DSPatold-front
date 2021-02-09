@@ -205,14 +205,14 @@ export default {
 			
 			this.$swal.fire({
 				title: "Are you sure?",
-				text: "This will add a new email template.",
+				text: "This will add a new template.",
 				icon: "question",
 				showClass: {
 					popup: '',
 					backdrop: ''
 				},
 				showCancelButton: true,
-				confirmButtonText: "Launch",
+				confirmButtonText: "Add template",
 				confirmButtonColor: "#428bca",
 				reverseButtons: true,
 				allowOutsideClick: false,

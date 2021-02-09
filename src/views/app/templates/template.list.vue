@@ -71,7 +71,6 @@ import 'quill/dist/quill.bubble.css'
 
 import { quillEditor } from 'vue-quill-editor'
 import Quill from 'quill'
-import moment from 'moment'
 import api from '../../../api/api';
 
 export default {
@@ -143,77 +142,67 @@ export default {
 				console.log(err);
 			});
 	},
-	methods:{
+	methods: {
 		isEmpty(arr) {
 			return !Array.isArray(arr) || !arr.length;
 		},
-		addItemTable(file){
+		addItemTable(file) {
 			this.modalForm.items.push({name: file.name, type: file.type});
-			console.log(this.modalForm)
 		},
-		importEmail(id){
+		importEmail(id) {
 			this.modalForm.f_textArea2=this.txtA2;
 			this.closeModal(id);
 		},
-		closeModal(id){
+		closeModal(id) {
 			this.$bvModal.hide(id)
 		},
-		acep(id){
-			this.dataTemplate.push({
-				name: this.modalForm.f_name,
-				modified_day: this.modalForm.now,
-				f_email_subjet:this.modalForm.f_email_subjet,
-				f_textArea1:this.modalForm.f_textArea1,
-				f_textArea2:this.modalForm.f_textArea2,
-				f_contentEditor:this.modalForm.f_contentEditor,
-				status1:this.modalForm.status1,
-				status2:this.modalForm.status2,
-				items:this.modalForm.items
-			});
-			
-			
-			console.log(this.dataTemplate);
-			console.log(this.modalForm);
-			this.closeModal(id);	
+		editTemplate(template) {
+			this.$router.push(`templates/show/${template.id}`);
 		},
-		checkFormValidity() {
-			
-			const valid = this.$refs.form.checkValidity()
-			
-			this.nameState = this.modalForm.f_name!==''
-			this.textArea1State = this.modalForm.f_textArea1 !==''
-			
-			return valid && this.textArea1State
-		},
-		checkFormValidity2() {
-			
-			const valid = this.$refs.form2.checkValidity()
-			this.textArea2State = valid;
-			return valid;
-		},
+		deleteTemplate(template) {
+			const _this = this;
 
-		handleSubmit(id) {
-			
-			// Exit when the form isn't valid
-			if (!this.checkFormValidity()) {
-			return
-			}
-			else{
-				this.acep(id);
-			}
-			
-		},
-
-		handleSubmit2(id) {
-			
-			// Exit when the form isn't valid
-			if (!this.checkFormValidity2()) {
-			return
-			}
-			else{
-				this.importEmail(id);
-			}
-			
+			this.$swal.fire({
+				title: "Are you sure?",
+				text: "This will delete the template. This can't be undone!",
+				icon: "warning",
+				showClass: {
+					popup: '',
+					backdrop: ''
+				},
+				showCancelButton: true,
+				confirmButtonText: "Delete " + template.name,
+				confirmButtonColor: "#428bca",
+				reverseButtons: true,
+				allowOutsideClick: false,
+				showLoaderOnConfirm: true,
+				preConfirm: function () {
+					return new Promise(function (resolve, reject) {
+						// Submit the campaign
+						api.templateId.delete(template.id)
+							.then(response => {
+								resolve();
+							})
+							.catch(error => {
+								const errorMsg = error.response.data.message;
+								_this.$swal.close();
+								_this.$swal.fire('Error!', errorMsg, 'error');
+							})
+					});
+				}
+			})
+				.then(function (result) {
+					if (result.value) {
+						_this.$swal.fire({
+							title: 'Template deleted!',
+							text: 'This template has been deleted!',
+							icon: 'success'
+						})
+						.then(function (result) {
+							_this.$router.go();
+						});
+					}
+				});
 		}
 	},
 	computed: {
