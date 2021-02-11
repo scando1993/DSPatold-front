@@ -65,19 +65,10 @@
 </template>
 
 <script>
-import 'quill/dist/quill.core.css'
-import 'quill/dist/quill.snow.css'
-import 'quill/dist/quill.bubble.css'
-
-import { quillEditor } from 'vue-quill-editor'
-import Quill from 'quill'
 import api from '../../../api/api';
 
 export default {
 	name: "template",
-	components: {
-   	quillEditor
-  },
 	data() {
 		return {
 			content: '',
@@ -203,11 +194,6 @@ export default {
 						});
 					}
 				});
-		}
-	},
-	computed: {
-		editor() {
-			return this.$refs.myQuillEditor.quill
 		}
 	}
 }

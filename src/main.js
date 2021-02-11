@@ -32,6 +32,7 @@ import VueSweetalert2 from "vue-sweetalert2";
 import "@/assets/styles/sass/themes/lite-blue.scss";
 import VueApexCharts from 'vue-apexcharts';
 import moment from 'moment';
+import CKEditor from '@ckeditor/ckeditor5-vue2';
 
 Vue.config.productionTip = false
 
@@ -92,6 +93,8 @@ Vue.use(VueLazyload, {
     threshold: 0.1
   }
 });
+
+Vue.use(CKEditor)
 
 firebase.initializeApp(firebaseSettings);
 
