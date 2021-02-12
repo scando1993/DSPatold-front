@@ -19,6 +19,9 @@
 							:rows="pages"
 							:search-options="{ enabled: true }"
 							styleClass="tableOne vgt-table"
+							:pagination-options="{
+								enabled: true
+							}"
 					>
 						<template slot="table-row" slot-scope="props">
 							<span v-if="props.column.field === 'name'">
