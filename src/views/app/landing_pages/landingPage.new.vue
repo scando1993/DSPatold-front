@@ -31,7 +31,7 @@
 									<b-tabs>
 										<b-tab title="HTML">
 											<div class="example">
-												<ckeditor :editor="editor" v-model="form.html" :config="editorConfig"></ckeditor>
+												<ckeditor v-model="form.html" :config="editorConfig"></ckeditor>
 											</div>
 										</b-tab>
 									</b-tabs>
@@ -43,13 +43,41 @@
 									id="checkbox-1"
 									v-model="form.capture_credentials"
 									name="checkbox-1"
-									:value="capture"
-									:unchecked-value="not_capture"
+									:value="checked"
+									:unchecked-value="unchecked"
+									v-on:click="form.capture_credentials = !form.capture_credentials"
 									>
 									Capture Submitted Data
 								</b-form-checkbox>
 							</b-form-group>
-
+							<div v-if="form.capture_credentials">
+								<b-form-group>
+									<b-form-checkbox
+										id="checkbox-2"
+										v-model="form.capture_passwords"
+										name="checkbox-2"
+										:value="true"
+										:unchecked-value="false"
+										>
+										Capture Passwords
+									</b-form-checkbox>
+								</b-form-group>
+								<b-container>
+									<b-alert show variant="warning">
+									<i class="fa fa-exclamation-circle"></i>
+									Warning: Credentials are currently not encrypted. 
+									This means that captured passwords are stored in the database as cleartext. 
+									Be careful with this!
+								</b-alert>
+								</b-container>
+								<b-form-group id="input-group-2" label="Redirect to:" label-for="input-2">
+									<b-form-input
+										id="input-2"
+										v-model="form.redirect_url"
+										placeholder="http://example.com"
+									></b-form-input>
+								</b-form-group>
+							</div>
 						</b-form>
 					</b-container>
 				</b-card>
@@ -79,7 +107,6 @@
 </template>
 
 <script>
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 import api from '../../../api/api';
 
 export default {
@@ -93,14 +120,13 @@ export default {
 				capture_passwords: false,
 				redirect_url: ''
 			},
-			editor: ClassicEditor,
 			editorData: '<p>Content of the editor.</p>',
 			editorConfig: {
 				//
 			},
-			capture: true,
-			not_capture: false,
-			import_url: ""
+			import_url: "",
+			checked: true,
+			unchecked: false
 		};
 	},
 	methods: {

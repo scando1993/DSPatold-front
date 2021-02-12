@@ -111,6 +111,54 @@ export default {
 	methods: {
 		isEmpty(arr) {
 			return !Array.isArray(arr) || !arr.length;
+		},
+		editPage(page) {
+			this.$router.push(`landing_pages/show/${page.id}`);
+		},
+		deletePage(page) {
+			const _this = this;
+
+			this.$swal.fire({
+				title: "Are you sure?",
+				text: "This will delete the page. This can't be undone!",
+				icon: "warning",
+				showClass: {
+					popup: '',
+					backdrop: ''
+				},
+				showCancelButton: true,
+				confirmButtonText: "Delete " + page.name,
+				confirmButtonColor: "#428bca",
+				reverseButtons: true,
+				allowOutsideClick: false,
+				showLoaderOnConfirm: true,
+				preConfirm: function () {
+					return new Promise(function (resolve, reject) {
+						// Submit the campaign
+						api.pageId.delete(page.id)
+							.then(response => {
+								resolve();
+							})
+							.catch(error => {
+								const errorMsg = error.response.data.message;
+								_this.$swal.close();
+								_this.$swal.fire('Error!', errorMsg, 'error');
+							})
+					});
+				}
+			})
+				.then(function (result) {
+					if (result.value) {
+						_this.$swal.fire({
+							title: 'Page deleted!',
+							text: 'This page has been deleted!',
+							icon: 'success'
+						})
+						.then(function (result) {
+							_this.$router.go();
+						});
+					}
+				});
 		}
 	}
 }

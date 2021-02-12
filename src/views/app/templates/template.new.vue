@@ -51,7 +51,7 @@
 										</b-tab>
 										<b-tab title="HTML">
 											<div class="example">
-												<ckeditor :editor="editor" v-model="form.html" :config="editorConfig"></ckeditor>
+												<ckeditor v-model="form.html" :config="editorConfig"></ckeditor>
 											</div>
 										</b-tab>
 										
@@ -135,7 +135,6 @@
 </template>
 
 <script>
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 import api from '../../../api/api';
 	
 export default {
@@ -149,7 +148,6 @@ export default {
 				html : '',
 				attachments : []
 			},
-			editor: ClassicEditor,
 			editorData: '<p>Content of the editor.</p>',
 			editorConfig: {
 				//
