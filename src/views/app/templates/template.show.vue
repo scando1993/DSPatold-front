@@ -11,7 +11,7 @@
       <b-col sm="12">
         <b-card>
           <b-container fluid>
-            <b-form id="form-1" @submit="onSubmit" @reset="onReset">
+            <b-form id="form-1" @submit="onSubmit">
               <b-form-group
                 id="input-group-1"
                 label="Template Name:"
@@ -151,7 +151,7 @@ export default {
 					backdrop: ''
 				},
 				showCancelButton: true,
-				confirmButtonText: "Launch",
+				confirmButtonText: "Update template",
 				confirmButtonColor: "#428bca",
 				reverseButtons: true,
 				allowOutsideClick: false,
