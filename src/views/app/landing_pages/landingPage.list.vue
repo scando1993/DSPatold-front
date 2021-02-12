@@ -112,6 +112,14 @@ export default {
 		isEmpty(arr) {
 			return !Array.isArray(arr) || !arr.length;
 		},
+		duplicatePage(page) {
+			api.pageId.get(page.id)
+				.then(response => {
+					let {id, ...data} = response.data;
+					localStorage.setItem('tmpPage', JSON.stringify(data));
+					this.$router.push('landing_pages/new');
+				});
+		},
 		editPage(page) {
 			this.$router.push(`landing_pages/show/${page.id}`);
 		},

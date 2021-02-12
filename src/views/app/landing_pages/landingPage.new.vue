@@ -111,6 +111,7 @@ import api from '../../../api/api';
 
 export default {
 	name: "landing-new",
+	props:['pageId'],
 	data() {
 		return {
 			form: {
@@ -128,6 +129,14 @@ export default {
 			checked: true,
 			unchecked: false
 		};
+	},
+	mounted() {
+		const page = JSON.parse(localStorage.getItem('tmpPage'));
+
+		if (!!page) {
+			this.form = page;
+			this.form.name = `Copy of ${this.form.name}`;
+		}
 	},
 	methods: {
 		onSubmit(evt) {
@@ -159,9 +168,11 @@ export default {
 						// Submit the campaign
 						api.pages.post(_this.form)
 							.then(response => {
+								localStorage.removeItem('tmpPage');
 								resolve();
 							})
 							.catch(error => {
+								console.log(error);
 								const errorMsg = error.response.data.message;
 								_this.$swal.close();
 								_this.$swal.fire('Error!', errorMsg, 'error');
@@ -171,10 +182,14 @@ export default {
 			})
 				.then(function (result) {
 					if (result.value) {
-						_this.$swal.fire(
-							'Page added successfully!',
-							'This page has been added successfully!',
-							'success');
+						_this.$swal.fire({
+							title: 'Page added successfully!',
+							text: 'This page has been added successfully!',
+							icon: 'success',
+							preConfirm: function() {
+								_this.$router.push('/app/landing_pages');
+							}
+						});
 					}
 				});
 		},
