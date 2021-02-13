@@ -147,6 +147,14 @@ export default {
 		closeModal(id) {
 			this.$bvModal.hide(id)
 		},
+		duplicateTemplate(template) {
+			api.templateId.get(template.id)
+				.then(response => {
+					let {id, ...data} = response.data;
+					localStorage.setItem('tmpTemplate', JSON.stringify(data));
+					this.$router.push('templates/new');
+				});
+		},
 		editTemplate(template) {
 			this.$router.push(`templates/show/${template.id}`);
 		},

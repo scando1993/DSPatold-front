@@ -23,7 +23,7 @@
 							</b-form-group>
 
 							<div class="mb-2">
-								<button class="btn btn-danger" @click="$bvModal.show('importSite')">Import Site</button>
+								<b-button variant="danger" @click="$bvModal.show('importSite')">Import Site</b-button>
 							</div>
 
 							<b-form-group>
@@ -148,7 +148,7 @@ export default {
 			});
 
 			let _this = this;
-			console.log(_this.form);
+			
 			this.$swal.fire({
 				title: "Are you sure?",
 				text: "This will add a new landing page.",
@@ -172,7 +172,6 @@ export default {
 								resolve();
 							})
 							.catch(error => {
-								console.log(error);
 								const errorMsg = error.response.data.message;
 								_this.$swal.close();
 								_this.$swal.fire('Error!', errorMsg, 'error');
@@ -211,13 +210,7 @@ export default {
 					this.form.html = response.data.html;
 					this.closeModal(id);
 				} );
-		},
-		onEditorReady(quill) {},
-		onEditorFocus() {},
-		onEditorChange({ quill, html, text }) {
-			this.form.html = html;
-		},
-		onEditorBlur() {}
+		}
 	}
 }
 </script>
