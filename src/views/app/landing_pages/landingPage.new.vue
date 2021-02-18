@@ -43,8 +43,8 @@
 									id="checkbox-1"
 									v-model="form.capture_credentials"
 									name="checkbox-1"
-									:value="checked"
-									:unchecked-value="unchecked"
+									:value="true"
+									:unchecked-value="false"
 									v-on:click="form.capture_credentials = !form.capture_credentials"
 									>
 									Capture Submitted Data
@@ -121,13 +121,12 @@ export default {
 				capture_passwords: false,
 				redirect_url: ''
 			},
-			editorData: '<p>Content of the editor.</p>',
 			editorConfig: {
-				//
+				fullPage: true,
+				extraPlugins: 'docprops',
+				allowedContent: true
 			},
-			import_url: "",
-			checked: true,
-			unchecked: false
+			import_url: ""
 		};
 	},
 	mounted() {
@@ -137,6 +136,9 @@ export default {
 			this.form = page;
 			this.form.name = `Copy of ${this.form.name}`;
 		}
+	},
+	destroyed() {
+		localStorage.removeItem('tmpPage');
 	},
 	methods: {
 		onSubmit(evt) {
@@ -204,11 +206,11 @@ export default {
 		closeModal(id) {
 			this.$bvModal.hide(id);
 		},
-		importSite(id) {
+		importSite(modalId) {
 			api.clone_site({url: this.import_url, include_resources: false})
 				.then(response => {
 					this.form.html = response.data.html;
-					this.closeModal(id);
+					this.closeModal(modalId);
 				} );
 		}
 	}

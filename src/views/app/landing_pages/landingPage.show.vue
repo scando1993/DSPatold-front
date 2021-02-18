@@ -42,8 +42,8 @@
 									id="checkbox-1"
 									v-model="form.capture_credentials"
 									name="checkbox-1"
-									:value="capture"
-									:unchecked-value="not_capture"
+									:value="true"
+									:unchecked-value="false"
 									>
 									Capture Submitted Data
 								</b-form-checkbox>
@@ -118,15 +118,14 @@ export default {
 				capture_passwords: false,
 				redirect_url: ''
 			},
-			editorData: '<p>Content of the editor.</p>',
 			editorConfig: {
-				//
+				fullPage: true,
+				extraPlugins: 'docprops',
+				allowedContent: true
 			},
 			capture: true,
 			not_capture: false,
-			import_url: "",
-			checked: true,
-			unchecked: false
+			import_url: ""
 		};
 	},
 	mounted() {
@@ -206,13 +205,7 @@ export default {
 					this.form.html = response.data.html;
 					this.closeModal(id);
 				} );
-		},
-		onEditorReady(quill) {},
-		onEditorFocus() {},
-		onEditorChange({ quill, html, text }) {
-			this.form.html = html;
-		},
-		onEditorBlur() {}
+		}
 	}
 }
 </script>

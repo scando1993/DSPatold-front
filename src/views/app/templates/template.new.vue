@@ -183,6 +183,9 @@ export default {
 			this.checkTracking();
 		}
 	},
+	destroyed() {
+		localStorage.removeItem('tmpTemplate');
+	},
 	methods: {
 		initialize() {
 			this.form = {
