@@ -101,6 +101,62 @@ export default {
 			});
 	},
 	methods: {
+		duplicateProfile(profile) {
+			api.SMTPId.get(profile.id)
+				.then(response => {
+					let {id, ...data} = response.data;
+					localStorage.setItem('tmpProfile', JSON.stringify(data));
+					this.$router.push('sending_profiles/new');
+				});
+		},
+		editProfile(profile) {
+			this.$router.push(`sending_profiles/show/${profile.id}`);
+		},
+		deleteProfile(profile) {
+			const _this = this;
+
+			this.$swal.fire({
+				title: "Are you sure?",
+				text: "This will delete the profile. This can't be undone!",
+				icon: "warning",
+				showClass: {
+					popup: '',
+					backdrop: ''
+				},
+				showCancelButton: true,
+				confirmButtonText: "Delete " + profile.name,
+				confirmButtonColor: "#428bca",
+				reverseButtons: true,
+				allowOutsideClick: false,
+				showLoaderOnConfirm: true,
+				preConfirm: function () {
+					return new Promise(function (resolve, reject) {
+						// Submit the campaign
+						api.SMTPId.delete(profile.id)
+							.then(response => {
+								resolve();
+							})
+							.catch(error => {
+								const errorMsg = error.response.data.message;
+								_this.$swal.close();
+								_this.$swal.fire('Error!', errorMsg, 'error');
+							})
+					});
+				}
+			})
+				.then(function (result) {
+					if (result.value) {
+						_this.$swal.fire({
+							title: 'Profile deleted!',
+							text: 'This profile has been deleted!',
+							icon: 'success'
+						})
+						.then(function (result) {
+							_this.$router.go();
+						});
+					}
+				});
+		},
 		isEmpty(arr) {
 			return !Array.isArray(arr) || !arr.length;
 		}
