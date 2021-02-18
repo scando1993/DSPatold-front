@@ -62,15 +62,7 @@
                     </b-tab>
                     <b-tab title="HTML">
                       <div class="example">
-                        <quill-editor
-                          class="editor"
-                          ref="myQuillEditor"
-                          v-model="form.html"
-                          :options="editorOption"
-                          @blur="onEditorBlur($event)"
-                          @focus="onEditorFocus($event)"
-                          @ready="onEditorReady($event)"
-                        />
+                        <ckeditor v-model="form.html" :config="editorConfig"></ckeditor>
                       </div>
                     </b-tab>
                   </b-tabs>
@@ -80,19 +72,74 @@
               <b-form-group>
                 <b-form-checkbox
                   id="checkbox-1"
-                  v-model="form.tracking"
+                  v-model="addTrackingImage"
                   name="checkbox-1"
-                  value="accepted"
-                  unchecked-value="not_accepted"
+                  :value="true"
+                  :unchecked-value="false"
                 >
                   Add Tracking Image
                 </b-form-checkbox>
               </b-form-group>
+
+							<b-form-group>
+								<b-form-file v-model="file" placeholder="Choose a file or drop it here..." drop-placeholder="Drop file here..." @change="handleImage"></b-form-file>
+							</b-form-group>
+
+							<vue-good-table
+								:columns="fields"
+								:rows="form.attachments"
+								:search-options="{ enabled: false }"
+								styleClass="tableOne vgt-table"
+								:pagination-options="{
+									enabled: true
+								}"
+							>
+								<template slot="table-row" slot-scope="props">
+									<span v-if="props.column.field === 'actions'">
+										<a class="dropdown-item" @click="removeFile(props.row)">
+											<i class="nav-icon i-Close-Window text-danger font-weight-bold mr-2"></i>Delete
+										</a>
+									</span>
+								</template>
+							</vue-good-table>
             </b-form>
           </b-container>
         </b-card>
       </b-col>
     </b-row>
+
+		<div>
+			<b-modal id="importEmail" hide-footer title="Import Email" size="lg">
+				<b-form id="form-import-template">
+					<b-form-group id="input-group-import-1" label="Email Content:" label-for="import-input">
+						<b-form-textarea	
+							id="import-input"
+							v-model="import_email.content"
+							required
+							placeholder="Raw Email Source"
+							rows="8"
+						></b-form-textarea>
+					</b-form-group>
+
+					<b-form-group>
+						<b-form-checkbox
+							id="checkbox-2"
+							v-model="import_email.convert_links"
+							name="checkbox-2"
+							:value="true"
+							:unchecked-value="false"
+							>
+							Change Links to Point to Landing Page
+						</b-form-checkbox>
+					</b-form-group>
+
+					<div class="d-flex float-right">
+						<b-button class="mx-3" variant="default" @click="closeModal('importEmail')">Cancel</b-button>
+						<b-button class="mx-3" variant="success" @click="importEmail('importEmail')">Import</b-button>
+					</div>
+				</b-form>
+			</b-modal>
+		</div>
   </div>
 </template>
 
@@ -100,26 +147,42 @@
 import api from '../../../api/api';
 
 export default {
-	metaInfo: {
-		title: "Templates",
-	},
 	name: "template-show",
 	data() {
 		return {
-			form: {
-				id : 1,
-				name : "Password Reset Template",
-				subject : "{{.FirstName}}, please reset your password.",
-				text : "Please reset your password here: {{.URL}}",
-				html : "<html><head></head><body>Please reset your password <a href\"{{.URL}}\">here</a></body></html>",
-				modified_date : "2016-11-21T18:30:11.1477736-06:00",
-				attachments : [],
+			form: null,
+			addTrackingImage: true,
+			import_email: {
+				content: '',
+				convert_links: false
+			},
+			editorConfig: {
+				fullPage: true,
+				extraPlugins: 'docprops',
+				allowedContent: true,
+				startupMode: 'source'
 			},
 			textArea1State: null,
 			file: null,
-			options: [5, 10, 20, 50],
-			perPage: 5
+			fields: [
+				{
+					label: "Name",
+					field: "name",
+					thClass: "text-left",
+					tdClass: "text-left"
+				},
+				{
+					label: "Actions",
+					field: "actions",
+					thClass: "text-right",
+					tdClass: "text-right"
+				}
+			],
+			options: [5, 10, 20, 50]
 		};
+	},
+	beforeMount() {
+		this.initialize();
 	},
 	mounted() {
 		const templateId = this.$route.params.id;
@@ -127,13 +190,25 @@ export default {
 		api.templateId.get(templateId)
 			.then(response => {
 				this.form = response.data;
+				this.checkTracking();
 			}).catch(err => {
 				console.log(err);
 			});
 	},
 	methods: {
+		initialize() {
+			this.form = {
+				name : '',
+				subject : '',
+				text : '',
+				html : '',
+				attachments : []
+			}
+		},
 		onSubmit(evt) {
 			evt.preventDefault();
+			this.form.html = this.form.html.replace(/https?:\/\/{{\.URL}}/gi, "{{.URL}}");
+			this.changeTags();
 
 			this.show = false
 			this.$nextTick(() => {
@@ -144,7 +219,7 @@ export default {
 			
 			this.$swal.fire({
 				title: "Are you sure?",
-				text: "This will update this email template.",
+				text: "This will update this template.",
 				icon: "question",
 				showClass: {
 					popup: '',
@@ -183,15 +258,61 @@ export default {
 		onReset(evt) {
 			evt.preventDefault();
 		},
-		onEditorReady(quill) {
-			console.log('editor ready!', quill)
+		checkTracking() {
+			if (this.form.html.includes("{{.Tracker}}")) {
+				this.addTrackingImage = true;
+			}
+			else {
+				this.addTrackingImage = false;
+			}
 		},
-		onEditorFocus() {},
-		onEditorChange({ quill, html, text }) {
-			console.log('editor change!', quill, html, text)
-			this.content = html
+		changeTags() {
+			if (this.addTrackingImage) {
+				if (!this.form.html) this.form.html = "<html>\n<head>\n\t<title></title>\n</head>\n<body></body>\n</html>\n";
+				if (!this.form.html.includes("{{.Tracker}}") &&
+						!this.form.html.includes("{{.TrackerUrl}}")) {
+					this.form.html = this.form.html.replace("</body>", "{{.Tracker}}</body>");
+				}
+			} else {
+				this.form.html = this.form.html.replace("{{.Tracker}}</body>", "</body>");
+			}
 		},
-		onEditorBlur() {}
+		closeModal(id) {
+			this.$bvModal.hide(id);
+		},
+		importEmail(id) {
+			api.import_email(this.import_email)
+				.then(response => {
+					this.form.text = response.data.text;
+					this.form.html = response.data.html;
+					this.form.subject = response.data.subject;
+					this.closeModal(id);
+				} );
+		},
+		createBase64Image(fileObj) {
+			const reader = new FileReader();
+			const file = {
+				type: fileObj.type,
+				name: fileObj.name
+			};
+			reader.onload = (e) => {
+				const image = e.target.result;
+				this.form.attachments.push({
+					content: image,
+					...file
+				});
+				this.file = null;
+			}
+
+			reader.readAsDataURL(fileObj);
+		},
+		handleImage(e) {
+			const file = e.target.files[0];
+			this.createBase64Image(file);
+		},
+		removeFile(file) {
+			this.form.attachments = this.form.attachments.filter(x => x.content != file.content);
+		}
 	}
 };
 </script>

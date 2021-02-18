@@ -62,7 +62,7 @@
 							<b-form-group>
 								<b-form-checkbox
 									id="checkbox-1"
-									v-model="form.tracking"
+									v-model="addTrackingImage"
 									name="checkbox-1"
 									:value="true"
 									:unchecked-value="false"
@@ -72,22 +72,19 @@
 							</b-form-group>
 
 							<b-form-group>
-								<b-form-file v-model="file" class="mt-3" browse-text="'Add File'" plain @input="addFile(file)" ></b-form-file>
+								<b-form-file v-model="file" placeholder="Choose a file or drop it here..." drop-placeholder="Drop file here..." @change="handleImage"></b-form-file>
 							</b-form-group>
 
 							<vue-good-table
-								v-if="!isEmpty(this.form.attachments)"
 								:columns="fields"
-								:rows="this.form.attachments"
-								:search-options="{ enabled: true }"
+								:rows="form.attachments"
+								:search-options="{ enabled: false }"
 								styleClass="tableOne vgt-table"
 								:pagination-options="{
 									enabled: true
 								}"
 							>
 								<template slot="table-row" slot-scope="props">
-									<span v-if="props.column.field === 'name'"></span>
-									
 									<span v-if="props.column.field === 'actions'">
 										<a class="dropdown-item" @click="removeFile(props.row)">
 											<i class="nav-icon i-Close-Window text-danger font-weight-bold mr-2"></i>Delete
@@ -95,53 +92,6 @@
 									</span>
 								</template>
 							</vue-good-table>
-							<!-- <div class="row">
-							
-								<div class="col-sm-6">
-									<div class="dataTables_length" id="attachmentsTable_length">
-
-										<label>Show 
-											<b-form-select v-model="perPage" :options="options"></b-form-select>
-											entries
-										</label>
-									</div>
-								</div>
-
-								<div class="col-sm-6">
-									<div id="attachmentsTable_filter" class="dataTables_filter">
-										<label>Search:
-											<input type="search" class="form-control input-sm" placeholder="" aria-controls="table">
-										</label>
-									</div>
-								</div>
-							</div>
-
-							<div class="row">
-								<div class="col-sm-12">
-									<div>
-										<b-table small :fields="fields" :items="form.attachments" 
-										responsive="sm" 
-										id="table1"  
-										sticky-header="true"
-										:current-page="currentPage"
-										:per-page="perPage">
-										</b-table>
-									</div>
-								</div>
-							</div>
-
-
-							<div class="row">
-								<b-pagination
-									v-model="currentPage"
-									:total-rows="form.attachments.length"
-									:per-page="perPage"
-									prev-text="Prev"
-									next-text="Next"
-									aria-controls="table1"
-								></b-pagination>
-							</div> -->
-
 						</b-form>
 					</b-container>
 				</b-card>
@@ -190,29 +140,39 @@ export default {
 	name: "template-new",
 	data() {
 		return {
-			form: {
-				name : '',
-				subject : '',
-				text : '',
-				html : '',
-				attachments : []
-			},
+			form: null,
 			addTrackingImage: true,
 			import_email: {
 				content: '',
 				convert_links: false
 			},
-			editorData: '<p>Content of the editor.</p>',
 			editorConfig: {
-				//
+				fullPage: true,
+				extraPlugins: 'docprops',
+				allowedContent: true,
+				startupMode: 'source'
 			},
 			textArea1State: null,
 			file: null,
-			fields: ['name'],
-			options: [5, 10, 20, 50],
-			perPage: 5,
-			currentPage: 1
+			fields: [
+				{
+					label: "Name",
+					field: "name",
+					thClass: "text-left",
+					tdClass: "text-left"
+				},
+				{
+					label: "Actions",
+					field: "actions",
+					thClass: "text-right",
+					tdClass: "text-right"
+				}
+			],
+			options: [5, 10, 20, 50]
 		}
+	},
+	beforeMount() {
+		this.initialize();
 	},
 	mounted() {
 		const template = JSON.parse(localStorage.getItem('tmpTemplate'));
@@ -220,12 +180,24 @@ export default {
 		if (!!template) {
 			this.form = template;
 			this.form.name = `Copy of ${this.form.name}`;
+			this.checkTracking();
 		}
 	},
 	methods: {
+		initialize() {
+			this.form = {
+				name : '',
+				subject : '',
+				text : '',
+				html : '',
+				attachments : []
+			}
+		},
 		onSubmit(evt) {
-			evt.preventDefault()
-			// Trick to reset/clear native browser form validation state
+			evt.preventDefault();
+			this.form.html = this.form.html.replace(/https?:\/\/{{\.URL}}/gi, "{{.URL}}");
+			this.changeTags();
+
 			this.show = false
 			this.$nextTick(() => {
 				this.show = false
@@ -279,19 +251,32 @@ export default {
 		onReset(evt) {
 			evt.preventDefault()
 			// Reset our form values
-			this.form = {
-				name : '',
-				subject : '',
-				text : '',
-				html : '',
-				attachments : []
-			}
+			this.initialize();
 			
 			// Trick to reset/clear native browser form validation state
 			this.show = false
 			this.$nextTick(() => {
 				this.show = false
 			})
+		},
+		checkTracking() {
+			if (this.form.html.includes("{{.Tracker}}")) {
+				this.addTrackingImage = true;
+			}
+			else {
+				this.addTrackingImage = false;
+			}
+		},
+		changeTags() {
+			if (this.addTrackingImage) {
+				if (!this.form.html) this.form.html = "<html>\n<head>\n\t<title></title>\n</head>\n<body></body>\n</html>\n";
+				if (!this.form.html.includes("{{.Tracker}}") &&
+						!this.form.html.includes("{{.TrackerUrl}}")) {
+					this.form.html = this.form.html.replace("</body>", "{{.Tracker}}</body>");
+				}
+			} else {
+				this.form.html = this.form.html.replace("{{.Tracker}}</body>", "</body>");
+			}
 		},
 		closeModal(id) {
 			this.$bvModal.hide(id);
@@ -305,17 +290,29 @@ export default {
 					this.closeModal(id);
 				} );
 		},
-		addFile(file) {
-			console.log(file);
-			this.form.attachments.push({
-				content: "",
-				name: file.name,
-				type: file.type
-			});
+		createBase64Image(fileObj) {
+			const reader = new FileReader();
+			const file = {
+				type: fileObj.type,
+				name: fileObj.name
+			};
+			reader.onload = (e) => {
+				const image = e.target.result;
+				this.form.attachments.push({
+					content: image,
+					...file
+				});
+				this.file = null;
+			}
+
+			reader.readAsDataURL(fileObj);
 		},
-		removeFile() {},
-		isEmpty(arr) {
-			return !Array.isArray(arr) || !arr.length;
+		handleImage(e) {
+			const file = e.target.files[0];
+			this.createBase64Image(file);
+		},
+		removeFile(file) {
+			this.form.attachments = this.form.attachments.filter(x => x.content != file.content);
 		}
 	}
 }
