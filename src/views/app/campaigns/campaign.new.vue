@@ -13,33 +13,33 @@
 				<b-card>
 					<b-container fluid>
 						<b-form id="form-1" @submit="onSubmit" @reset="onReset">
-							<b-form-group id="input-group-1" label="Campaign Name:" label-for="input-1">
+							<b-form-group id="input-group-1" label="Name:" label-for="input-1">
 								<b-form-input
-										id="input-1"
-										v-model="form.name"
-										required
-										placeholder="Campaign name"
+									id="input-1"
+									v-model="form.name"
+									required
+									placeholder="Campaign name"
 								></b-form-input>
 							</b-form-group>
 
 							<b-form-group id="input-select-group" label="Groups:">
 								<div class="btn-group" role="group" aria-label="Basic example">
 									<b-button variant="primary ripple m-1" v-on:click="sendToAllUsers">All users</b-button>
-									<b-button variant="secondary ripple m-1" v-on:click="sendToAllGroups = false">Specific Groups</b-button>
+									<b-button variant="secondary ripple m-1" v-on:click="sendToGroups = false">Specific Groups</b-button>
 								</div>
 							</b-form-group>
 
-							<span v-if="!sendToAllGroups">
+							<span v-if="!sendToGroups">
 								<b-form-group id="input-group-8" label-for="input-8">
 									<v-select
-											id="input-8"
-											v-model="form.groups"
-											:options="groups"
-											:reduce="group => group.name"
-											label="name"
-											required
-											multiple
-											placeholder="Select Groups"
+										id="input-8"
+										v-model="form.groups"
+										:options="groups"
+										:reduce="group => group.name"
+										label="name"
+										required
+										multiple
+										placeholder="Select Groups"
 									>
 										<template #search="{attributes, events}">
 											<input
@@ -55,14 +55,14 @@
 
 							<b-form-group id="input-group-emailTemplate" label="Email Template:" label-for="input-2">
 								<v-select
-										id="input-emailTemplate"
-										v-model="form.template.name"
-										:options="templates"
-										:reduce="template => template.name"
-										label="name"
-										required
-										class="style-chooser-1"
-										placeholder="Select email template"
+									id="input-emailTemplate"
+									v-model="form.template.name"
+									:options="templates"
+									:reduce="template => template.name"
+									label="name"
+									required
+									class="style-chooser-1"
+									placeholder="Select a template"
 								>
 									<template #search="{attributes, events}">
 										<input
@@ -77,13 +77,13 @@
 
 							<b-form-group id="input-group-3" label="Landing Page:" label-for="input-3">
 								<v-select
-										id="input-3"
-										v-model="form.page.name"
-										:options="pages"
-										:reduce="page => page.name"
-										label="name"
-										required
-										placeholder="Select a Landing Page"
+									id="input-3"
+									v-model="form.page.name"
+									:options="pages"
+									:reduce="page => page.name"
+									label="name"
+									required
+									placeholder="Select a Landing Page"
 								>
 									<template #search="{attributes, events}">
 										<input
@@ -98,9 +98,9 @@
 
 							<b-form-group id="input-group-4" label="URL:" label-for="input-4">
 								<b-form-input
-										id="input-4"
-										v-model="form.url"
-										placeholder="http://192.168.1.1"
+									id="input-4"
+									v-model="form.url"
+									placeholder="http://192.168.1.1"
 								></b-form-input>
 							</b-form-group>
 
@@ -108,21 +108,21 @@
 								<b-col cols="6">
 									<b-form-group id="input-group-5" label="Launch Date" label-for="input-5">
 										<b-form-datepicker
-												id="input-5"
-												v-model="form.launch_date"
-												required
-												locale="es"
+											id="input-5"
+											v-model="launch_date"
+											required
+											locale="es"
 										></b-form-datepicker>
 										<b-form-timepicker v-model="launch_hour" required></b-form-timepicker>
 									</b-form-group>
 								</b-col>
 
 								<b-col cols="6">
-									<b-form-group id="input-group-6" label="Send Emails by (Optional)" label-for="input-6">
+									<b-form-group id="input-group-6" label="Send Emails By (Optional)" label-for="input-6">
 										<b-form-datepicker
-												id="input-6"
-												v-model="form.send_by_date"
-												locale="es"
+											id="input-6"
+											v-model="send_by_date"
+											locale="es"
 										></b-form-datepicker>
 										<b-form-timepicker v-model="send_by_hour"></b-form-timepicker>
 									</b-form-group>
@@ -133,13 +133,13 @@
 								<b-row>
 									<b-col cols="9">
 										<v-select
-												id="input-7"
-												v-model="form.smtp.name"
-												:options="sendProfiles"
-												:reduce="profile => profile.name"
-												label="name"
-												required
-												placeholder="Select a Sending Profile"
+											id="input-7"
+											v-model="form.smtp.name"
+											:options="sendProfiles"
+											:reduce="profile => profile.name"
+											label="name"
+											required
+											placeholder="Select a Sending Profile"
 										>
 											<template #search="{attributes, events}">
 												<input
@@ -175,32 +175,32 @@
 									<b-col>
 									<b-form-group id="input-test-email-name" label="First Name:" label-for="input-test-email-name">
 										<b-form-input
-												id="input-test-email-name"
-												v-model="testForm.first_name"
-												required
+											id="input-test-email-name"
+											v-model="testForm.first_name"
+											required
 										></b-form-input>
 									</b-form-group>
 										<b-form-group id="input-test-email-lastname" label="Last Name:" label-for="input-test-email-lastname">
 											<b-form-input
-													id="input-test-email-lastname"
-													v-model="testForm.last_name"
-													required
+												id="input-test-email-lastname"
+												v-model="testForm.last_name"
+												required
 											></b-form-input>
 										</b-form-group>
 									</b-col>
 									<b-col>
 										<b-form-group id="input-test-email-position" label="Position:" label-for="input-test-email-position">
 											<b-form-input
-													id="input-test-email-position"
-													v-model="testForm.position"
-													required
+												id="input-test-email-position"
+												v-model="testForm.position"
+												required
 											></b-form-input>
 										</b-form-group>
 										<b-form-group id="input-test-email-email" label="Email:" label-for="input-test-email-email">
 											<b-form-input
-													id="input-test-email-email"
-													v-model="testForm.email"
-													required
+												id="input-test-email-email"
+												v-model="testForm.email"
+												required
 											></b-form-input>
 										</b-form-group>
 									</b-col>
@@ -261,11 +261,13 @@ export default {
 				url: '',
 				page: { name: '' },
 				smtp: { name: '' },
-				launch_date: moment().format("YYYY-MM-DD"),
+				launch_date: null,
 				send_by_date: null,
 				groups: []
 			},
+			launch_date: moment().format("YYYY-MM-DD"),
 			launch_hour: moment().add(1, "hours").startOf("hour").format("HH:mm:ss"),
+			send_by_date: null,
 			send_by_hour: '00:00:00',
 			testForm: {
 				first_name: '',
@@ -276,7 +278,7 @@ export default {
 			groups: [],
 			templates: [],
 			pages: [],
-			sendToAllGroups: true,
+			sendToGroups: true,
 			sendProfiles: [],
 			sending: false
 		}
@@ -287,42 +289,41 @@ export default {
 	methods: {
 		initForm() {
 			api.templates.get()
-			.then(response => {
-				this.templates = response.data;
-			}).catch(err => {
-				console.log(err);
-			});
+				.then(response => {
+					this.templates = response.data;
+				}).catch(err => {
+					console.log(err);
+				});
 		
-		api.pages.get()
-			.then(response => {
-				this.pages = response.data;
-			}).catch(err => {
-				console.log(err);
-			});
+			api.pages.get()
+				.then(response => {
+					this.pages = response.data;
+				}).catch(err => {
+					console.log(err);
+				});
 
-		api.groups.summary()
-			.then(response => {
-				this.groups = response.data.groups;
-				this.form.groups = this.groups.map(x => x.name);
-			}).catch(err => {
-				console.log(err);
-			});
+			api.groups.summary()
+				.then(response => {
+					this.groups = response.data.groups;
+					this.form.groups = this.groups.map(x => { return { name: x.name } });
+				}).catch(err => {
+					console.log(err);
+				});
 
-		api.SMTP.get()
-			.then(response => {
-				this.sendProfiles = response.data;
-			}).catch(err => {
-				console.log(err);
-			});
+			api.SMTP.get()
+				.then(response => {
+					this.sendProfiles = response.data;
+				}).catch(err => {
+					console.log(err);
+				});
 		},
 		sendToAllUsers() {
-			this.form.groups = this.groups.map(x => x.name);
-			this.sendToAllGroups = true;
+			this.form.groups = this.groups.map(x => { return { name: x.name } });
+			this.sendToGroups = true;
 		},
 		onSubmit(evt) {
-			this.form.launch_date += `T${this.launch_hour}+00:00`;
+			this.form.launch_date = `${this.launch_date}T${this.launch_hour}+00:00`;
 			if (this.form.send_by_date) this.form.send_by_date += `T${this.send_by_hour}+00:00`;
-			this.form.groups = this.form.groups.map(x => { return { name: x } });
 
 			evt.preventDefault()
 			// Trick to reset/clear native browser form validation state
@@ -412,7 +413,8 @@ export default {
 				smtp: {
 					name: this.form.sendingProfiles
 				}
-			}
+			};
+
 			this.sending = true;
 
 			this.send_test_email()
@@ -432,7 +434,7 @@ export default {
 					});
 					this.sending = true;
 					throw new Error(err);
-				})
+				});
 			// Send the test email
 			// api.send_test_email(test_email_request)
 			// 	.success(function (data) {

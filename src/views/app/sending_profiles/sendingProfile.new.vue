@@ -170,7 +170,7 @@
 
 					<div class="d-flex float-right">
 						<b-button class="mx-3" variant="default" @click="closeModal('sendTestEmail')">Cancel</b-button>
-						<b-button class="mx-3" variant="success" @click="sendTestEmail('sendTestEmail')">Import</b-button>
+						<b-button variant="success" @click="sendTestEmail('sendTestEmail')"><b-icon icon="envelope-fill" aria-hidden="true"></b-icon> Send</b-button>
 					</div>
 				</b-form>
 			</b-modal>

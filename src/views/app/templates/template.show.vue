@@ -1,85 +1,74 @@
 <template>
-  <div class="main-content">
-    <breadcumb :page="'Email Template'" :folder="'Templates'" />
+	<div class="main-content">
+		<breadcumb :page="'Email Template'" :folder="'Templates'" />
 		<div class="d-flex flex-row">
 			<b-button class="mx-3" variant="light" @click="$router.back()">Go back</b-button>
 			<b-button class="mx-3" form="form-1" type="submit" variant="primary">Submit</b-button>
 		</div>
-    <div class="my-4"></div>
+		<div class="my-4"></div>
 
-    <b-row>
-      <b-col sm="12">
-        <b-card>
-          <b-container fluid>
-            <b-form id="form-1" @submit="onSubmit">
-              <b-form-group
-                id="input-group-1"
-                label="Template Name:"
-                label-for="input-1"
-              >
-                <b-form-input
-                  id="input-1"
-                  v-model="form.name"
-                  required
-                  placeholder="Template name"
-                ></b-form-input>
-              </b-form-group>
+		<b-row>
+			<b-col sm="12">
+				<b-card>
+					<b-container fluid>
+						<b-form id="form-1" @submit="onSubmit">
+							<b-form-group id="input-group-1" label="Template Name:" label-for="input-1">
+								<b-form-input
+										id="input-1"
+										v-model="form.name"
+										required
+										placeholder="Template name"
+								></b-form-input>
+							</b-form-group>
 
-              <div class="mb-2">
-                <button
-                  class="btn btn-danger"
-                  @click="$bvModal.show('importEmailModal')"
-                >
-                  Import Email
-                </button>
-              </div>
+							<div class="mb-2">
+								<b-button variant="danger" @click="$bvModal.show('importEmail')">Import Email</b-button>
+							</div>
 
-              <b-form-group
-                id="input-group-2"
-                label="Subject:"
-                label-for="input-2"
-              >
-                <b-form-input
-                  id="input-2"
-                  v-model="form.subject"
-                  placeholder="subject"
-                ></b-form-input>
-              </b-form-group>
+							<b-form-group id="input-group-2" label="Subject:" label-for="input-2">
+								<b-form-input
+										id="input-2"
+										v-model="form.subject"
+										placeholder="subject"
+								></b-form-input>
+							</b-form-group>
 
-              <b-form-group>
-                <div class="mt-3">
-                  <b-tabs>
-                    <b-tab title="Text" active>
-                      <div>
-                        <b-form-textarea
-                          id="textarea"
-                          :state="textArea1State"
-                          v-model="form.text"
-                          placeholder="Enter something..."
-                          rows="8"
-                        ></b-form-textarea>
-                      </div>
-                    </b-tab>
-                    <b-tab title="HTML">
-                      <div class="example">
-                        <ckeditor v-model="form.html" :config="editorConfig"></ckeditor>
-                      </div>
-                    </b-tab>
-                  </b-tabs>
-                </div>
-              </b-form-group>
+							<b-form-group>
+								<div class="mt-3">
+									<b-tabs>
+										<b-tab title="Text" active >
+											<div>
+												<b-form-textarea	
+													id="textarea"
+													:state="textArea1State"
+													v-model="form.text"
+													placeholder="Enter something..."
+													rows="8"
+												></b-form-textarea>
+											</div>
+											
+										</b-tab>
+										<b-tab title="HTML">
+											<div class="example">
+												<ckeditor v-model="form.html" :config="editorConfig"></ckeditor>
+											</div>
+										</b-tab>
+										
+									</b-tabs>
+								</div>
+							</b-form-group>
 
-              <b-form-group>
-                <b-form-checkbox
-                  id="checkbox-1"
-                  v-model="addTrackingImage"
-                  name="checkbox-1"
-                  :value="true"
-                  :unchecked-value="false"
-                >
-                  Add Tracking Image
-                </b-form-checkbox>
-              </b-form-group>
+							<b-form-group>
+								<b-form-checkbox
+									id="checkbox-1"
+									v-model="addTrackingImage"
+									name="checkbox-1"
+									:value="true"
+									:unchecked-value="false"
+								>
+									Add Tracking Image
+								</b-form-checkbox>
+							</b-form-group>
 
 							<b-form-group>
 								<b-form-file v-model="file" placeholder="Choose a file or drop it here..." drop-placeholder="Drop file here..." @change="handleImage"></b-form-file>
@@ -102,11 +91,11 @@
 									</span>
 								</template>
 							</vue-good-table>
-            </b-form>
-          </b-container>
-        </b-card>
-      </b-col>
-    </b-row>
+						</b-form>
+					</b-container>
+				</b-card>
+			</b-col>
+		</b-row>
 
 		<div>
 			<b-modal id="importEmail" hide-footer title="Import Email" size="lg">
@@ -140,7 +129,7 @@
 				</b-form>
 			</b-modal>
 		</div>
-  </div>
+	</div>
 </template>
 
 <script>

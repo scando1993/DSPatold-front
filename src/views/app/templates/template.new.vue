@@ -144,7 +144,7 @@ export default {
 			addTrackingImage: true,
 			import_email: {
 				content: '',
-				convert_links: false
+				convert_links: true
 			},
 			editorConfig: {
 				fullPage: true,
