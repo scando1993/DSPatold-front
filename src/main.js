@@ -11,7 +11,7 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import { firebaseSettings } from "@/config";
 
-import {BootstrapVue, BootstrapVueIcons} from "bootstrap-vue";
+import {BootstrapVue, IconsPlugin, SpinnerPlugin} from "bootstrap-vue";
 import VueTour from "vue-tour";
 import VueTagsInput from "@johmun/vue-tags-input";
 import VueTheMask from "vue-the-mask";
@@ -42,7 +42,8 @@ Vue.config.productionTip = false
 // })
 
 Vue.use(BootstrapVue);
-Vue.use(BootstrapVueIcons);
+Vue.use(IconsPlugin);
+Vue.use(SpinnerPlugin);
 Vue.use(VueSweetalert2);
 
 Vue.use(VueApexCharts)

@@ -48,4 +48,7 @@ export default {
   color: #2c3e50;
   margin-top: 60px;
 }
+.vgt-responsive {
+	padding: 30px 0 20px;
+}
 </style>

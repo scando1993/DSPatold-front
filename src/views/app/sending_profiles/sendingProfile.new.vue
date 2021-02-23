@@ -295,10 +295,14 @@ export default {
 			})
 				.then(function (result) {
 					if (result.value) {
-						_this.$swal.fire(
-							'Profile added successfully!',
-							'This profile has been added successfully!',
-							'success');
+						_this.$swal.fire({
+							title: 'Profile added successfully!',
+							text: 'This profile has been added successfully!',
+							icon: 'success',
+							preConfirm: function() {
+								_this.$router.push('/app/sending_profiles');
+							}
+						});
 					}
 				});
 		},

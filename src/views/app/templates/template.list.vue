@@ -4,12 +4,17 @@
 		<breadcumb :page="'Email Templates'" :folder="''"/>
 		<b-button variant="primary" @click="$router.push('templates/new')">New Template</b-button>
 		<div class="my-4"></div>
-		
+
 		<b-row>
 			<b-col sm="12">
 				<b-card>
+					<div class="text-center" v-if="loading">
+						<!-- <b-spinner></b-spinner> -->
+						<b-icon icon="circle-fill" animation="throb"></b-icon>
+						Loading...
+					</div>
 					<div>
-						<b-alert variant="success" :show="isEmpty(templates)">
+						<b-alert variant="success" :show="isEmpty(templates) && !loading">
 							No templates created yet. Let's create one!
 						</b-alert>
 					</div>
@@ -71,26 +76,10 @@ export default {
 	name: "template",
 	data() {
 		return {
-			content: '',
-			isBadge: true,
-			isOpenMobileMenu: false,
+			loading: true,
 			file: null,
-			fields: ['name',
-			'type',
-			],
 			txtA2:'',
 			currentPage: 1,
-			selected: null,
-			itemsp:[],
-			currentPagep: 1,
-			fieldsp: 
-			[
-			'name',
-			'modified_day',
-			],
-			nameState: null,
-			textArea2State:null,
-			dataTemplate:[],
 			columns: [
 				{
 					label: "Template Name",
@@ -112,23 +101,14 @@ export default {
 					tdClass: "text-right"
 				}
 			],
-			templates: [
-				{
-					id : 1,
-					name : "Password Reset Template",
-					subject : "{{.FirstName}}, please reset your password.",
-					text : "Please reset your password here: {{.URL}}",
-					html : "<html><head></head><body>Please reset your password <a href\"{{.URL}}\">here</a></body></html>",
-					modified_date : "2016-11-21T18:30:11.1477736-06:00",
-					attachments : []
-				}
-			]
+			templates: []
 		}
 	},
 	mounted() {
 		api.templates.get()
 			.then(response => {
 				this.templates = response.data;
+				this.loading = false;
 			}).catch(err => {
 				console.log(err);
 			});
@@ -208,4 +188,15 @@ export default {
 </script>
 
 <style>
+.spinner-border {
+	display: inline-block;
+	width: 2rem;
+	height: 2rem;
+	vertical-align: text-bottom;
+	border: .25em solid;
+	border-right: .25em solid transparent;
+	border-radius: 50%;
+	-webkit-animation: spinner-border .75s linear infinite;
+	animation: spinner-border .75s linear infinite;
+}
 </style>

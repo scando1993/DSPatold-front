@@ -8,8 +8,13 @@
 		<b-row>
 			<b-col sm="12">
 				<b-card>
+					<div class="text-center" v-if="loading">
+						<!-- <b-spinner></b-spinner> -->
+						<b-icon icon="circle-fill" animation="throb"></b-icon>
+						Loading...
+					</div>
 					<div>
-						<b-alert variant="success" :show="isEmpty(pages)">
+						<b-alert variant="success" :show="isEmpty(pages) && !loading">
 							No pages created yet. Let's create one!
 						</b-alert>
 					</div>
@@ -75,6 +80,7 @@ export default {
 	name: "landing-page",
 	data() {
 		return {
+			loading: true,
 			options: [5, 10, 20, 50],
 			form:{
 				name:'',
@@ -107,6 +113,7 @@ export default {
 		api.pages.get()
 			.then(response => {
 				this.pages = response.data;
+				this.loading = false;
 			}).catch(err => {
 				console.log(err);
 			});

@@ -8,13 +8,18 @@
 		<b-row>
 			<b-col sm="12">
 				<b-card>
+					<div class="text-center" v-if="loading">
+						<!-- <b-spinner></b-spinner> -->
+						<b-icon icon="circle-fill" animation="throb"></b-icon>
+						Loading...
+					</div>
 					<div>
-						<b-alert variant="success" :show="isEmpty(profiles)">
+						<b-alert variant="success" :show="isEmpty(profiles) && !loading">
 							No profiles created yet. Let's create one!
 						</b-alert>
 					</div>
 					<vue-good-table
-							v-if="!isEmpty(profiles)"
+							v-if="!isEmpty(profiles)  && !loading"
 							:columns="columns"
 							:rows="profiles"
 							:search-options="{ enabled: true }"
@@ -72,6 +77,7 @@ export default {
 	name: "sending-profile",
 	data() {
 		return {
+			loading: true,
 			options: [5, 10, 20, 50],
 			columns: [
 				{
@@ -93,14 +99,18 @@ export default {
 		}
 	},
 	mounted() {
-		api.SMTP.get()
-			.then(response => {
-				this.profiles = response.data;
-			}).catch(err => {
-				console.log(err);
-			});
+		this.getProfiles();
 	},
 	methods: {
+		getProfiles() {
+			api.SMTP.get()
+				.then(response => {
+					this.profiles = response.data;
+					this.loading = false;
+				}).catch(err => {
+					console.log(err);
+				});
+		},
 		duplicateProfile(profile) {
 			api.SMTPId.get(profile.id)
 				.then(response => {
@@ -152,7 +162,9 @@ export default {
 							icon: 'success'
 						})
 						.then(function (result) {
-							_this.$router.go();
+							_this.loading = true;
+							_this.getProfiles();
+							// _this.$router.go();
 						});
 					}
 				});

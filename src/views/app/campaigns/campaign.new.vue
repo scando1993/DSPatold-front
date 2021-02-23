@@ -284,7 +284,17 @@ export default {
 		}
 	},
 	mounted() {
+		const campaign = JSON.parse(localStorage.getItem('tmpCampaign'));
+
+		if (!!campaign) {
+			this.form = campaign;
+			this.form.name = `Copy of ${this.form.name}`;
+		}
+
 		this.initForm();
+	},
+	destroyed() {
+		localStorage.removeItem('tmpCampaign');
 	},
 	methods: {
 		initForm() {
@@ -365,10 +375,14 @@ export default {
 			})
 				.then(function (result) {
 					if (result.value) {
-						_this.$swal.fire(
-							'Campaign Scheduled!',
-							'This campaign has been scheduled for launch!',
-							'success');
+						_this.$swal.fire({
+							title: 'Campaign Scheduled!',
+							text: 'This campaign has been scheduled for launch!',
+							icon: 'success',
+							preConfirm: function() {
+								_this.$router.push('/app/campaigns');
+							}
+						});
 					}
 				});
 		},

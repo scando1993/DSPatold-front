@@ -42,7 +42,7 @@ const routes = [
 					},
 					{
 						path: '',
-						component: () => import('./views/app/campaigns/campaign.refactor')
+						component: () => import('./views/app/campaigns/campaign.list')
 					}
 				]
 			},
