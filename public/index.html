@@ -41,6 +41,10 @@
 		  -webkit-animation: loader 1s ease-in-out infinite;
 	  }
 
+		.custom-file-input~.custom-file-label[data-browse]:after {
+			content: attr(data-browse) !important;
+		}
+
 	  @keyframes loader {
 		  to {
 			  -webkit-transform: rotate(360deg);

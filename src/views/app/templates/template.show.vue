@@ -244,9 +244,6 @@ export default {
 					}
 				});
 		},
-		onReset(evt) {
-			evt.preventDefault();
-		},
 		checkTracking() {
 			if (this.form.html.includes("{{.Tracker}}")) {
 				this.addTrackingImage = true;

@@ -12,15 +12,15 @@
 				<i
 						class="i-Add-UserStar mr-3 text-20 cursor-pointer"
 						v-b-tooltip.hover
-						v-b-modal:users-new
 						title="User"
 				></i>
-				<i
+				<router-link tag="div" to="/app/groups">
+					<i
 						class="i-Find-User mr-3 text-20 cursor-pointer"
 						v-b-tooltip.hover
 						title="Users and Groups"
-						@click="$router.push('users/')"
-				></i>
+					></i>
+				</router-link>
 				<i
 						class="i-Email mr-3 text-20 cursor-pointer"
 						v-b-tooltip.hover
@@ -219,28 +219,13 @@
 				</div>
 			</div>
 		</header>
-		<users-new />
-<!--		<b-modal id="groups-new" title="New Groups">-->
-<!--			<b-container fluid>-->
-<!--				<b-form id="groups-new-form" @submit="" @reset="">-->
-
-<!--				</b-form>-->
-<!--			</b-container>-->
-<!--			<div slot="modal-footer" class="ml-auto">-->
-<!--				<b-button form="form-1" type="reset" variant="danger">Reset</b-button>-->
-<!--				<span class="mx-2"></span>-->
-<!--				<b-button form="form-1" type="submit" variant="primary">Submit</b-button>-->
-<!--			</div>-->
-<!--		</b-modal>-->
 	</div>
 </template>
 <script>
 import {mapGetters, mapActions} from "vuex";
 import Util from "@/utils";
-import UsersNew from "@/views/app/users/users.new";
 
 export default {
-	components: { UsersNew },
 	computed: {
 		...mapGetters(["getVerticalCompact", "getVerticalSidebar", "getSideBarToggleProperties"])
 	},

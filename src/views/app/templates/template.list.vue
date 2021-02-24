@@ -105,15 +105,18 @@ export default {
 		}
 	},
 	mounted() {
-		api.templates.get()
-			.then(response => {
-				this.templates = response.data;
-				this.loading = false;
-			}).catch(err => {
-				console.log(err);
-			});
+		this.getTemplates();
 	},
 	methods: {
+		getTemplates() {
+			api.templates.get()
+				.then(response => {
+					this.templates = response.data;
+					this.loading = false;
+				}).catch(err => {
+					console.log(err);
+				});
+		},
 		isEmpty(arr) {
 			return !Array.isArray(arr) || !arr.length;
 		},
@@ -178,7 +181,7 @@ export default {
 							icon: 'success'
 						})
 						.then(function (result) {
-							_this.$router.go();
+							_this.getTemplates();
 						});
 					}
 				});

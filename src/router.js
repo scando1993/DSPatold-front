@@ -47,13 +47,22 @@ const routes = [
 				]
 			},
 			{
-				path: "/app/users",
-				component: () => import("./views/app/users"), //users
+				path: "/app/groups",
+				component: () => import("./views/app/groups"), //users & groups
 				children: [
 					{
+						path: "new",
+						component: () => import("./views/app/groups/group.new")
+					},
+					{
 						path: '',
-						component: () => import('./views/app/users/users.dashboard')
-					}
+						component: () => import('./views/app/groups/group.list')
+					},
+					{
+						path: "show/:id",
+						name: "groupShow",
+						component: () => import('./views/app/groups/group.show')
+					},
 				]
 			},
 			{
