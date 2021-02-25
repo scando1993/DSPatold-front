@@ -123,22 +123,31 @@ const routes = [
 				]
 			},
 			{
-				path: "/app/account",
-				component: () => import("./views/app/account"), //account
+				path: "/app/settings",
+				component: () => import("./views/app/account_settings"), //account
 				children: [
 					{
-						path: "dashboard.v1",
-						component: () => import("./views/app/dashboards/dashboard.v1")
+						path: "",
+						component: () => import("./views/app/account_settings/index.vue")
 					},
 				]
 			},
 			{
-				path: "/app/user_management",
+				path: "/app/users",
 				component: () => import("./views/app/user_management"), //user_management
 				children: [
 					{
-						path: "dashboard.v1",
-						component: () => import("./views/app/dashboards/dashboard.v1")
+						path: "new",
+						component: () => import("./views/app/user_management/user.new")
+					},
+					{
+						path: "show/:id",
+						name: "userShow",
+						component: () => import('./views/app/user_management/user.show')
+					},
+					{
+						path: "",
+						component: () => import("./views/app/user_management/user.list")
 					},
 				]
 			},
