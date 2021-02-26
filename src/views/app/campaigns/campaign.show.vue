@@ -1,6 +1,15 @@
 <template>
 	<div class="main-content">
-		<breadcumb :page="'Campaigns User'" :folder="'Campaigns'" />
+		<h1>Results for {{campaign.name}}</h1>
+		<b-button class="mx-3" variant="light" @click="$router.back()">Go back</b-button>
+		<b-button class="mx-3" variant="success" @click="exportCSV">Export CSV</b-button>
+		<b-button class="mx-3" variant="primary" @click="completeCampaign" :disabled="status">Complete</b-button>
+		<b-button class="mx-3" variant="danger" @click="deleteCamapaign">Delete</b-button>
+		<b-button class="mx-3" variant="primary" @click="refresh">
+			<b-icon icon="arrow-repeat" animation="spin" v-if="loading"></b-icon>
+			<b-icon icon="arrow-repeat" v-if="!loading"></b-icon>
+			Refresh
+		</b-button>
 		<div class="my-4"></div>
 
 		<b-row>
@@ -10,7 +19,7 @@
 						<b-tab title="Overview" active>
 							<div class="row">
 								<b-col cols="8">
-									<b-card title="Campaign Timeline" class="mb-30">
+									<b-card title="Failures in the first 8 hours" class="mb-30">
 										<div id="basicArea-chart" style="min-height: 365px">
 											<apexchart
 												type="line"
@@ -31,7 +40,7 @@
 										</div>
 									</b-card>
 								</b-col>
-								<b-col lg="4" md="6" class="mb-30">
+								<b-col lg="4" md="4" class="mb-30">
 									<b-card title="Campaign Status" class="mb-30">
 										<div class="ul-widget-app__browser-list">
 											<div class="ul-widget-app__browser-list-1 mb-30">
@@ -39,7 +48,7 @@
 													class="i-Email text-18 text-danger font-weight-600 mr-3"
 												></i>
 												<span class="text-15">Email sent</span>
-												<b-badge pill variant="success p-1 m-1">3</b-badge>
+												<b-badge pill variant="success p-1 m-1">{{ stats.sent }}</b-badge>
 											</div>
 
 											<div class="ul-widget-app__browser-list-1 mb-30">
@@ -47,7 +56,7 @@
 													class="i-Cloud-Email text-18 text-warning font-weight-600 mr-3"
 												></i>
 												<span class="text-15">Email Opened</span>
-												<b-badge pill variant="danger p-1 m-1">1</b-badge>
+												<b-badge pill variant="danger p-1 m-1">{{ stats.opened }}</b-badge>
 											</div>
 
 											<div class="ul-widget-app__browser-list-1 mb-30">
@@ -55,7 +64,7 @@
 													class="i-Cursor-Click-2 text-18 text-info font-weight-600 mr-3"
 												></i>
 												<span class="text-15">Clicked Link</span>
-												<b-badge pill variant="primary p-1 m-1">1</b-badge>
+												<b-badge pill variant="primary p-1 m-1">{{ stats.clicked }}</b-badge>
 											</div>
 
 											<div class="ul-widget-app__browser-list-1 mb-30">
@@ -63,14 +72,14 @@
 													class="i-Data-Cloud text-18 text-danger font-weight-600 mr-3"
 												></i>
 												<span class="text-15">Submitted Data</span>
-												<b-badge pill variant="dark p-1 m-1">1</b-badge>
+												<b-badge pill variant="dark p-1 m-1">{{ stats.submitted_data }}</b-badge>
 											</div>
 
 											<div class="ul-widget-app__browser-list-1 mb-30">
 												<i class="i-Voicemail text-18 text-success mr-3"></i>
 												<span class="text-15">Email Reported</span>
 
-												<b-badge pill variant="danger p-1 m-1">0</b-badge>
+												<b-badge pill variant="danger p-1 m-1">{{ stats.email_reported }}</b-badge>
 											</div>
 										</div>
 									</b-card>
@@ -80,36 +89,29 @@
 											<div class="ul-widget-app__browser-list-1 mb-30">
 												<span class="text-15">From</span>
 												<span class="text-15 p-1 m-1"
-													>scando@fiec.espol.edu.ec</span
+													>{{ fromAddress }}</span
 												>
 											</div>
 
 											<div class="ul-widget-app__browser-list-1 mb-30">
 												<span class="text-15">To</span>
-												<span class="text-15 p-1 m-1">4 recipients</span>
-											</div>
-
-											<div class="ul-widget-app__browser-list-1 mb-30">
-												<span class="text-15">Reply To</span>
-												<span class="text-15 p-1 m-1"
-													>scando@fiec.espol.edu.ec</span
-												>
+												<span class="text-15 p-1 m-1">{{ results.length }} recipients</span>
 											</div>
 
 											<div class="ul-widget-app__browser-list-1 mb-30">
 												<span class="text-15">Subject</span>
-												<span class="text-15 p-1 m-1">Cambio de password</span>
+												<span class="text-15 p-1 m-1">{{ campaign.template.subject }}</span>
 											</div>
 										</div>
 									</b-card>
 								</b-col>
 							</div>
 						</b-tab>
-						<b-tab title="Users">
+						<b-tab title="Details">
 							<div>
 								<vue-good-table
 									:columns="columns"
-									:rows="rows"
+									:rows="results"
 									:search-options="{
 										enabled: true,
 									}"
@@ -172,6 +174,7 @@
 </template>
 
 <script>
+import api from '../../../api/api';
 export default {
 	metaInfo: {
 		title: "Campaigns",
@@ -179,55 +182,52 @@ export default {
 	name: "campaign-show",
 	data() {
 		return {
+			loading: false,
+			campaignId: null,
+			campaign: null,
+			status: false,
+			results: [],
+			stats: {},
+			fromAddress: '',
 			columns: [
 				{
 					label: "First Name",
-					field: "name",
+					field: "first_name",
 					thClass: "text-left",
-					tdClass: "text-left",
+					tdClass: "text-left"
 				},
 				{
 					label: "Last Name",
-					field: "lastName",
+					field: "last_name",
 					thClass: "text-left",
-					tdClass: "text-left",
+					tdClass: "text-left"
 				},
 				{
 					label: "Email",
 					field: "email",
 					thClass: "text-left",
-					tdClass: "text-left",
+					tdClass: "text-left"
 				},
 				{
 					label: "Position",
 					field: "position",
 					thClass: "text-left",
-					tdClass: "text-left",
-					type: "percentage",
+					tdClass: "text-left"
 				},
 				{
 					label: "Status",
 					field: "status",
 					thClass: "text-left",
-					tdClass: "text-left",
+					tdClass: "text-left"
 				},
 				{
 					label: "",
 					field: "action",
 					thClass: "text-right",
-					tdClass: "text-right",
-				},
+					tdClass: "text-right"
+				}
 			],
-			rows: [
-				{
-					name: "Kevin",
-					lastName: "Cando",
-					email: "scando@fiec.espol.edu.ec",
-					position: "Developer",
-					status: "Email sent",
-					action: "",
-				},
-			],
+			rows: [],
 			options: {
 				chart: {
 					id: "vuechart-example",
@@ -239,7 +239,7 @@ export default {
 			series: [
 				{
 					name: "series-1",
-					data: [30, 40, 45, 50, 49, 60, 70, 91],
+					data: [5, 10, 15, 20, 25, 30, 35, 40],
 				},
 			],
 			basicLineChart: {
@@ -263,7 +263,7 @@ export default {
 						curve: "straight",
 					},
 					title: {
-						text: "Product Trends by Month",
+						text: "",
 						align: "left",
 					},
 					grid: {
@@ -286,9 +286,176 @@ export default {
 						],
 					},
 				},
-			},
+			}
 		};
 	},
+	beforeMount() {
+		this.initialize();
+	},
+	mounted() {
+	},
+	methods: {
+		async initialize() {
+			this.campaign = {
+				name: "",
+				created_date: "",
+				launch_date: "",
+				send_by_date: "",
+				completed_date: "",
+				status: "",
+				template: {}
+			}
+			this.campaignId = this.$route.params.id;
+			await this.getResults();
+			await this.getSummary();
+		},
+		getSummary() {
+			return new Promise((resolve, reject) => {
+				api.campaignId.summary(this.campaignId)
+				.then(response => {
+					this.stats = response.data.stats;
+					console.log(this.campaign.status);
+					if (this.campaign.status == "Completed") {
+						this.status = true;
+					}
+					resolve();
+				}).catch(err => {
+					console.log(err);
+					reject();
+				});
+			})
+		},
+		getResults() {
+			return new Promise((resolve, reject) => {
+				api.campaignId.get(this.campaignId)
+					.then(response => {
+						this.loading = false;
+						this.campaign = response.data;
+						console.log("get", this.campaign.status);
+						this.results = response.data.results;
+						this.results.forEach(item => {
+							item.timeline = response.data.timeline.filter(x => 
+								x.email == item.email);
+						});
+						this.fromAddress = this.getFromAddress(this.campaign.smtp.from_address);
+						resolve();
+					}).catch(err => {
+						console.log(err);
+						reject();
+					});
+			});
+		},
+		getFromAddress(fromAddres) {
+			const regex = /<(.*)>/g;
+			const matches = regex.exec(fromAddres);
+			let email = fromAddres;
+			if (matches) {
+				email = matches[1];
+			}
+
+			return email;
+		},
+		refresh() {
+			this.loading = true;
+			setTimeout(() => {
+				this.getResults();
+			}, 700);
+		},
+		exportCSV() {},
+		completeCampaign() {
+			const _this = this;
+
+			this.$swal.fire({
+				title: "Are you sure?",
+				text: "This will stop processing events for this campaign",
+				icon: "warning",
+				showClass: {
+					popup: '',
+					backdrop: ''
+				},
+				showCancelButton: true,
+				confirmButtonText: "Complete Campaign",
+				confirmButtonColor: "#428bca",
+				reverseButtons: true,
+				allowOutsideClick: false,
+				showLoaderOnConfirm: true,
+				preConfirm: function () {
+					return new Promise(function (resolve, reject) {
+						api.campaignId.complete(_this.campaignId)
+							.then(response => {
+								resolve();
+							})
+							.catch(error => {
+								console.log(error);
+							})
+					});
+				}
+			})
+				.then(function (result) {
+					if (result.value) {
+						_this.$swal.fire({
+							title: 'Campaign Completed!',
+							text: 'This campaign has been completed!',
+							icon: 'success'
+						})
+						.then(function (result) {
+							api.campaignId.get(_this.campaignId)
+								.then(response => {
+									_this.status = true;
+									_this.getResults();
+								})
+								.catch(error => {
+									console.log(error);
+								})
+						});
+					}
+				});
+		},
+		deleteCamapaign() {
+			const _this = this;
+
+			this.$swal.fire({
+				title: "Are you sure?",
+				text: "This will delete the campaign. This can't be undone!",
+				icon: "warning",
+				showClass: {
+					popup: '',
+					backdrop: ''
+				},
+				showCancelButton: true,
+				confirmButtonText: "Delete " + _this.campaign.name,
+				confirmButtonColor: "#428bca",
+				reverseButtons: true,
+				allowOutsideClick: false,
+				showLoaderOnConfirm: true,
+				preConfirm: function () {
+					return new Promise(function (resolve, reject) {
+						api.campaignId.delete(_this.campaignId)
+							.then(response => {
+								resolve();
+							})
+							.catch(error => {
+								const errorMsg = error.response.data.message;
+								_this.$swal.close();
+								_this.$swal.fire('Error!', errorMsg, 'error');
+							})
+					});
+				}
+			})
+				.then(function (result) {
+					if (result.value) {
+						_this.$swal.fire({
+							title: 'Campaign deleted!',
+							text: 'This campaign has been deleted!',
+							icon: 'success'
+						})
+						.then(function (result) {
+							_this.$router.push('/app/campaigns');
+						});
+					}
+				});
+		}
+	}
 };
 </script>
 

@@ -53,7 +53,7 @@
 												<span class="_dot _r_block-dot bg-dark"></span>
 											</template>
 
-											<b-dropdown-item class="dropdown-item" @click="editCampaign(props.row)">
+											<b-dropdown-item class="dropdown-item" @click="viewResults(props.row)">
 												<i class="nav-icon i-Statistic text-success font-weight-bold mr-2"></i>View Results
 											</b-dropdown-item>
 											<b-dropdown-item class="dropdown-item" @click="duplicateCampaign(props.row)">
@@ -195,6 +195,9 @@ export default {
 				}).catch(err => {
 					console.log(err);
 				});
+		},
+		viewResults(campaign) {
+			this.$router.push(`campaigns/show/${campaign.id}`);
 		},
 		duplicateCampaign(campaign) {
 			api.campaignId.get(campaign.id)
