@@ -33,6 +33,7 @@ import "@/assets/styles/sass/themes/lite-blue.scss";
 import VueApexCharts from 'vue-apexcharts';
 import moment from 'moment';
 import CKEditor from 'ckeditor4-vue';
+import VueHorizontalTimeline from "vue-horizontal-timeline";
 
 Vue.config.productionTip = false
 
@@ -45,6 +46,7 @@ Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);
 Vue.use(SpinnerPlugin);
 Vue.use(VueSweetalert2);
+Vue.use(VueHorizontalTimeline);
 
 Vue.use(VueApexCharts)
 
