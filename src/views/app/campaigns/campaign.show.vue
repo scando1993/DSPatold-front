@@ -67,18 +67,18 @@
 								<b-col cols="5">
 									<b-card title="Phishing Email" class="mb-30">
 										<div class="ul-widget-app__browser-list">
-											<div class="ul-widget-app__browser-list-1 mb-30">
-												<span class="text-15">From</span>
+											<div class="ul-widget-app__browser-list-1 mb-3 flex-wrap">
+												<span class="text-15">From: </span>
 												<span class="text-15">{{ fromAddress }}</span>
 											</div>
 
-											<div class="ul-widget-app__browser-list-1 mb-30">
-												<span class="text-15">To</span>
+											<div class="ul-widget-app__browser-list-1 mb-3 flex-wrap">
+												<span class="text-15">To: </span>
 												<span class="text-15">{{ results.length }} recipients</span>
 											</div>
 
-											<div class="ul-widget-app__browser-list-1 mb-30">
-												<span class="text-15">Subject</span>
+											<div class="ul-widget-app__browser-list-1 mb-3 flex-wrap">
+												<span class="text-15 custom-widget-key">Subject: </span>
 												<span class="text-15">{{ campaign.template.subject }}</span>
 											</div>
 										</div>
@@ -99,53 +99,33 @@
 						</b-tab>
 						<b-tab title="Details">
 							<div>
-								<vue-good-table
-									:columns="columns"
-									:rows="results"
-									:search-options="{
-										enabled: true,
-									}"
-									styleClass="tableOne vgt-table"
-								>
-									<template slot="table-row" slot-scope="props">
-										<span v-if="props.column.field === 'action'">
-											<b-dropdown
-												id="dropdown-left"
-												variant="link"
-												text="Left align"
-												toggle-class="text-decoration-none"
-												size="md"
-												dropleft
-												no-caret
-											>
-												<template v-slot:button-content class="_r_btn border-0">
-													<span class="_dot _r_block-dot bg-dark"></span>
-													<span class="_dot _r_block-dot bg-dark"></span>
-													<span class="_dot _r_block-dot bg-dark"></span>
-												</template>
-
-												<b-dropdown-item
-													class="dropdown-item"
-													@click="duplicateCampaign(props.row)"
-												>
-													<i
-														class="nav-icon i-File-Copy text-info font-weight-bold mr-2"
-													></i
-													>Details
-												</b-dropdown-item>
-											</b-dropdown>
-										</span>
-										<span v-if="props.column.field === 'status'">
-											<span
-												class="badge badge-pill badge-outline-primary p-2"
-												>{{ props.row.status }}</span
-											>
-										</span>
-										<span v-else>{{
-											props.formattedRow[props.column.field]
-										}}</span>
+								<b-table :items="results" :fields="columns" responsive="sm">
+									<template #cell(show_details)="row">
+										<b-button size="sm" @click="row.toggleDetails">
+											{{ row.detailsShowing ? 'Hide' : 'Show'}} Details
+										</b-button>
 									</template>
-								</vue-good-table>
+
+									<template #row-details="row">
+										<b-card 
+											class="bg-light-custom custom-timeline" 
+											:title="'Timeline for ' + row.item.first_name + ' ' + row.item.last_name" 
+											:sub-title="'Email: ' + row.item.email"
+										>
+											<div v-for="(item, i) in row.item.timeline" :key="i">
+												<vue-timeline-update
+													:date="new Date(item.time)"
+													title=""
+													description=""
+													thumbnail=""
+													:category="item.message"
+													:icon="item.icon"
+													:color="item.color"
+												/>
+											</div>
+										</b-card>
+									</template>
+								</b-table>
 							</div>
 						</b-tab>
 					</b-tabs>
@@ -174,7 +154,8 @@ export default {
 			stats: {},
 			timeline: [],
 			fromAddress: '',
-			columns: [
+			columns: ["first_name", "last_name", "email", "position", "status", "show_details"],
+			cols: [
 				{
 					label: "First Name",
 					field: "first_name",
@@ -206,8 +187,8 @@ export default {
 					tdClass: "text-left"
 				},
 				{
-					label: "",
-					field: "action",
+					label: "Actions",
+					field: "actions",
 					thClass: "text-right",
 					tdClass: "text-right"
 				}
@@ -235,6 +216,7 @@ export default {
 			await this.getResults();
 			await this.getSummary();
 			this.setTimeline();
+			this.setUserTimeline();
 		},
 		setTimeline() {
 			this.campaign.timeline.forEach(item => {
@@ -245,6 +227,38 @@ export default {
 				};
 
 				this.timeline.push(action);
+			});
+		},
+		setUserTimeline() {
+			this.results.forEach(result => {
+				result.timeline.forEach(item => {
+					switch (item.message) {
+						case "Email Sent":
+							item.color = "green";
+							item.icon = "email";
+							break;
+
+						case "Email Opened":
+							item.color = "orange";
+							item.icon = "drafts";
+							break;
+
+						case "Clicked Link":
+							item.color = "orange";
+							item.icon = "north_west";
+							break;
+
+						case "Submitted Data":
+							item.color = "red";
+							item.icon = "error";
+							break;
+						
+						case "Error Sending Email":
+							item.color = "black";
+							item.icon = "clear";
+							break;
+					}
+				});
 			});
 		},
 		getSummary() {
@@ -408,5 +422,31 @@ export default {
 }
 .vue-horizontal-timeline .time {
 	min-width: 150px;
+}
+.gb-vue-timeline-update--dark 
+.gb-vue-timeline-update__right 
+.gb-vue-timeline-update__description,
+.gb-base-icon {
+	color: #333 !important;
+}
+.gb-vue-timeline-update .gb-vue-timeline-update__right {
+	padding-bottom: 10px !important;
+}
+.gb-vue-timeline-update--dark .gb-vue-timeline-update__center .gb-vue-timeline-update__bullet,
+.gb-vue-timeline-update--dark .gb-vue-timeline-update__right .gb-vue-timeline-update__information 
+.gb-vue-timeline-update__meta .gb-vue-timeline-update__category {
+	box-shadow: none !important;
+}
+.bg-light-custom {
+	background-color: #f3f3f3;
+}
+.custom-timeline .card-title {
+	margin-bottom: 10px;
+}
+.custom-timeline .text-muted {
+	color: #a2a2a2 !important;
+}
+.custom-widget-key {
+	width: 100%;
 }
 </style>

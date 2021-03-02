@@ -34,6 +34,7 @@ import VueApexCharts from 'vue-apexcharts';
 import moment from 'moment';
 import CKEditor from 'ckeditor4-vue';
 import VueHorizontalTimeline from "vue-horizontal-timeline";
+import VueTimeline from "@growthbunker/vuetimeline";
 
 Vue.config.productionTip = false
 
@@ -47,6 +48,7 @@ Vue.use(IconsPlugin);
 Vue.use(SpinnerPlugin);
 Vue.use(VueSweetalert2);
 Vue.use(VueHorizontalTimeline);
+Vue.use(VueTimeline);
 
 Vue.use(VueApexCharts)
 

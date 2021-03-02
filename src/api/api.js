@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://0c5e87b6bfc4.ngrok.io/api"; //Remote development
+const API_URL = "http://eb66b027972f.ngrok.io/api"; //Remote development
 // const API_URL = "http://192.168.100.4:3333/api"; //Local development
 
 function query(endpoint, method, data, type="json") {
