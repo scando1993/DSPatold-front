@@ -116,7 +116,7 @@
 												<vue-timeline-update
 													:date="new Date(item.time)"
 													title=""
-													description=""
+													:description="item.details"
 													thumbnail=""
 													:category="item.message"
 													:icon="item.icon"
@@ -138,6 +138,7 @@
 <script>
 import api from '../../../api/api';
 import moment from "moment";
+import uaParser from "ua-parser-js";
 
 export default {
 	metaInfo: {
@@ -232,7 +233,13 @@ export default {
 		setUserTimeline() {
 			this.results.forEach(result => {
 				result.timeline.forEach(item => {
+					let browser, ua;
 					switch (item.message) {
+						case "Campaign Created":
+							item.color = "green";
+							item.icon = "flag";
+							break;
+
 						case "Email Sent":
 							item.color = "green";
 							item.icon = "email";
@@ -246,16 +253,29 @@ export default {
 						case "Clicked Link":
 							item.color = "orange";
 							item.icon = "north_west";
+							browser = JSON.parse(item.details).browser;
+							ua = uaParser(browser['user-agent']);
+							item.details = `
+								<div>Device: ${ua.os.name} (OS Version: ${ua.os.version})</div>
+								<div>Browser: ${ua.browser.name} (Version: ${ua.browser.version})</div>
+							`;
 							break;
 
 						case "Submitted Data":
 							item.color = "red";
 							item.icon = "error";
+							browser = JSON.parse(item.details).browser;
+							ua = uaParser(browser['user-agent']);
+							item.details = `
+								<div>Device: ${ua.os.name} (OS Version: ${ua.os.version})</div>
+								<div>Browser: ${ua.browser.name} (Version: ${ua.browser.version})</div>
+							`;
 							break;
 						
 						case "Error Sending Email":
 							item.color = "black";
 							item.icon = "clear";
+							item.details = JSON.parse(item.details).error;
 							break;
 					}
 				});
@@ -285,7 +305,9 @@ export default {
 						this.results = response.data.results;
 						this.results.forEach(item => {
 							item.timeline = response.data.timeline.filter(x => 
-								x.email == item.email);
+								x.email == "");
+							item.timeline.push(...response.data.timeline.filter(x => 
+								x.email == item.email));
 						});
 						this.fromAddress = this.getFromAddress(this.campaign.smtp.from_address);
 						resolve();
@@ -428,6 +450,11 @@ export default {
 .gb-vue-timeline-update__description,
 .gb-base-icon {
 	color: #333 !important;
+}
+.gb-vue-timeline-update--dark 
+.gb-vue-timeline-update__right 
+.gb-vue-timeline-update__description {
+	font-size: 12px !important;
 }
 .gb-vue-timeline-update .gb-vue-timeline-update__right {
 	padding-bottom: 10px !important;
