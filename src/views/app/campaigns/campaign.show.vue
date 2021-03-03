@@ -2,7 +2,14 @@
 	<div class="main-content">
 		<h1>Results for {{campaign.name}}</h1>
 		<b-button class="mx-3" variant="light" @click="$router.back()">Go back</b-button>
-		<b-button class="mx-3" variant="success" @click="exportCSV">Export CSV</b-button>
+		<b-dropdown class="mx-3" variant="success" right text="Export CSV">
+			<b-dropdown-item>
+				<download-csv :data="exportAsCSV('results')" :name="campaign.name + ' - Results.csv'">Results</download-csv>
+			</b-dropdown-item>
+			<b-dropdown-item>
+				<download-csv :data="exportAsCSV('raw')" :name="campaign.name + ' - Events.csv'">Raw Events</download-csv>
+			</b-dropdown-item>
+		</b-dropdown>
 		<b-button class="mx-3" variant="primary" @click="completeCampaign" :disabled="status">Complete</b-button>
 		<b-button class="mx-3" variant="danger" @click="deleteCamapaign">Delete</b-button>
 		<b-button class="mx-3" variant="primary" @click="refresh">
@@ -302,6 +309,7 @@ export default {
 					.then(response => {
 						this.loading = false;
 						this.campaign = response.data;
+						localStorage.setItem("tmpTimeline", JSON.stringify(response.data.timeline));
 						this.results = response.data.results;
 						this.results.forEach(item => {
 							item.timeline = response.data.timeline.filter(x => 
@@ -333,7 +341,22 @@ export default {
 				this.getResults();
 			}, 700);
 		},
-		exportCSV() {},
+		exportAsCSV(data) {
+			let content = "";
+		
+			switch (data) {
+				case "raw":
+					const tmpTimeline = JSON.parse(localStorage.getItem("tmpTimeline"));
+					content = tmpTimeline;
+					break;
+
+				case "results":
+					content = this.results.map(x => { let {timeline, ...data} = x; return data; });
+					break;
+			}
+
+			return content;
+		},
 		completeCampaign() {
 			const _this = this;
 

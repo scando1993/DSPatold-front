@@ -35,6 +35,7 @@ import moment from 'moment';
 import CKEditor from 'ckeditor4-vue';
 import VueHorizontalTimeline from "vue-horizontal-timeline";
 import VueTimeline from "@growthbunker/vuetimeline";
+import JsonCSV from 'vue-json-csv';
 
 Vue.config.productionTip = false
 
@@ -49,6 +50,7 @@ Vue.use(SpinnerPlugin);
 Vue.use(VueSweetalert2);
 Vue.use(VueHorizontalTimeline);
 Vue.use(VueTimeline);
+Vue.component('downloadCsv', JsonCSV);
 
 Vue.use(VueApexCharts)
 
