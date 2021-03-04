@@ -156,8 +156,17 @@ const routes = [
 				component: () => import("./views/app/webhooks"), //webhooks
 				children: [
 					{
-						path: "dashboard.v1",
-						component: () => import("./views/app/dashboards/dashboard.v1")
+						path: "new",
+						component: () => import("./views/app/webhooks/webhook.new")
+					},
+					{
+						path: "show/:id",
+						name: "webhookShow",
+						component: () => import('./views/app/webhooks/webhook.show')
+					},
+					{
+						path: "",
+						component: () => import("./views/app/webhooks/webhook.list")
 					},
 				]
 			},
