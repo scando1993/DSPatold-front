@@ -3,6 +3,8 @@ import axios from "axios";
 const API_URL = "http://eb66b027972f.ngrok.io/api"; //Remote development
 // const API_URL = "http://192.168.100.4:3333/api"; //Local development
 
+const API_KEY = "52b6d8bd1150ab990c2e7ce4d5a568fff6da58a0202745a079a00c9401e999eb";
+
 function query(endpoint, method, data, type="json") {
 	let headerOptions = {};
 	if (type == "json") {
@@ -10,13 +12,15 @@ function query(endpoint, method, data, type="json") {
 		headerOptions = {'Content-Type': "application/json"}
 	} else if (type == "file") {
 		headerOptions = {'Content-Type': "multipart/form-data"};
+	} else if (type == "form-urlencoded") {
+		headerOptions = {'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8"}
 	}
 	return axios({
 		baseURL: API_URL + endpoint,
 		method: method,
 		data: data,
 		headers: {
-			'Authorization': 'Bearer 52b6d8bd1150ab990c2e7ce4d5a568fff6da58a0202745a079a00c9401e999eb',
+			'Authorization': `Bearer ${API_KEY}`,
 			...headerOptions
 		}
 	})
@@ -249,6 +253,9 @@ let api = {
 	},
 	reset: function () {
 		return query("/reset", "POST", {})
+	},
+	settings: function (req) {
+		return query("/settings", "POST", req, "form-urlencoded")
 	}
 }
 
