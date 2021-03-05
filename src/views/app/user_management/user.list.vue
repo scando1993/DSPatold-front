@@ -47,9 +47,9 @@
 										<span class="_dot _r_block-dot bg-dark"></span>
 									</template>
 
-									<b-dropdown-item class="dropdown-item" @click="swapUser(props.row)">
+									<!-- <b-dropdown-item class="dropdown-item" @click="swapUser(props.row)">
 										<b-icon icon="arrow-left-right" variant="warning" class="nav-icon font-weight-bold pr-1"></b-icon> Swith User
-									</b-dropdown-item>
+									</b-dropdown-item> -->
 									<b-dropdown-item class="dropdown-item" @click="editUser(props.row)">
 										<i class="nav-icon i-Pen-2 text-success font-weight-bold mr-2"></i>Edit
 									</b-dropdown-item>
