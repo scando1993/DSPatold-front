@@ -110,6 +110,7 @@ export default {
 				this.webhooks = response.data;
 				this.loading = false;
 			}).catch(err => {
+				this.loading = false;
 				console.log(err);
 			});
 	},
@@ -139,7 +140,6 @@ export default {
 				showLoaderOnConfirm: true,
 				preConfirm: function () {
 					return new Promise(function (resolve, reject) {
-						// Submit the campaign
 						api.webhookId.delete(webhook.id)
 							.then(response => {
 								resolve();
@@ -164,6 +164,16 @@ export default {
 						});
 					}
 				});
+		},
+		ping(webhook) {
+			api.webhookId.ping(webhook.id)
+				.then(response => {
+					this.$swal.fire('Success!', `Ping of "${webhook.name}" webhook succeeded`, 'success');
+				})
+				.catch(error => {
+					const errorMsg = error.response.data.message;
+					this.$swal.fire(`Ping of "${webhook.name}" webhook failed`, errorMsg, 'error');
+				})
 		}
 	}
 }
