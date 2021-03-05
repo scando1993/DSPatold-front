@@ -205,7 +205,7 @@ export default {
 				.split("/")
 				.filter(x => x !== "")[1];
 
-			if (currentParentUrl !== undefined || currentParentUrl !== null) {
+			if (currentParentUrl !== undefined && currentParentUrl !== null) {
 				this.selectedParentMenu = currentParentUrl.toLowerCase();
 			} else {
 				this.selectedParentMenu = "dashboards";
